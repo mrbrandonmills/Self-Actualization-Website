@@ -13,6 +13,10 @@ const rainbow = {
   roseGarden: '#FB7185',
   goldenHour: '#FCD34D',
   skyBlue: '#7DD3FC',
+  violetSky: '#C084FC',
+  seafoam: '#5EEAD4',
+  cherryBlossom: '#F9A8D4',
+  limeZest: '#BEF264',
 }
 
 // Book card color mapping (6 unique colors)
@@ -53,21 +57,19 @@ export function getCourseColor(index: number) {
  * Get navigation link color by route
  */
 export function getNavColor(route: string): string {
-  const { navColors } = designTokens.colors
-
   switch (route) {
     case '/books':
-      return navColors.books
+      return rainbow.coralSunset
     case '/courses':
-      return navColors.courses
+      return rainbow.lavenderDream
     case '/writing-lab':
-      return navColors.writingLab
+      return rainbow.mintFresh
     case '/blog':
-      return navColors.blog
+      return rainbow.peachyKeen
     case '/about':
-      return navColors.about
+      return rainbow.oceanBreeze
     default:
-      return navColors.books // default
+      return rainbow.coralSunset // default
   }
 }
 
