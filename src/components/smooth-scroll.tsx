@@ -40,7 +40,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
 
     // Integrate with Framer Motion for scroll-linked animations
     // This allows components to react to scroll position
-    function onScroll(scroll: any) {
+    function onScroll(_scroll: any) {
       // Custom scroll event handling can be added here
       // For example: updating a scroll progress indicator
     }

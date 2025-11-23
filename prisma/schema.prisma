@@ -1,0 +1,483 @@
+// Prisma Schema for The Self Actualized Life - Collective Writing AI
+// Database: PostgreSQL (Supabase)
+// Generated: 2025-11-22
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // For migrations in serverless environments
+}
+
+// ============================================================================
+// AUTHENTICATION & USER MANAGEMENT
+// ============================================================================
+
+/// User accounts with authentication and profile information
+model User {
+  id                String    @id @default(uuid()) @db.Uuid
+  email             String    @unique @db.VarChar(255)
+  emailVerified     DateTime?
+  passwordHash      String?   @map("password_hash") @db.VarChar(255)
+  name              String    @db.VarChar(255)
+  bio               String?   @db.Text
+  avatarUrl         String?   @map("avatar_url") @db.VarChar(500)
+  role              UserRole  @default(USER)
+  membershipTier    MembershipTier @default(FREE) @map("membership_tier")
+  isActive          Boolean   @default(true) @map("is_active")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  deletedAt         DateTime? @map("deleted_at")
+
+  // Relations
+  accounts          Account[]
+  sessions          Session[]
+  ownedProjects     WritingProject[] @relation("ProjectOwner")
+  collaborations    Collaborator[]
+  contributions     Contribution[]
+  aiGenerations     AiGeneration[]
+  comments          Comment[]
+  votes             Vote[]
+  polls             Poll[]
+  notifications     Notification[]
+  activityLogs      ActivityLog[]
+  commentReactions  CommentReaction[]
+
+  // Invited collaborators
+  invitedCollaborators Collaborator[] @relation("InvitedBy")
+  approvedContributions Contribution[] @relation("ApprovedBy")
+  resolvedComments  Comment[] @relation("ResolvedBy")
+
+  @@index([email], name: "idx_users_email")
+  @@index([membershipTier], name: "idx_users_membership_tier")
+  @@index([isActive, deletedAt], name: "idx_users_active")
+  @@map("users")
+}
+
+/// OAuth provider accounts (NextAuth.js compatible)
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @map("user_id") @db.Uuid
+  type              String  @db.VarChar(50)
+  provider          String  @db.VarChar(50)
+  providerAccountId String  @map("provider_account_id") @db.VarChar(255)
+  refreshToken      String? @map("refresh_token") @db.Text
+  accessToken       String? @map("access_token") @db.Text
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type") @db.VarChar(50)
+  scope             String? @db.VarChar(255)
+  idToken           String? @map("id_token") @db.Text
+  sessionState      String? @map("session_state") @db.VarChar(255)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], name: "idx_accounts_provider")
+  @@index([userId], name: "idx_accounts_user")
+  @@map("accounts")
+}
+
+/// User sessions (NextAuth.js compatible)
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique @map("session_token") @db.VarChar(255)
+  userId       String   @map("user_id") @db.Uuid
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([sessionToken], name: "idx_sessions_token")
+  @@index([userId], name: "idx_sessions_user")
+  @@map("sessions")
+}
+
+// ============================================================================
+// WRITING PROJECTS
+// ============================================================================
+
+/// Collaborative writing projects
+model WritingProject {
+  id                String              @id @default(uuid()) @db.Uuid
+  title             String              @db.VarChar(500)
+  description       String?             @db.Text
+  content           String              @default("") @db.Text
+  genre             String?             @db.VarChar(100)
+  status            ProjectStatus       @default(DRAFT)
+  visibility        ProjectVisibility   @default(PRIVATE)
+  ownerId           String              @map("owner_id") @db.Uuid
+  featuredImageUrl  String?             @map("featured_image_url") @db.VarChar(500)
+  tags              String[]            @default([])
+  wordCount         Int                 @default(0) @map("word_count")
+  targetWordCount   Int?                @map("target_word_count")
+  publicationDate   DateTime?           @map("publication_date")
+  settings          Json                @default("{}") @db.JsonB
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+  deletedAt         DateTime?           @map("deleted_at")
+
+  // Relations
+  owner             User                @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  collaborators     Collaborator[]
+  contributions     Contribution[]
+  comments          Comment[]
+  votes             Vote[]
+  polls             Poll[]
+  aiGenerations     AiGeneration[]
+  activityLogs      ActivityLog[]
+
+  @@index([ownerId], name: "idx_projects_owner")
+  @@index([status, deletedAt], name: "idx_projects_status")
+  @@index([visibility], name: "idx_projects_visibility")
+  @@index([tags], name: "idx_projects_tags", type: Gin)
+  @@index([createdAt(sort: Desc)], name: "idx_projects_created")
+  @@map("writing_projects")
+}
+
+/// Project collaborators with roles and permissions
+model Collaborator {
+  id          String             @id @default(uuid()) @db.Uuid
+  projectId   String             @map("project_id") @db.Uuid
+  userId      String             @map("user_id") @db.Uuid
+  role        CollaboratorRole   @default(CONTRIBUTOR)
+  permissions Json               @default("{}") @db.JsonB
+  invitedBy   String?            @map("invited_by") @db.Uuid
+  invitedAt   DateTime           @default(now()) @map("invited_at")
+  joinedAt    DateTime?          @map("joined_at")
+  status      CollaboratorStatus @default(PENDING)
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  project     WritingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inviter     User?          @relation("InvitedBy", fields: [invitedBy], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, userId], name: "idx_collaborators_unique")
+  @@index([projectId, status], name: "idx_collaborators_project")
+  @@index([userId, status], name: "idx_collaborators_user")
+  @@map("collaborators")
+}
+
+// ============================================================================
+// CONTRIBUTIONS & VERSIONING
+// ============================================================================
+
+/// Individual contributions to projects with version history
+model Contribution {
+  id               String            @id @default(uuid()) @db.Uuid
+  projectId        String            @map("project_id") @db.Uuid
+  userId           String            @map("user_id") @db.Uuid
+  parentId         String?           @map("parent_id") @db.Uuid
+  content          String            @db.Text
+  contentDelta     Json?             @map("content_delta") @db.JsonB
+  section          String?           @db.VarChar(255)
+  position         Int               @default(0)
+  contributionType ContributionType  @map("contribution_type")
+  isAiAssisted     Boolean           @default(false) @map("is_ai_assisted")
+  aiGenerationId   String?           @map("ai_generation_id") @db.Uuid
+  status           ContributionStatus @default(PENDING)
+  approvedBy       String?           @map("approved_by") @db.Uuid
+  approvedAt       DateTime?         @map("approved_at")
+  rejectionReason  String?           @map("rejection_reason") @db.Text
+  wordCount        Int               @default(0) @map("word_count")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  deletedAt        DateTime?         @map("deleted_at")
+
+  // Relations
+  project          WritingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent           Contribution?  @relation("ContributionHistory", fields: [parentId], references: [id], onDelete: SetNull)
+  children         Contribution[] @relation("ContributionHistory")
+  aiGeneration     AiGeneration?  @relation(fields: [aiGenerationId], references: [id], onDelete: SetNull)
+  approver         User?          @relation("ApprovedBy", fields: [approvedBy], references: [id], onDelete: SetNull)
+  comments         Comment[]
+  votes            Vote[]
+
+  @@index([projectId, status, createdAt(sort: Desc)], name: "idx_contributions_project")
+  @@index([userId, createdAt(sort: Desc)], name: "idx_contributions_user")
+  @@index([parentId], name: "idx_contributions_parent")
+  @@index([status, deletedAt], name: "idx_contributions_status")
+  @@index([isAiAssisted, aiGenerationId], name: "idx_contributions_ai")
+  @@map("contributions")
+}
+
+// ============================================================================
+// AI INTEGRATION
+// ============================================================================
+
+/// Track AI-generated content for analytics and billing
+model AiGeneration {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  projectId         String?   @map("project_id") @db.Uuid
+  prompt            String    @db.Text
+  context           Json?     @db.JsonB
+  model             String    @db.VarChar(100)
+  provider          String    @db.VarChar(50)
+  generatedContent  String    @map("generated_content") @db.Text
+  temperature       Decimal?  @db.Decimal(3, 2)
+  maxTokens         Int?      @map("max_tokens")
+  tokensUsed        Int       @map("tokens_used")
+  costUsd           Decimal   @map("cost_usd") @db.Decimal(10, 6)
+  qualityRating     Int?      @map("quality_rating")
+  wasUsed           Boolean   @default(false) @map("was_used")
+  metadata          Json      @default("{}") @db.JsonB
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project           WritingProject? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  contributions     Contribution[]
+
+  @@index([userId, createdAt(sort: Desc)], name: "idx_ai_gen_user")
+  @@index([projectId], name: "idx_ai_gen_project")
+  @@index([model, createdAt(sort: Desc)], name: "idx_ai_gen_model")
+  @@index([costUsd], name: "idx_ai_gen_cost")
+  @@map("ai_generations")
+}
+
+// ============================================================================
+// COLLABORATION & FEEDBACK
+// ============================================================================
+
+/// Comments on contributions and projects
+model Comment {
+  id              String        @id @default(uuid()) @db.Uuid
+  contributionId  String?       @map("contribution_id") @db.Uuid
+  projectId       String        @map("project_id") @db.Uuid
+  userId          String        @map("user_id") @db.Uuid
+  parentId        String?       @map("parent_id") @db.Uuid
+  content         String        @db.Text
+  contentType     ContentType   @default(TEXT) @map("content_type")
+  isResolved      Boolean       @default(false) @map("is_resolved")
+  resolvedBy      String?       @map("resolved_by") @db.Uuid
+  resolvedAt      DateTime?     @map("resolved_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
+
+  // Relations
+  contribution    Contribution? @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  project         WritingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent          Comment?      @relation("CommentThread", fields: [parentId], references: [id], onDelete: Cascade)
+  replies         Comment[]     @relation("CommentThread")
+  resolver        User?         @relation("ResolvedBy", fields: [resolvedBy], references: [id], onDelete: SetNull)
+  reactions       CommentReaction[]
+
+  @@index([contributionId, createdAt], name: "idx_comments_contribution")
+  @@index([projectId, createdAt(sort: Desc)], name: "idx_comments_project")
+  @@index([userId], name: "idx_comments_user")
+  @@index([parentId], name: "idx_comments_parent")
+  @@index([isResolved], name: "idx_comments_resolved")
+  @@map("comments")
+}
+
+/// Reactions to comments
+model CommentReaction {
+  id           String   @id @default(uuid()) @db.Uuid
+  commentId    String   @map("comment_id") @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  reactionType String   @map("reaction_type") @db.VarChar(50)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  comment      Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId, reactionType], name: "idx_reactions_unique")
+  @@index([commentId], name: "idx_reactions_comment")
+  @@map("comment_reactions")
+}
+
+// ============================================================================
+// VOTING & POLLS
+// ============================================================================
+
+/// Votes on contributions and polls
+model Vote {
+  id              String    @id @default(uuid()) @db.Uuid
+  projectId       String    @map("project_id") @db.Uuid
+  contributionId  String?   @map("contribution_id") @db.Uuid
+  pollId          String?   @map("poll_id") @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  voteType        VoteType  @map("vote_type")
+  weight          Int       @default(1)
+  comment         String?   @db.Text
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  project         WritingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contribution    Contribution?  @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  poll            Poll?          @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([contributionId, userId], name: "idx_votes_unique_contribution", map: "idx_votes_unique_contribution")
+  @@unique([pollId, userId], name: "idx_votes_unique_poll", map: "idx_votes_unique_poll")
+  @@index([projectId], name: "idx_votes_project")
+  @@index([contributionId], name: "idx_votes_contribution")
+  @@index([pollId], name: "idx_votes_poll")
+  @@map("votes")
+}
+
+/// Polls for project direction decisions
+model Poll {
+  id              String     @id @default(uuid()) @db.Uuid
+  projectId       String     @map("project_id") @db.Uuid
+  createdBy       String     @map("created_by") @db.Uuid
+  title           String     @db.VarChar(500)
+  description     String?    @db.Text
+  pollType        PollType   @map("poll_type")
+  options         Json       @db.JsonB
+  status          PollStatus @default(ACTIVE)
+  closesAt        DateTime?  @map("closes_at")
+  resultsVisible  Boolean    @default(true) @map("results_visible")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  project         WritingProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  creator         User           @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  votes           Vote[]
+
+  @@index([projectId, status], name: "idx_polls_project")
+  @@index([createdBy], name: "idx_polls_creator")
+  @@index([closesAt], name: "idx_polls_closes")
+  @@map("polls")
+}
+
+// ============================================================================
+// NOTIFICATIONS & ACTIVITY
+// ============================================================================
+
+/// User notifications
+model Notification {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  type              String    @db.VarChar(100)
+  title             String    @db.VarChar(500)
+  message           String    @db.Text
+  link              String?   @db.VarChar(500)
+  relatedEntityType String?   @map("related_entity_type") @db.VarChar(100)
+  relatedEntityId   String?   @map("related_entity_id") @db.Uuid
+  isRead            Boolean   @default(false) @map("is_read")
+  readAt            DateTime? @map("read_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt(sort: Desc)], name: "idx_notifications_user")
+  @@index([relatedEntityType, relatedEntityId], name: "idx_notifications_entity")
+  @@map("notifications")
+}
+
+/// Activity log for audit trail
+model ActivityLog {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String?   @map("user_id") @db.Uuid
+  projectId   String?   @map("project_id") @db.Uuid
+  actionType  String    @map("action_type") @db.VarChar(100)
+  entityType  String    @map("entity_type") @db.VarChar(100)
+  entityId    String    @map("entity_id") @db.Uuid
+  details     Json      @default("{}") @db.JsonB
+  ipAddress   String?   @map("ip_address") @db.VarChar(45)
+  userAgent   String?   @map("user_agent") @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user        User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project     WritingProject? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)], name: "idx_activity_user")
+  @@index([projectId, createdAt(sort: Desc)], name: "idx_activity_project")
+  @@index([entityType, entityId], name: "idx_activity_entity")
+  @@index([createdAt(sort: Desc)], name: "idx_activity_created")
+  @@map("activity_log")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum MembershipTier {
+  FREE
+  BASIC
+  PRO
+  PREMIUM
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ProjectVisibility {
+  PRIVATE
+  COLLABORATORS_ONLY
+  PUBLIC
+}
+
+enum CollaboratorRole {
+  OWNER
+  EDITOR
+  CONTRIBUTOR
+  REVIEWER
+}
+
+enum CollaboratorStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  REMOVED
+}
+
+enum ContributionType {
+  ADDITION
+  EDIT
+  DELETION
+  RESTRUCTURE
+}
+
+enum ContributionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  INTEGRATED
+}
+
+enum ContentType {
+  TEXT
+  MARKDOWN
+}
+
+enum VoteType {
+  APPROVE
+  REJECT
+  ABSTAIN
+}
+
+enum PollType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  APPROVAL
+}
+
+enum PollStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}

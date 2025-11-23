@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { ReactNode } from 'react'
-import { designTokens } from '@/lib/design-tokens'
 
 /**
  * PageTransition Component
