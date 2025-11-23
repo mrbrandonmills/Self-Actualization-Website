@@ -3,9 +3,17 @@
  * Each book and course gets a unique vibrant color
  */
 
-import { designTokens } from './design-tokens'
-
-const { rainbow } = designTokens.colors
+// Rainbow color palette
+const rainbow = {
+  coralSunset: '#FF6B6B',
+  lavenderDream: '#A78BFA',
+  peachyKeen: '#FDBA74',
+  oceanBreeze: '#67E8F9',
+  mintFresh: '#6EE7B7',
+  roseGarden: '#FB7185',
+  goldenHour: '#FCD34D',
+  skyBlue: '#7DD3FC',
+}
 
 // Book card color mapping (6 unique colors)
 const BOOK_COLORS = [
