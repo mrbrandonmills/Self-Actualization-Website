@@ -23,7 +23,11 @@ export function BookExplosionScene() {
         antialias: true,
         alpha: false,
         powerPreference: 'high-performance',
+        stencil: false,  // Disable stencil buffer
+        depth: true,
       }}
+      dpr={[1, 2]}  // Limit pixel ratio to 2x max for performance
+      performance={{ min: 0.5 }}  // Auto-throttle if FPS drops below 50%
     >
       {/* Background - Bartosz Dark */}
       <color attach="background" args={['#05201f']} />
