@@ -32,9 +32,9 @@ export default function BookAccordionPage() {
           scrub: 1, // Smooth scrubbing
         },
         // Kasane accordion effect: pages spread out in Z-space
-        z: index * 100, // Each page goes deeper
-        rotateX: index * 2, // Slight tilt
-        rotateY: (index % 2 === 0 ? 1 : -1) * index * 1.5, // Alternate slight rotation
+        z: -index * 150, // Each page goes AWAY from camera (negative Z)
+        rotateX: index * 3, // Slight tilt
+        rotateY: (index % 2 === 0 ? 1 : -1) * index * 2, // Alternate slight rotation
         ease: 'none',
       })
     })
@@ -97,7 +97,7 @@ export default function BookAccordionPage() {
           left: 0;
           width: 100%;
           height: 100vh;
-          perspective: 1200px;
+          perspective: 2000px;
           perspective-origin: 50% 50%;
           pointer-events: none;
         }
