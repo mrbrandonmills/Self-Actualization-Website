@@ -35,6 +35,12 @@
   textarea:focus {
     cursor: none !important;
   }
+
+  /* Override: Show cursor on test/debug pages */
+  .show-cursor,
+  .show-cursor * {
+    cursor: auto !important;
+  }
 }
 
 /* Keep default cursor on touch devices */

@@ -26,7 +26,7 @@
 
 export default function ScrollTest() {
   return (
-    <main className="min-h-[300vh] bg-gradient-to-b from-gray-900 via-gray-800 to-black">
+    <main className="min-h-[300vh] bg-gradient-to-b from-gray-900 via-gray-800 to-black show-cursor">
       {/* Fixed Header with Performance Stats */}
       <div className="fixed top-0 left-0 w-full p-8 bg-black/50 backdrop-blur-xl z-50 border-b border-white/10">
         <div className="container mx-auto">
