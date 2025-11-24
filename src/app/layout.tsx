@@ -3,7 +3,6 @@ import { Playfair_Display, Inter } from 'next/font/google'
 import './globals.css'
 import { BartoszNavigation } from '@/components/bartosz/BartoszNavigation'
 import SmoothScroll from '@/components/smooth-scroll'
-import PageTransition from '@/components/page-transition'
 import BartoszFooter from '@/components/bartosz/BartoszFooter'
 
 // Playfair Display - Luxury serif for headings
@@ -59,9 +58,7 @@ export default function RootLayout({
       <body className="antialiased">
         <SmoothScroll>
           <BartoszNavigation />
-          <PageTransition>
-            {children}
-          </PageTransition>
+          {children}
           <BartoszFooter />
         </SmoothScroll>
       </body>
