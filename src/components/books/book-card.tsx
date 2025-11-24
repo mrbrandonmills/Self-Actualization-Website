@@ -108,7 +108,7 @@ export function BookCard({ book, index }: BookCardProps) {
                 <div
                   className="w-16 h-px mx-auto"
                   style={{
-                    background: `linear-gradient(to right, transparent, ${bookColor.base}88, transparent)`
+                    background: `linear-gradient(to right, transparent, ${typeof bookColor === 'string' ? bookColor : bookColor.base}88, transparent)`
                   }}
                 />
                 <p className="font-sans text-sm md:text-base text-white/80 tracking-wide uppercase">

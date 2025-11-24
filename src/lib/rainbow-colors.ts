@@ -43,14 +43,22 @@ const COURSE_COLORS = [
  * Get unique color for book card based on index
  */
 export function getBookColor(index: number) {
-  return BOOK_COLORS[index % BOOK_COLORS.length]
+  const baseColor = BOOK_COLORS[index % BOOK_COLORS.length];
+  return {
+    base: baseColor,
+    glow: baseColor,
+  };
 }
 
 /**
  * Get unique color for course card based on index
  */
 export function getCourseColor(index: number) {
-  return COURSE_COLORS[index % COURSE_COLORS.length]
+  const baseColor = COURSE_COLORS[index % COURSE_COLORS.length];
+  return {
+    base: baseColor,
+    glow: baseColor,
+  };
 }
 
 /**
