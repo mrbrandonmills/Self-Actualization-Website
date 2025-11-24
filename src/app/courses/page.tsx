@@ -22,7 +22,7 @@ export default function CoursesPage() {
     : courses.filter(course => course.level === activeLevel)
 
   return (
-    <main className="min-h-screen bg-black text-white pt-24 pb-16">
+    <main className="min-h-screen pt-24 pb-16" style={{ background: '#EDE3D3', color: '#3A3A3A' }}>
       {/* Page header */}
       <section className="px-4 sm:px-6 lg:px-16 mb-12 md:mb-16">
         <motion.div
@@ -37,26 +37,29 @@ export default function CoursesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ color: '#3A3A3A' }}
           >
             Transformative{' '}
-            <span className="inline-block bg-gradient-to-r from-[#D4AF37] via-[#C9A050] to-[#B89040] bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-[#E8B4B8] via-[#D4A5A5] to-[#E8B4B8] bg-clip-text text-transparent">
               Courses
             </span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto font-light"
+            className="text-lg md:text-xl mb-8 max-w-2xl mx-auto font-light"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            style={{ color: '#6B7A7A' }}
           >
             Master the art of self-actualization
           </motion.p>
 
-          {/* Gold accent divider */}
+          {/* Pastel divider */}
           <motion.div
-            className="w-24 h-px bg-gradient-to-r from-transparent via-[#C9A050] to-transparent mx-auto mb-12"
+            className="w-24 h-px mx-auto mb-12"
+            style={{ background: 'linear-gradient(to right, transparent, #E8B4B8, transparent)' }}
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -76,14 +79,17 @@ export default function CoursesPage() {
                 <motion.button
                   key={level}
                   onClick={() => setActiveLevel(level)}
-                  className={`
-                    px-6 py-2.5 rounded-full text-sm font-medium tracking-wide
-                    transition-all duration-400 relative overflow-hidden
-                    ${isActive
-                      ? 'text-black'
-                      : 'text-gray-300 hover:text-white glass-button'
-                    }
-                  `}
+                  className="px-6 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-400 relative overflow-hidden"
+                  style={isActive ? {
+                    background: '#E8B4B8',
+                    color: '#3A3A3A',
+                    border: '2px solid rgba(212, 165, 165, 0.5)',
+                    boxShadow: '0 4px 12px rgba(232, 180, 184, 0.3)',
+                  } : {
+                    background: 'rgba(245, 239, 230, 0.6)',
+                    color: '#6B7A7A',
+                    border: '2px solid rgba(58, 58, 58, 0.1)',
+                  }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
@@ -94,34 +100,7 @@ export default function CoursesPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {/* Active background gradient */}
-                  {isActive && (
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] via-[#C9A050] to-[#B89040]"
-                      layoutId="activeLevel"
-                      transition={{
-                        type: 'spring',
-                        stiffness: 400,
-                        damping: 30
-                      }}
-                    />
-                  )}
-
-                  {/* Button text */}
                   <span className="relative z-10">{level}</span>
-
-                  {/* Hover glow effect */}
-                  {!isActive && (
-                    <motion.div
-                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                      initial={{ opacity: 0 }}
-                      whileHover={{
-                        opacity: 1,
-                        boxShadow: '0 0 20px rgba(201, 160, 80, 0.2)'
-                      }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
                 </motion.button>
               )
             })}
@@ -178,7 +157,7 @@ export default function CoursesPage() {
             <p className="text-xl text-gray-500 mb-4">No courses found at this level</p>
             <button
               onClick={() => setActiveLevel('All')}
-              className="px-6 py-3 rounded-full glass-button text-sm font-medium tracking-wide hover:text-[#C9A050] transition-colors duration-300"
+              className="px-6 py-3 rounded-full glass-button text-sm font-medium tracking-wide hover:text-[#8A9A5B] transition-colors duration-300"
             >
               View All Courses
             </button>
@@ -189,13 +168,13 @@ export default function CoursesPage() {
       {/* Bottom spacing */}
       <div className="h-16 md:h-24" />
 
-      {/* Decorative background elements */}
+      {/* Decorative background elements - Wes Anderson pastels */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
-        {/* Gold glow orbs */}
+        {/* Pastel glow orbs */}
         <motion.div
           className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(201, 160, 80, 0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(168, 197, 209, 0.12) 0%, transparent 70%)',
             filter: 'blur(80px)',
           }}
           animate={{
@@ -212,7 +191,7 @@ export default function CoursesPage() {
         <motion.div
           className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(201, 160, 80, 0.06) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(198, 120, 86, 0.1) 0%, transparent 70%)',
             filter: 'blur(80px)',
           }}
           animate={{
@@ -224,6 +203,24 @@ export default function CoursesPage() {
             duration: 25,
             repeat: Infinity,
             ease: 'linear'
+          }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/3 w-80 h-80 rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(244, 232, 193, 0.08) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+          animate={{
+            x: [0, -30, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: 'linear',
+            delay: 5
           }}
         />
       </div>

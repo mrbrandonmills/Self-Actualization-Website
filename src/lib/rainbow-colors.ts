@@ -76,6 +76,7 @@ export function getNavColor(route: string): string {
 /**
  * Generate gradient background for card
  */
-export function getCardGradient(color: { base: string; glow: string }) {
-  return `linear-gradient(135deg, ${color.base} 0%, ${color.base}dd 50%, ${color.base}aa 100%)`
+export function getCardGradient(color: string | { base: string; glow: string }) {
+  const baseColor = typeof color === 'string' ? color : color.base;
+  return `linear-gradient(135deg, ${baseColor} 0%, ${baseColor}dd 50%, ${baseColor}aa 100%)`
 }

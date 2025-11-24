@@ -1,67 +1,121 @@
 /**
  * Design Tokens for The Self Actualized Life
- * Museum-quality luxury design system
- * Inspired by Louis Vuitton, Hermès, Chanel, Gucci, and Apple
+ * Wes Anderson-Inspired Nature Aesthetic
+ * Warm pastels, organic animations, whimsical details
  */
 
 export const designTokens = {
-  // === COLOR PALETTE ===
+  // === HYPER-REALISTIC ULTRA-SATURATED COLOR PALETTE ===
   colors: {
-    // Core brand colors
-    black: '#000000',
+    // Base colors - warm and inviting
+    cream: '#F5EFE6',          // Vintage Paper - primary background
+    beige: '#EDE3D3',          // Warm Beige - secondary background
+    charcoal: '#3A3A3A',       // Soft charcoal for text (NOT pure black)
     white: '#FFFFFF',
 
-    // Gold accent - primary luxury accent
-    gold: {
-      DEFAULT: '#C9A050',
-      light: '#D4AF37',
-      dark: '#B89040',
-      muted: 'rgba(201, 160, 80, 0.6)',
-      50: 'rgba(201, 160, 80, 0.05)',
-      100: 'rgba(201, 160, 80, 0.10)',
-      200: 'rgba(201, 160, 80, 0.20)',
-      300: 'rgba(201, 160, 80, 0.30)',
-      400: 'rgba(201, 160, 80, 0.40)',
-      500: '#C9A050',
-      600: '#B89040',
-      700: '#A78030',
-      800: '#967020',
-      900: '#856010',
+    // === HYPER-SATURATED PRIMARY COLORS ===
+    hyperSaturated: {
+      electricGreen: { base: '#00FF41', light: '#66FF80', dark: '#00C933' },
+      vividSky: { base: '#00D4FF', light: '#66E6FF', dark: '#00A8CC' },
+      hotCoral: { base: '#FF3E5C', light: '#FF7089', dark: '#CC3149' },
+      sunshineYellow: { base: '#FFD700', light: '#FFE866', dark: '#CCAC00' },
+      deepViolet: { base: '#8B00FF', light: '#A966FF', dark: '#6B00CC' },
+      neonPink: { base: '#FF006E', light: '#FF66A3', dark: '#CC0058' },
+      orangeFlame: { base: '#FF6B00', light: '#FF9A66', dark: '#CC5500' },
+      turquoisePop: { base: '#00FFD4', light: '#66FFE5', dark: '#00CCA9' },
     },
 
-    // Grayscale with alpha transparency
-    gray: {
-      50: 'rgba(255, 255, 255, 0.05)',
-      100: 'rgba(255, 255, 255, 0.10)',
-      200: 'rgba(255, 255, 255, 0.20)',
-      300: 'rgba(255, 255, 255, 0.30)',
-      400: 'rgba(255, 255, 255, 0.40)',
-      500: 'rgba(255, 255, 255, 0.50)',
-      600: 'rgba(255, 255, 255, 0.60)',
-      700: 'rgba(255, 255, 255, 0.70)',
-      800: 'rgba(255, 255, 255, 0.80)',
-      900: 'rgba(255, 255, 255, 0.90)',
+    // === ULTRA-SATURATED RAINBOW PALETTE (for unique buttons/cards) ===
+    rainbow: {
+      // Book Card Colors (6 unique) - ULTRA-SATURATED
+      coralSunset: { base: '#FF3E5C', glow: 'rgba(255, 62, 92, 0.6)' },
+      lavenderDream: { base: '#8B00FF', glow: 'rgba(139, 0, 255, 0.6)' },
+      peachyKeen: { base: '#FF6B00', glow: 'rgba(255, 107, 0, 0.6)' },
+      oceanBreeze: { base: '#00D4FF', glow: 'rgba(0, 212, 255, 0.6)' },
+      mintFresh: { base: '#00FF41', glow: 'rgba(0, 255, 65, 0.6)' },
+      roseGarden: { base: '#FF006E', glow: 'rgba(255, 0, 110, 0.6)' },
+
+      // Course Card Colors (6 unique) - ULTRA-SATURATED
+      goldenHour: { base: '#FFD700', glow: 'rgba(255, 215, 0, 0.6)' },
+      violetSky: { base: '#8B00FF', glow: 'rgba(139, 0, 255, 0.6)' },
+      seafoam: { base: '#00FFD4', glow: 'rgba(0, 255, 212, 0.6)' },
+      cherryBlossom: { base: '#FF006E', glow: 'rgba(255, 0, 110, 0.6)' },
+      limeZest: { base: '#00FF41', glow: 'rgba(0, 255, 65, 0.6)' },
+      skyBlue: { base: '#00D4FF', glow: 'rgba(0, 212, 255, 0.6)' },
     },
 
-    // iOS 18 Liquid Glass Design System colors
-    glass: {
-      // Backgrounds
-      bg: 'rgba(255, 255, 255, 0.06)',
-      bgHover: 'rgba(255, 255, 255, 0.1)',
-      bgActive: 'rgba(255, 255, 255, 0.14)',
-      bgElevated: 'rgba(255, 255, 255, 0.08)',
+    // Navigation Link Colors (5 unique)
+    navColors: {
+      books: '#FF6B6B',        // coral
+      courses: '#FCD34D',      // golden
+      writingLab: '#67E8F9',   // ocean
+      blog: '#A78BFA',         // lavender
+      about: '#6EE7B7',        // mint
+    },
 
-      // Borders
-      border: 'rgba(255, 255, 255, 0.12)',
-      borderHover: 'rgba(255, 255, 255, 0.2)',
-      borderAccent: 'rgba(201, 160, 80, 0.3)',
-      borderSubtle: 'rgba(255, 255, 255, 0.08)',
+    // Wes Anderson Pastels
+    dustyRose: {
+      DEFAULT: '#E8B4B8',      // Primary dusty pink
+      light: '#F5D7DA',        // Lighter rose
+      dark: '#D4A5A5',         // Deeper rose
+      muted: 'rgba(232, 180, 184, 0.6)',
+    },
 
-      // Dark variants
-      dark: 'rgba(0, 0, 0, 0.6)',
-      panel: 'rgba(5, 5, 5, 0.9)',
-      navbar: 'rgba(0, 0, 0, 0.7)',
-      modal: 'rgba(10, 10, 10, 0.85)',
+    mintGreen: {
+      DEFAULT: '#B8D4C8',      // Primary mint/sage
+      light: '#D4E8DD',        // Lighter mint
+      dark: '#9EC5AB',         // Deeper sage
+      muted: 'rgba(184, 212, 200, 0.6)',
+    },
+
+    softYellow: {
+      DEFAULT: '#F4E8C1',      // Primary soft yellow
+      light: '#FFF8E7',        // Cream yellow
+      dark: '#E8D4A5',         // Golden yellow
+      muted: 'rgba(244, 232, 193, 0.6)',
+    },
+
+    mutedBlue: {
+      DEFAULT: '#A8C5D1',      // Primary muted blue
+      light: '#C5D8E0',        // Lighter blue
+      dark: '#8BABC1',         // Deeper blue
+      muted: 'rgba(168, 197, 209, 0.6)',
+    },
+
+    terracotta: {
+      DEFAULT: '#C67856',      // Primary terracotta
+      light: '#D89A7A',        // Lighter terracotta
+      dark: '#B85C3E',         // Deeper terracotta
+      muted: 'rgba(198, 120, 86, 0.6)',
+    },
+
+    // Nature-inspired greens (for grass, trees)
+    nature: {
+      grass: '#B8D4C8',        // Grass green
+      grassLight: '#C8E4D8',   // Light grass
+      grassDark: '#9EC5AB',    // Dark grass
+      forestGreen: '#6B8E7A',  // Forest
+      moss: '#8A9A7B',         // Moss green
+    },
+
+    // Sunlight colors
+    sunlight: {
+      golden: '#F4E8C1',       // Golden light
+      amber: '#E8D4A5',        // Amber glow
+      warmGlow: '#FFF8E7',     // Warm glow
+    },
+
+    // Water/River colors
+    water: {
+      river: '#A8C5D1',        // River blue
+      ripple: '#8BABC1',       // Deeper blue
+      mist: 'rgba(168, 197, 209, 0.3)',
+    },
+
+    // Vintage film grain overlay
+    vintage: {
+      grain: 'rgba(138, 120, 100, 0.03)',
+      sepia: 'rgba(232, 212, 180, 0.1)',
     },
   },
 
@@ -156,20 +210,22 @@ export const designTokens = {
       slow: 600,       // Complex animations
       slower: 800,     // Hero sections, page transitions
       slowest: 1000,   // Dramatic reveals
+      organic: 3000,   // Slow organic animations (grass sway, clouds)
+      ambient: 6000,   // Very slow ambient animations (sunlight pulse)
     },
 
     // Easing curves (as arrays for Framer Motion)
     easing: {
-      // Luxury easing - smooth and elegant (PRIMARY)
-      luxury: [0.22, 1, 0.36, 1],
-      // Apple-style easing - refined deceleration
-      apple: [0.16, 1, 0.3, 1],
+      // Whimsical easing - playful and organic
+      whimsical: [0.34, 1.2, 0.64, 1],
+      // Organic easing - natural and smooth
+      organic: [0.45, 0.05, 0.55, 0.95],
+      // Gentle easing - soft and calm
+      gentle: [0.22, 1, 0.36, 1],
       // Spring physics - bouncy effect
       spring: [0.34, 1.56, 0.64, 1],
-      // Sharp - precise and quick
-      sharp: [0.4, 0.0, 0.2, 1],
-      // Deceleration - smooth slow down
-      decel: [0.0, 0.0, 0.2, 1],
+      // Smooth - very smooth transitions
+      smooth: [0.4, 0.0, 0.2, 1],
     },
   },
 
@@ -185,30 +241,28 @@ export const designTokens = {
     full: '9999px',   // Pill shape
   },
 
-  // === SHADOWS ===
+  // === SOFT SHADOWS (Wes Anderson style - subtle, not harsh) ===
   shadows: {
-    // Standard shadows
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    // Soft vintage shadows
+    sm: '0 2px 4px 0 rgba(0, 0, 0, 0.08)',
+    md: '0 4px 8px -1px rgba(0, 0, 0, 0.12)',
+    lg: '0 8px 16px -2px rgba(0, 0, 0, 0.15)',
+    xl: '0 12px 24px -4px rgba(0, 0, 0, 0.18)',
+    '2xl': '0 20px 40px -8px rgba(0, 0, 0, 0.2)',
 
-    // Gold accent shadows
-    gold: {
-      sm: '0 2px 8px rgba(201, 160, 80, 0.15)',
-      md: '0 8px 16px rgba(201, 160, 80, 0.2)',
-      lg: '0 16px 32px rgba(201, 160, 80, 0.25)',
-      xl: '0 24px 48px rgba(201, 160, 80, 0.3)',
-      glow: '0 0 40px rgba(201, 160, 80, 0.15)',
+    // Pastel accent shadows
+    pastel: {
+      rose: '0 4px 12px rgba(232, 180, 184, 0.3)',
+      mint: '0 4px 12px rgba(184, 212, 200, 0.3)',
+      yellow: '0 4px 12px rgba(244, 232, 193, 0.3)',
+      blue: '0 4px 12px rgba(168, 197, 209, 0.3)',
+      terracotta: '0 4px 12px rgba(198, 120, 86, 0.3)',
     },
 
-    // Glass design system shadows
-    glass: {
-      default: '0 8px 32px rgba(0, 0, 0, 0.3)',
-      lg: '0 16px 48px rgba(0, 0, 0, 0.4)',
-      inner: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-      glow: '0 0 40px rgba(201, 160, 80, 0.15)',
+    // Soft inner shadows for depth
+    inner: {
+      soft: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)',
+      medium: 'inset 0 4px 8px rgba(0, 0, 0, 0.1)',
     },
   },
 
@@ -254,10 +308,10 @@ export const designTokens = {
 
   // === GRADIENTS ===
   gradients: {
-    // Gold gradients
-    gold: 'linear-gradient(135deg, #D4AF37 0%, #C9A050 50%, #B89040 100%)',
-    goldRadial: 'radial-gradient(circle, rgba(201, 160, 80, 0.3) 0%, transparent 70%)',
-    goldShine: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent)',
+    // Sage Garden gradients
+    sage: 'linear-gradient(135deg, #A8B88C 0%, #8A9A5B 50%, #6B7A3D 100%)',
+    sageRadial: 'radial-gradient(circle, rgba(138, 154, 91, 0.3) 0%, transparent 70%)',
+    sageShine: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent)',
 
     // Black fades
     blackFade: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%)',
@@ -436,25 +490,25 @@ export const animationPresets = {
   // Fast interactions (hover, clicks)
   fast: {
     duration: 0.2,
-    ease: designTokens.animation.easing.luxury,
+    ease: designTokens.animation.easing.gentle,
   },
 
   // Normal transitions (page elements)
   normal: {
     duration: 0.4,
-    ease: designTokens.animation.easing.luxury,
+    ease: designTokens.animation.easing.gentle,
   },
 
   // Slow, dramatic reveals
   slow: {
     duration: 0.8,
-    ease: designTokens.animation.easing.luxury,
+    ease: designTokens.animation.easing.gentle,
   },
 
   // Hero section animations
   hero: {
     duration: 1,
-    ease: designTokens.animation.easing.luxury,
+    ease: designTokens.animation.easing.gentle,
   },
 
   // Spring physics for bouncy effects

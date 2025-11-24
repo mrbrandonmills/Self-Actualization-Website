@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { Book } from '@/data/books'
 import { useState, useRef } from 'react'
+import { getBookColor, getCardGradient } from '@/lib/rainbow-colors'
 
 interface BookCardProps {
   book: Book
@@ -52,18 +53,9 @@ export function BookCard({ book, index }: BookCardProps) {
     y.set(0)
   }
 
-  // Generate gradient background for book cover (placeholder)
-  const getCoverGradient = () => {
-    const gradients = [
-      'linear-gradient(135deg, #000000 0%, #C9A050 100%)',
-      'linear-gradient(135deg, #1a1a1a 0%, #D4AF37 100%)',
-      'linear-gradient(135deg, #0a0a0a 0%, #B89040 100%)',
-      'linear-gradient(135deg, #000000 0%, #856010 100%)',
-      'linear-gradient(135deg, #1a1a1a 0%, #C9A050 100%)',
-      'linear-gradient(135deg, #0a0a0a 0%, #D4AF37 100%)',
-    ]
-    return gradients[index % gradients.length]
-  }
+  // Get unique rainbow color for this book
+  const bookColor = getBookColor(index)
+  const coverGradient = getCardGradient(bookColor)
 
   return (
     <motion.div
@@ -91,38 +83,44 @@ export function BookCard({ book, index }: BookCardProps) {
         >
           {/* Main card with 3D tilt */}
           <motion.div
-            className="relative h-full min-h-[500px] rounded-2xl overflow-hidden bg-black"
+            className="relative h-full min-h-[500px] rounded-2xl overflow-hidden"
             style={{
               rotateX,
               rotateY,
               transformStyle: 'preserve-3d',
+              background: '#EDE3D3',
             }}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Book cover with gradient placeholder */}
+            {/* Book cover with unique rainbow gradient - HYPER-SATURATED */}
             <motion.div
-              className="absolute inset-0 flex items-center justify-center p-8"
+              className="absolute inset-0 flex items-center justify-center p-8 hyper-realistic"
               style={{
-                background: getCoverGradient(),
+                background: coverGradient,
               }}
             >
               {/* Book title overlay on cover */}
               <div className="text-center space-y-4">
-                <h3 className="font-serif text-3xl md:text-4xl font-light text-white/90 tracking-tight">
+                <h3 className="font-serif text-3xl md:text-4xl font-light text-white/95 tracking-tight">
                   {book.title}
                 </h3>
-                <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#C9A050] to-transparent mx-auto" />
-                <p className="font-sans text-sm md:text-base text-white/70 tracking-wide uppercase">
+                <div
+                  className="w-16 h-px mx-auto"
+                  style={{
+                    background: `linear-gradient(to right, transparent, ${bookColor.base}88, transparent)`
+                  }}
+                />
+                <p className="font-sans text-sm md:text-base text-white/80 tracking-wide uppercase">
                   {book.subtitle}
                 </p>
               </div>
 
-              {/* Image zoom effect layer */}
+              {/* Image zoom effect layer - HYPER-SATURATED */}
               <motion.div
-                className="absolute inset-0"
+                className="absolute inset-0 hyper-realistic"
                 style={{
-                  background: getCoverGradient(),
+                  background: coverGradient,
                 }}
                 initial={{ scale: 1 }}
                 whileHover={{ scale: 1.08 }}
@@ -140,15 +138,15 @@ export function BookCard({ book, index }: BookCardProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
             </motion.div>
 
-            {/* Gold glow effect on hover */}
+            {/* ULTRA-SATURATED glow effect on hover */}
             <motion.div
               className="absolute inset-0 pointer-events-none rounded-2xl"
               initial={{ opacity: 0 }}
               animate={{
                 opacity: isHovered ? 1 : 0,
                 boxShadow: isHovered
-                  ? '0 0 40px rgba(201, 160, 80, 0.4), 0 0 80px rgba(201, 160, 80, 0.3), 0 0 120px rgba(201, 160, 80, 0.2)'
-                  : '0 0 0px rgba(201, 160, 80, 0)'
+                  ? `0 10px 40px ${bookColor.glow}, 0 20px 80px ${bookColor.glow}, 0 30px 120px ${bookColor.glow}`
+                  : `0 0 0px ${bookColor.glow}`
               }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             />
@@ -181,7 +179,10 @@ export function BookCard({ book, index }: BookCardProps) {
               {/* Price and CTA */}
               <div className="flex items-center justify-between">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-light text-[#C9A050]">
+                  <span
+                    className="text-2xl font-light"
+                    style={{ color: bookColor.base }}
+                  >
                     ${book.price}
                   </span>
                   <span className="text-sm text-gray-400">USD</span>
@@ -189,8 +190,15 @@ export function BookCard({ book, index }: BookCardProps) {
 
                 {/* View Details button */}
                 <motion.button
-                  className="px-6 py-2.5 rounded-full glass-button text-sm font-medium tracking-wide hover:text-[#C9A050] transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
+                  className="px-6 py-2.5 rounded-full glass-button text-sm font-medium tracking-wide transition-colors duration-300"
+                  style={{
+                    borderColor: `${bookColor.base}40`,
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: `${bookColor.base}20`,
+                    color: bookColor.base,
+                  }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -221,7 +229,7 @@ export function BookCard({ book, index }: BookCardProps) {
                 height="20"
                 viewBox="0 0 20 20"
                 fill="none"
-                className="text-[#C9A050]"
+                style={{ color: bookColor.base }}
               >
                 <path
                   d="M4 10h12M10 4l6 6-6 6"
@@ -236,7 +244,12 @@ export function BookCard({ book, index }: BookCardProps) {
             {/* Featured badge */}
             {book.featured && (
               <div className="absolute top-6 left-6 z-10">
-                <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#C9A050] text-black text-xs font-medium uppercase tracking-wider">
+                <div
+                  className="px-4 py-1.5 rounded-full text-white text-xs font-medium uppercase tracking-wider"
+                  style={{
+                    background: `linear-gradient(135deg, ${bookColor.base}, ${bookColor.base}dd)`
+                  }}
+                >
                   Featured
                 </div>
               </div>
@@ -245,7 +258,10 @@ export function BookCard({ book, index }: BookCardProps) {
             {/* Border gradient glow */}
             <div className="absolute inset-0 rounded-2xl border border-white/10 pointer-events-none" />
             <motion.div
-              className="absolute inset-0 rounded-2xl border border-[#C9A050]/30 pointer-events-none"
+              className="absolute inset-0 rounded-2xl border pointer-events-none"
+              style={{
+                borderColor: `${bookColor.base}30`,
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.4 }}

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingBag } from 'lucide-react'
 import { animationPresets, motionVariants } from '@/lib/design-tokens'
+import { getNavColor } from '@/lib/rainbow-colors'
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
@@ -73,9 +74,9 @@ export default function Navigation() {
               className="group relative flex items-center gap-3"
               aria-label="The Self Actualized Life Home"
             >
-              {/* Gold accent mark */}
+              {/* Sage accent mark */}
               <motion.div
-                className="w-1.5 h-10 bg-gradient-to-b from-[#C9A050] to-[#B89040] rounded-full"
+                className="w-1.5 h-10 bg-gradient-to-b from-[#8A9A5B] to-[#6B7A3D] rounded-full"
                 whileHover={{ scaleY: 1.2 }}
                 transition={animationPresets.fast}
               />
@@ -86,7 +87,7 @@ export default function Navigation() {
                   The Self Actualized Life
                 </span>
                 <motion.div
-                  className="h-px bg-gradient-to-r from-[#C9A050] to-transparent"
+                  className="h-px bg-gradient-to-r from-[#8A9A5B] to-transparent"
                   initial={{ width: 0 }}
                   animate={{ width: '100%' }}
                   transition={{ duration: 0.8, delay: 0.3 }}
@@ -96,40 +97,53 @@ export default function Navigation() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="group relative min-h-[44px] flex items-center"
-                >
-                  <span
-                    className={`text-sm font-sans tracking-wide transition-colors duration-300 ${
-                      pathname === link.href
-                        ? 'text-white'
-                        : 'text-white/60 hover:text-white'
-                    }`}
+              {navLinks.map((link) => {
+                const linkColor = getNavColor(link.href)
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="group relative min-h-[44px] flex items-center"
                   >
-                    {link.name}
-                  </span>
+                    <motion.span
+                      className={`text-sm font-sans tracking-wide transition-colors duration-300 ${
+                        pathname === link.href
+                          ? 'text-white'
+                          : 'text-white/60'
+                      }`}
+                      whileHover={{
+                        color: linkColor,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {link.name}
+                    </motion.span>
 
-                  {/* Gold underline animation */}
-                  <motion.div
-                    className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-[#C9A050] to-[#B89040]"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: '100%' }}
-                    transition={animationPresets.fast}
-                  />
-
-                  {/* Active indicator */}
-                  {pathname === link.href && (
+                    {/* Rainbow underline animation */}
                     <motion.div
-                      layoutId="activeNav"
-                      className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-[#C9A050] to-[#B89040]"
-                      transition={animationPresets.normal}
+                      className="absolute bottom-0 left-0 h-px"
+                      style={{
+                        background: `linear-gradient(to right, ${linkColor}, ${linkColor}88)`,
+                      }}
+                      initial={{ width: 0 }}
+                      whileHover={{ width: '100%' }}
+                      transition={animationPresets.fast}
                     />
-                  )}
-                </Link>
-              ))}
+
+                    {/* Active indicator */}
+                    {pathname === link.href && (
+                      <motion.div
+                        layoutId="activeNav"
+                        className="absolute bottom-0 left-0 right-0 h-px"
+                        style={{
+                          background: `linear-gradient(to right, ${linkColor}, ${linkColor}88)`,
+                        }}
+                        transition={animationPresets.normal}
+                      />
+                    )}
+                  </Link>
+                )
+              })}
 
               {/* Shopping Cart */}
               <motion.button
@@ -146,7 +160,7 @@ export default function Navigation() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                    className="absolute -top-1 -right-1 min-w-[20px] min-h-[20px] bg-[#C9A050] text-black text-xs font-medium rounded-full flex items-center justify-center px-1.5 shadow-lg"
+                    className="absolute -top-1 -right-1 min-w-[20px] min-h-[20px] bg-[#8A9A5B] text-white text-xs font-medium rounded-full flex items-center justify-center px-1.5 shadow-lg"
                   >
                     {cartItemCount}
                   </motion.span>
@@ -199,7 +213,8 @@ export default function Navigation() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={animationPresets.normal}
-              className="fixed inset-0 z-40 lg:hidden bg-black/40 backdrop-blur-sm"
+              className="fixed inset-0 z-40 lg:hidden backdrop-blur-sm"
+              style={{ background: 'rgba(58, 58, 58, 0.3)' }}
               onClick={() => setMobileMenuOpen(false)}
             />
 
@@ -250,11 +265,11 @@ export default function Navigation() {
                           {link.name}
                         </span>
 
-                        {/* Gold accent on active */}
+                        {/* Sage accent on active */}
                         {pathname === link.href && (
                           <motion.div
                             layoutId="activeMobileNav"
-                            className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-8 bg-gradient-to-b from-[#C9A050] to-[#B89040] rounded-full"
+                            className="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-8 bg-gradient-to-b from-[#8A9A5B] to-[#6B7A3D] rounded-full"
                           />
                         )}
                       </Link>
@@ -298,7 +313,7 @@ export default function Navigation() {
                   </div>
 
                   {cartItemCount > 0 && (
-                    <span className="relative min-w-[32px] h-8 bg-[#C9A050] text-black text-sm font-medium rounded-full flex items-center justify-center px-3 shadow-lg">
+                    <span className="relative min-w-[32px] h-8 bg-[#8A9A5B] text-white text-sm font-medium rounded-full flex items-center justify-center px-3 shadow-lg">
                       {cartItemCount}
                     </span>
                   )}
@@ -311,9 +326,9 @@ export default function Navigation() {
                   transition={{ duration: 0.8, delay: 0.8 }}
                   className="mt-auto pt-8 flex items-center justify-center gap-2"
                 >
-                  <div className="w-2 h-2 rounded-full bg-[#C9A050]/40" />
-                  <div className="w-2 h-2 rounded-full bg-[#C9A050]/60" />
-                  <div className="w-2 h-2 rounded-full bg-[#C9A050]" />
+                  <div className="w-2 h-2 rounded-full bg-[#8A9A5B]/40" />
+                  <div className="w-2 h-2 rounded-full bg-[#8A9A5B]/60" />
+                  <div className="w-2 h-2 rounded-full bg-[#8A9A5B]" />
                 </motion.div>
               </div>
             </motion.div>

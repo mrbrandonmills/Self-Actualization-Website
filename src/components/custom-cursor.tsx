@@ -204,7 +204,7 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Trail Effect - Gold glow halo with slow follow (0.3s delay) */}
+      {/* Trail Effect - Sage glow halo with slow follow (0.3s delay) */}
       <motion.div
         className="fixed top-0 left-0 w-16 h-16 pointer-events-none z-[9998]"
         style={{
@@ -217,7 +217,7 @@ export function CustomCursor() {
         <motion.div
           className="w-full h-full rounded-full"
           style={{
-            background: designTokens.gradients.goldRadial,
+            background: designTokens.gradients.sageRadial,
           }}
           animate={{
             scale: state.isHovering ? 1.5 : 1,
@@ -229,7 +229,7 @@ export function CustomCursor() {
         />
       </motion.div>
 
-      {/* Main Cursor Ring - Luxury gold with contextual sizing */}
+      {/* Main Cursor Ring - Luxury sage with contextual sizing */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] flex items-center justify-center"
         style={{
@@ -244,7 +244,7 @@ export function CustomCursor() {
         <motion.div
           className="rounded-full border-2 flex items-center justify-center"
           style={{
-            borderColor: designTokens.colors.gold.DEFAULT,
+            borderColor: '#8A9A5B', // sage green
           }}
           animate={{
             width: mainSize,
@@ -265,7 +265,7 @@ export function CustomCursor() {
               exit={{ opacity: 0, scale: 0.8 }}
               className="text-[10px] font-sans font-light tracking-widest uppercase whitespace-nowrap"
               style={{
-                color: designTokens.colors.gold.DEFAULT,
+                color: '#8A9A5B', // sage green
               }}
             >
               {state.cursorText}
@@ -282,7 +282,7 @@ export function CustomCursor() {
               initial={{ opacity: 0, rotate: -90 }}
               animate={{ opacity: 1, rotate: 0 }}
               style={{
-                color: designTokens.colors.gold.DEFAULT,
+                color: '#8A9A5B', // sage green
               }}
             >
               <path
@@ -303,7 +303,7 @@ export function CustomCursor() {
               animate={{ opacity: 1 }}
               className="text-xs"
               style={{
-                color: designTokens.colors.gold.DEFAULT,
+                color: '#8A9A5B', // sage green
               }}
             >
               ⟷
@@ -311,11 +311,11 @@ export function CustomCursor() {
           )}
         </motion.div>
 
-        {/* Gold Glow on Hover - Radial gradient halo */}
+        {/* Sage Glow on Hover - Radial gradient halo */}
         <motion.div
           className="absolute inset-0 rounded-full"
           style={{
-            background: designTokens.gradients.goldRadial,
+            background: designTokens.gradients.sageRadial,
           }}
           animate={{
             scale: state.isHovering ? 1.5 : 0,
@@ -371,20 +371,20 @@ export function CustomCursor() {
 
         /* Preserve focus indicators for accessibility (WCAG) */
         *:focus-visible {
-          outline: 2px solid ${designTokens.colors.gold.DEFAULT};
+          outline: 2px solid #8A9A5B;
           outline-offset: 4px;
           border-radius: 4px;
         }
 
         /* Luxury text selection */
         ::selection {
-          background-color: ${designTokens.colors.gold.DEFAULT};
-          color: ${designTokens.colors.black};
+          background-color: #8A9A5B;
+          color: #000000;
         }
 
         ::-moz-selection {
-          background-color: ${designTokens.colors.gold.DEFAULT};
-          color: ${designTokens.colors.black};
+          background-color: #8A9A5B;
+          color: #000000;
         }
 
         /* Smooth scrolling */

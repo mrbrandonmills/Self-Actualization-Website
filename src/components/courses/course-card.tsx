@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { Course } from '@/data/courses'
 import { useState, useRef } from 'react'
+import { getCourseColor, getCardGradient } from '@/lib/rainbow-colors'
 
 interface CourseCardProps {
   course: Course
@@ -52,18 +53,9 @@ export function CourseCard({ course, index }: CourseCardProps) {
     y.set(0)
   }
 
-  // Generate gradient background for course thumbnail (placeholder)
-  const getThumbnailGradient = () => {
-    const gradients = [
-      'linear-gradient(135deg, #000000 0%, #C9A050 100%)',
-      'linear-gradient(135deg, #1a1a1a 0%, #D4AF37 100%)',
-      'linear-gradient(135deg, #0a0a0a 0%, #B89040 100%)',
-      'linear-gradient(135deg, #000000 0%, #856010 100%)',
-      'linear-gradient(135deg, #1a1a1a 0%, #C9A050 100%)',
-      'linear-gradient(135deg, #0a0a0a 0%, #D4AF37 100%)',
-    ]
-    return gradients[index % gradients.length]
-  }
+  // Get unique rainbow color for this course
+  const courseColor = getCourseColor(index)
+  const thumbnailGradient = getCardGradient(courseColor)
 
   // Get level badge color
   const getLevelColor = () => {
@@ -83,27 +75,27 @@ export function CourseCard({ course, index }: CourseCardProps) {
   const getCourseIcon = () => {
     const icons = [
       // Lightbulb
-      <svg key="icon" className="w-16 h-16 text-[#C9A050]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg key="icon" className="w-16 h-16 text-[#8A9A5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
       </svg>,
       // Brain
-      <svg key="icon" className="w-16 h-16 text-[#C9A050]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg key="icon" className="w-16 h-16 text-[#8A9A5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>,
       // Star
-      <svg key="icon" className="w-16 h-16 text-[#C9A050]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg key="icon" className="w-16 h-16 text-[#8A9A5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
       </svg>,
       // Heart
-      <svg key="icon" className="w-16 h-16 text-[#C9A050]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg key="icon" className="w-16 h-16 text-[#8A9A5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
       </svg>,
       // Lightning
-      <svg key="icon" className="w-16 h-16 text-[#C9A050]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg key="icon" className="w-16 h-16 text-[#8A9A5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>,
       // Target
-      <svg key="icon" className="w-16 h-16 text-[#C9A050]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg key="icon" className="w-16 h-16 text-[#8A9A5B]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>,
     ]
@@ -136,35 +128,43 @@ export function CourseCard({ course, index }: CourseCardProps) {
         >
           {/* Main card with 3D tilt */}
           <motion.div
-            className="relative h-full min-h-[550px] rounded-2xl overflow-hidden bg-black"
+            className="relative h-full min-h-[550px] rounded-2xl overflow-hidden"
             style={{
               rotateX,
               rotateY,
               transformStyle: 'preserve-3d',
+              background: '#F5EFE6',
             }}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Course thumbnail with gradient placeholder */}
+            {/* Course thumbnail with unique rainbow gradient - HYPER-SATURATED */}
             <motion.div
-              className="absolute inset-0 flex items-center justify-center p-8"
+              className="absolute inset-0 flex items-center justify-center p-8 hyper-realistic"
               style={{
-                background: getThumbnailGradient(),
+                background: thumbnailGradient,
               }}
             >
               {/* Course icon overlay on thumbnail */}
               <div className="text-center space-y-6">
                 <div className="flex justify-center">
-                  {getCourseIcon()}
+                  <div style={{ color: `${courseColor.base}88` }}>
+                    {getCourseIcon()}
+                  </div>
                 </div>
-                <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#C9A050] to-transparent mx-auto" />
+                <div
+                  className="w-20 h-px mx-auto"
+                  style={{
+                    background: `linear-gradient(to right, transparent, ${courseColor.base}88, transparent)`
+                  }}
+                />
               </div>
 
-              {/* Image zoom effect layer */}
+              {/* Image zoom effect layer - HYPER-SATURATED */}
               <motion.div
-                className="absolute inset-0"
+                className="absolute inset-0 hyper-realistic"
                 style={{
-                  background: getThumbnailGradient(),
+                  background: thumbnailGradient,
                 }}
                 initial={{ scale: 1 }}
                 whileHover={{ scale: 1.08 }}
@@ -182,15 +182,15 @@ export function CourseCard({ course, index }: CourseCardProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent" />
             </motion.div>
 
-            {/* Gold glow effect on hover */}
+            {/* ULTRA-SATURATED glow effect on hover */}
             <motion.div
               className="absolute inset-0 pointer-events-none rounded-2xl"
               initial={{ opacity: 0 }}
               animate={{
                 opacity: isHovered ? 1 : 0,
                 boxShadow: isHovered
-                  ? '0 0 40px rgba(201, 160, 80, 0.4), 0 0 80px rgba(201, 160, 80, 0.3), 0 0 120px rgba(201, 160, 80, 0.2)'
-                  : '0 0 0px rgba(201, 160, 80, 0)'
+                  ? `0 10px 40px ${courseColor.glow}, 0 20px 80px ${courseColor.glow}, 0 30px 120px ${courseColor.glow}`
+                  : `0 0 0px ${courseColor.glow}`
               }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             />
@@ -260,7 +260,10 @@ export function CourseCard({ course, index }: CourseCardProps) {
                 transition={{ duration: 0.4 }}
               >
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-light text-[#C9A050]">
+                  <span
+                    className="text-3xl font-light"
+                    style={{ color: courseColor.base }}
+                  >
                     ${course.price}
                   </span>
                   <span className="text-sm text-gray-500">USD</span>
@@ -268,8 +271,15 @@ export function CourseCard({ course, index }: CourseCardProps) {
 
                 {/* Enroll Now button */}
                 <motion.button
-                  className="px-6 py-2.5 rounded-full glass-button text-sm font-medium tracking-wide hover:text-[#C9A050] transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
+                  className="px-6 py-2.5 rounded-full glass-button text-sm font-medium tracking-wide transition-colors duration-300"
+                  style={{
+                    borderColor: `${courseColor.base}40`,
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: `${courseColor.base}20`,
+                    color: courseColor.base,
+                  }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -287,11 +297,19 @@ export function CourseCard({ course, index }: CourseCardProps) {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs text-gray-500 uppercase tracking-widest">Progress</span>
-                    <span className="text-xs text-[#C9A050] font-medium">{course.progress}%</span>
+                    <span
+                      className="text-xs font-medium"
+                      style={{ color: courseColor.base }}
+                    >
+                      {course.progress}%
+                    </span>
                   </div>
                   <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-[#D4AF37] to-[#C9A050]"
+                      className="h-full"
+                      style={{
+                        background: `linear-gradient(to right, ${courseColor.base}dd, ${courseColor.base})`
+                      }}
                       initial={{ width: 0 }}
                       animate={{ width: `${course.progress}%` }}
                       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -316,7 +334,7 @@ export function CourseCard({ course, index }: CourseCardProps) {
                 height="20"
                 viewBox="0 0 20 20"
                 fill="none"
-                className="text-[#C9A050]"
+                style={{ color: courseColor.base }}
               >
                 <path
                   d="M4 10h12M10 4l6 6-6 6"
@@ -331,7 +349,12 @@ export function CourseCard({ course, index }: CourseCardProps) {
             {/* Featured badge */}
             {course.featured && (
               <div className="absolute top-6 left-6 z-10">
-                <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#C9A050] text-black text-xs font-medium uppercase tracking-wider">
+                <div
+                  className="px-4 py-1.5 rounded-full text-white text-xs font-medium uppercase tracking-wider"
+                  style={{
+                    background: `linear-gradient(135deg, ${courseColor.base}, ${courseColor.base}dd)`
+                  }}
+                >
                   Featured
                 </div>
               </div>
@@ -340,7 +363,10 @@ export function CourseCard({ course, index }: CourseCardProps) {
             {/* Border gradient glow */}
             <div className="absolute inset-0 rounded-2xl border border-white/10 pointer-events-none" />
             <motion.div
-              className="absolute inset-0 rounded-2xl border border-[#C9A050]/30 pointer-events-none"
+              className="absolute inset-0 rounded-2xl border pointer-events-none"
+              style={{
+                borderColor: `${courseColor.base}30`,
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.4 }}
