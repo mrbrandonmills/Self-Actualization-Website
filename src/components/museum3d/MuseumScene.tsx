@@ -1,11 +1,12 @@
 'use client'
 
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment } from '@react-three/drei'
-import { EffectComposer, Bloom, ChromaticAberration, DepthOfField } from '@react-three/postprocessing'
+import { Environment } from '@react-three/drei'
+import { EffectComposer, Bloom, ChromaticAberration, DepthOfField, Vignette } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import { WorkStop } from './stops/WorkStop'
-import { CameraFlight } from './CameraFlight'
+import { CinematicCamera } from './CinematicCamera'
+import { StopTransitions } from './StopTransitions'
 
 /**
  * MuseumScene - Main 3D museum journey container
@@ -38,35 +39,44 @@ export function MuseumScene() {
         {/* Fog for depth perception */}
         <fog attach="fog" args={['#031614', 10, 100]} />
 
-        {/* Lighting System */}
+        {/* Enhanced Cinematic Lighting System */}
 
-        {/* Ambient base light */}
-        <ambientLight intensity={0.2} />
+        {/* Ambient base light - darker for more drama */}
+        <ambientLight intensity={0.15} />
 
-        {/* Main museum spotlight */}
+        {/* Key Light - Main dramatic spotlight */}
         <spotLight
-          position={[5, 5, 5]}
-          intensity={2}
-          angle={0.3}
-          penumbra={0.5}
+          position={[8, 8, 5]}
+          intensity={3}
+          angle={0.4}
+          penumbra={0.6}
           castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-        />
-
-        {/* Rim lighting */}
-        <directionalLight
-          position={[-5, 5, -5]}
-          intensity={1}
+          shadow-mapSize-width={4096}
+          shadow-mapSize-height={4096}
+          shadow-bias={-0.0001}
           color="#ffffff"
         />
 
-        {/* Fill light */}
-        <pointLight
-          position={[0, 3, -5]}
-          intensity={0.5}
-          color="#C9A050"
+        {/* Rim Light - Edge definition */}
+        <directionalLight
+          position={[-8, 6, -5]}
+          intensity={1.5}
+          color="#8CB4D8"
         />
+
+        {/* Fill Light - Gold warmth */}
+        <pointLight
+          position={[0, 4, -5]}
+          intensity={0.8}
+          color="#C9A050"
+          distance={20}
+          decay={2}
+        />
+
+        {/* Accent Lights - Multiple colored accents throughout journey */}
+        <pointLight position={[5, 3, -20]} intensity={0.6} color="#E8C4A0" distance={15} />
+        <pointLight position={[-5, 3, -40]} intensity={0.6} color="#A0C8E8" distance={15} />
+        <pointLight position={[5, 3, -60]} intensity={0.6} color="#C9A050" distance={15} />
 
         {/* Environment Map - Museum hall HDRI */}
         <Environment
@@ -97,38 +107,41 @@ export function MuseumScene() {
         {/* <AboutStop position={[0, 2, -60]} /> */}
         {/* <ContactStop position={[0, 2, -70]} /> */}
 
-        {/* Camera Flight System */}
-        <CameraFlight />
+        {/* Cinematic Camera System */}
+        <CinematicCamera />
 
-        {/* Orbit Controls for development */}
-        <OrbitControls
-          enableDamping
-          dampingFactor={0.05}
-          maxDistance={20}
-          minDistance={3}
-        />
+        {/* Stop Transition Effects */}
+        <StopTransitions />
 
-        {/* Post-Processing Effects */}
-        <EffectComposer>
-          {/* Unreal Bloom */}
+        {/* Enhanced Post-Processing Effects */}
+        <EffectComposer multisampling={8}>
+          {/* Cinematic Bloom */}
           <Bloom
-            intensity={1.5}
-            luminanceThreshold={0.1}
+            intensity={2.0}
+            luminanceThreshold={0.2}
             luminanceSmoothing={0.9}
+            radius={0.8}
             blendFunction={BlendFunction.ADD}
           />
 
-          {/* Chromatic Aberration - Glass prism effect */}
+          {/* Subtle Chromatic Aberration */}
           <ChromaticAberration
-            offset={[0.002, 0.002]}
+            offset={[0.0015, 0.0015]}
             blendFunction={BlendFunction.NORMAL}
           />
 
-          {/* Depth of Field */}
+          {/* Cinematic Depth of Field */}
           <DepthOfField
-            focusDistance={0.01}
-            focalLength={0.02}
-            bokehScale={3}
+            focusDistance={0.015}
+            focalLength={0.03}
+            bokehScale={4}
+          />
+
+          {/* Film Vignette */}
+          <Vignette
+            offset={0.3}
+            darkness={0.6}
+            blendFunction={BlendFunction.NORMAL}
           />
         </EffectComposer>
       </Canvas>
