@@ -38,17 +38,11 @@ export function StopTransitions() {
 
   useFrame(() => {
     // Check if we're near any stop position
-    let nearStop = false
-    let stopIndex = -1
-
     for (let i = 0; i < STOP_POSITIONS.length; i++) {
       const stopPos = STOP_POSITIONS[i]
       const distance = Math.abs(scrollProgress - stopPos)
 
       if (distance < TRANSITION_THRESHOLD) {
-        nearStop = true
-        stopIndex = i
-
         // Trigger transition effect if not already triggered
         if (!triggeredStops.has(i)) {
           setTriggeredStops((prev) => new Set(prev).add(i))
