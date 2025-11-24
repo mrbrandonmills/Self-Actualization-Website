@@ -4,6 +4,7 @@ import { BookGallery } from '@/components/gallery/BookGallery'
 import { books } from '@/data/books'
 import { CustomCursor } from '@/components/bartosz/CustomCursor'
 import { VideoNoise } from '@/components/bartosz/VideoNoise'
+import { MuseumEntrance } from '@/components/museum/MuseumEntrance'
 
 /**
  * Books Catalog Page - Bartosz Dark + House of Corto Gallery
@@ -45,6 +46,9 @@ export default function BooksPage() {
           <div className="divider animate-fade-in" style={{ animationDelay: '0.3s' }} />
         </div>
       </section>
+
+      {/* Museum Entrance Portal */}
+      <MuseumEntrance />
 
       {/* Gallery Section */}
       <section className="section">
