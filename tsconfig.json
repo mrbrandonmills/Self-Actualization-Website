@@ -26,6 +26,8 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    // TODO: Re-enable in Phase 2-3 and fix all array access issues
+    // "noUncheckedIndexedAccess": true,
 
     // Advanced
     "isolatedModules": true,

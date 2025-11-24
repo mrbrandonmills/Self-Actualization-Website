@@ -29,18 +29,19 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Initialize Lenis smooth scroll with luxury settings
     const lenis = new Lenis({
-      duration: 0.8,                                    // Slow, elegant scrolling
+      duration: 1.2,                                    // Slow, elegant scrolling (workflow spec)
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration
       orientation: 'vertical',                          // Vertical scroll only
+      gestureOrientation: 'vertical',                   // Vertical gestures only
       smoothWheel: true,                                // Smooth wheel scrolling
-      wheelMultiplier: 1.2,                             // Increase scroll speed slightly
+      wheelMultiplier: 1,                               // Standard speed (workflow spec)
       touchMultiplier: 2,                               // Faster on mobile/touch
       infinite: false,                                  // No infinite scroll
     })
 
     // Integrate with Framer Motion for scroll-linked animations
     // This allows components to react to scroll position
-    function onScroll(_scroll: any) {
+    function onScroll() {
       // Custom scroll event handling can be added here
       // For example: updating a scroll progress indicator
     }

@@ -490,25 +490,25 @@ export const animationPresets = {
   // Fast interactions (hover, clicks)
   fast: {
     duration: 0.2,
-    ease: designTokens.animation.easing.gentle,
+    ease: designTokens.animation.easing.gentle as readonly [number, number, number, number],
   },
 
   // Normal transitions (page elements)
   normal: {
     duration: 0.4,
-    ease: designTokens.animation.easing.gentle,
+    ease: designTokens.animation.easing.gentle as readonly [number, number, number, number],
   },
 
   // Slow, dramatic reveals
   slow: {
     duration: 0.8,
-    ease: designTokens.animation.easing.gentle,
+    ease: designTokens.animation.easing.gentle as readonly [number, number, number, number],
   },
 
   // Hero section animations
   hero: {
     duration: 1,
-    ease: designTokens.animation.easing.gentle,
+    ease: designTokens.animation.easing.gentle as readonly [number, number, number, number],
   },
 
   // Spring physics for bouncy effects

@@ -11,8 +11,9 @@
         "varsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-explicit-any": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "react/no-unescaped-entities": "off"
+    "react/no-unescaped-entities": "off",
+    "no-console": ["warn", { "allow": ["warn", "error"] }]
   }
 }
