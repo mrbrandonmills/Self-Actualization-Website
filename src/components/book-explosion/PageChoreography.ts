@@ -122,6 +122,61 @@ export const pageChoreography: PageConfig[] = [
     endRot: [0, 1.2, 0.5],
     timing: { start: 0.5, end: 0.5 }
   },
+
+  // Page 11 - dramatic left sweep
+  {
+    id: 'page-11',
+    texture: '/books/blocks-a-b/page-11.jpg',
+    startPos: [0, 0, -1.0],
+    endPos: [-10, 3, 7],
+    startRot: [0, 0, 0],
+    endRot: [0.4, 0.7, 0.6],
+    timing: { start: 0.55, end: 0.95 }
+  },
+
+  // Page 12 - upward spiral
+  {
+    id: 'page-12',
+    texture: '/books/blocks-a-b/page-12.jpg',
+    startPos: [0, 0, -1.1],
+    endPos: [3, 10, 11],
+    startRot: [0, 0, 0],
+    endRot: [0.8, -0.3, 0.2],
+    timing: { start: 0.6, end: 0.9 }
+  },
+
+  // Page 13 - backward dive
+  {
+    id: 'page-13',
+    texture: '/books/blocks-a-b/page-13.jpg',
+    startPos: [0, 0, -1.2],
+    endPos: [-4, -2, -18],
+    startRot: [0, 0, 0],
+    endRot: [-0.5, -0.9, -0.4],
+    timing: { start: 0.65, end: 0.85 }
+  },
+
+  // Page 14 - right arc
+  {
+    id: 'page-14',
+    texture: '/books/blocks-a-b/page-14.jpg',
+    startPos: [0, 0, -1.3],
+    endPos: [9, 2, 13],
+    startRot: [0, 0, 0],
+    endRot: [0.2, -0.8, -0.3],
+    timing: { start: 0.7, end: 0.8 }
+  },
+
+  // Page 15 - final scatter
+  {
+    id: 'page-15',
+    texture: '/books/blocks-a-b/page-15.jpg',
+    startPos: [0, 0, -1.4],
+    endPos: [0, 6, 20],
+    startRot: [0, 0, 0],
+    endRot: [0.3, 1.5, 0.7],
+    timing: { start: 0.75, end: 1.0 }
+  },
 ]
 
 // Helper function to interpolate position/rotation
