@@ -1,383 +1,98 @@
 /**
- * WES ANDERSON-INSPIRED DESIGN SYSTEM
+ * BARTOSZ KOLENDA DESIGN SYSTEM
  *
- * Clean, professional, minimal CSS
- * NO WebGL, NO particle systems, NO oversaturated colors
- * Based on authentic Wes Anderson aesthetic
- *
- * Reference films: The Grand Budapest Hotel, Moonrise Kingdom,
- * The French Dispatch, Fantastic Mr. Fox
+ * Dark, sophisticated, museum-quality aesthetic
+ * Custom cursor, video noise, fluid typography
+ * Based on bartoszkolenda.com
  */
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
-
+/* Tailwind Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===== WES ANDERSON COLOR PALETTE ===== */
+/* Import Bartosz Foundation CSS System */
+@import '../styles/globals.css';
+
+/**
+ * Note: All design tokens, typography, layout, and components
+ * are now defined in the modular CSS system at src/styles/
+ *
+ * Files:
+ * - reset.css - Modern CSS reset
+ * - variables.css - Design tokens (colors, spacing, typography)
+ * - typography.css - Fluid clamp() type system
+ * - layout.css - Grid, containers, spacing utilities
+ * - components.css - Reusable component patterns
+ * - globals.css - Master import with global styles
+ */
+
+/* ========================================
+   NEXT.JS FONT VARIABLES
+   ======================================== */
+
+/* Override CSS variables with Next.js font variables */
 :root {
-  /* Primary Pastels */
-  --cream: #F5EFE6;
-  --beige: #EDE3D3;
-  --warm-white: #FAF7F0;
-
-  /* Accent Colors (muted, sophisticated) */
-  --yellow: #F4D35E;
-  --mustard: #E8B84E;
-  --green: #6B8E23;
-  --sage: #8A9A5B;
-  --mint: #A4C3A2;
-  --pink: #E8B4B8;
-  --rose: #D4A5A5;
-  --blush: #F2D7D5;
-  --sky: #A8C5D1;
-  --powder: #B5D3E7;
-  --red: #D4595C;
-  --brick: #C85A54;
-  --teal: #5EADB5;
-  --aqua: #7EC4CF;
-
-  /* Neutrals */
-  --charcoal: #3A3A3A;
-  --gray: #6B6B6B;
-  --light-gray: #C4C4C4;
-
-  /* Backgrounds */
-  --paper: #F8F5F0;
-  --canvas: #EFEBE3;
-
-  /* UI States */
-  --background: var(--cream);
-  --foreground: var(--charcoal);
-  --border: rgba(58, 58, 58, 0.15);
-  --muted: rgba(58, 58, 58, 0.5);
-
-  /* Shadows (soft, NOT harsh) */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
-
-  /* Hard shadows (Wes Anderson style) */
-  --shadow-hard-sm: 4px 4px 0 var(--charcoal);
-  --shadow-hard-md: 6px 6px 0 var(--charcoal);
-  --shadow-hard-lg: 8px 8px 0 var(--charcoal);
+  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-inter), 'Inter', -apple-system, sans-serif;
 }
 
-/* ===== BASE RESET ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ========================================
+   TAILWIND LAYER CUSTOMIZATIONS
+   ======================================== */
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100vw;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100vw;
-}
-
-/* ===== TYPOGRAPHY ===== */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0.05em;
-  text-align: center; /* Wes Anderson prefers centered text */
-}
-
-h1 {
-  font-size: clamp(2.5rem, 6vw, 6rem);
-}
-
-h2 {
-  font-size: clamp(2rem, 5vw, 3.75rem);
-}
-
-h3 {
-  font-size: clamp(1.5rem, 4vw, 3rem);
-}
-
-p {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--charcoal);
-}
-
-.font-serif {
-  font-family: 'Playfair Display', Georgia, serif;
-}
-
-.font-sans {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* ===== SELECTION COLOR ===== */
-::selection {
-  background-color: var(--yellow);
-  color: var(--charcoal);
-}
-
-::-moz-selection {
-  background-color: var(--yellow);
-  color: var(--charcoal);
-}
-
-/* ===== CUSTOM SCROLLBAR ===== */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--beige);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--sage);
-  border-radius: 5px;
-  border: 2px solid var(--cream);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--green);
-}
-
-/* ===== WES ANDERSON CARD STYLE ===== */
-.wa-card {
-  background: #FFFFFF;
-  border: 2px solid var(--charcoal);
-  padding: 2.5rem;
-  box-shadow: var(--shadow-hard-md);
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.wa-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-hard-lg);
-}
-
-/* ===== BUTTONS ===== */
-button,
-.btn {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid var(--charcoal);
-  background: var(--yellow);
-  color: var(--charcoal);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.875rem;
-}
-
-button:hover,
-.btn:hover {
-  background: var(--mustard);
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-hard-sm);
-}
-
-button:active,
-.btn:active {
-  transform: translate(0, 0);
-  box-shadow: none;
-}
-
-/* ===== LINKS ===== */
-a {
-  color: var(--charcoal);
-  text-decoration: none;
-  transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-a:hover {
-  color: var(--green);
-}
-
-/* ===== SIMPLE ANIMATIONS (NO COMPLEX 3D STUFF) ===== */
-
-/* Fade in */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Gentle float (for subtle motion) */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Ken Burns effect (for images) */
-@keyframes kenBurns {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.1);
-  }
-}
-
-.animate-kenBurns {
-  animation: kenBurns 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-/* ===== LAYOUT UTILITIES ===== */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.section {
-  padding: 4rem 0;
-}
-
-@media (min-width: 768px) {
-  .section {
-    padding: 6rem 0;
-  }
-}
-
-/* ===== SYMMETRICAL LAYOUTS (WES ANDERSON STYLE) ===== */
-.wa-center {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.wa-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-/* ===== DIVIDER ===== */
-.wa-divider {
-  height: 2px;
-  background: var(--charcoal);
-  margin: 3rem auto;
-  max-width: 200px;
-}
-
-/* ===== ACCESSIBILITY ===== */
-*:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 4px;
-  border-radius: 0;
-}
-
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* ===== REDUCED MOTION ===== */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ===== MOBILE OPTIMIZATIONS ===== */
-@media (max-width: 768px) {
-  body,
-  html {
-    overflow-x: hidden;
-    max-width: 100vw;
-  }
-
-  .container {
-    padding: 0 1rem;
-  }
-
-  .wa-card {
-    padding: 1.5rem;
-  }
-
-  /* Touch-friendly tap targets */
-  button,
-  a,
-  input {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Prevent iOS zoom */
-  input[type='email'],
-  input[type='text'],
-  input[type='password'],
-  textarea {
-    font-size: 16px;
-  }
-}
-
-/* ===== MOBILE TAP HIGHLIGHT ===== */
-* {
-  -webkit-tap-highlight-color: rgba(138, 154, 91, 0.2);
-}
-
-/* ===== LANDSCAPE MOBILE ===== */
-@media (max-width: 896px) and (orientation: landscape) {
-  .section {
-    padding: 2rem 0;
-  }
-}
-
-/* ===== SMALL DEVICES ===== */
-@media (max-width: 375px) {
-  .container {
-    padding: 0 1rem;
-  }
-
+@layer base {
+  /* Ensure body uses design system background */
   body {
-    font-size: 14px;
+    @apply bg-[var(--color-black-green)] text-[var(--color-text-primary)];
+  }
+}
+
+@layer components {
+  /* Museum room section - full viewport */
+  .museum-section {
+    @apply min-h-screen flex flex-col items-center justify-center p-8 md:p-16 relative;
+  }
+
+  /* Book pedestal wrapper */
+  .book-pedestal {
+    @apply relative transform-gpu transition-all duration-700;
+  }
+
+  /* Scroll reveal animation (via GSAP/Framer) */
+  .scroll-reveal {
+    @apply opacity-0 translate-y-10;
+  }
+
+  .scroll-reveal-active {
+    @apply opacity-100 translate-y-0;
+  }
+}
+
+@layer utilities {
+  /* Backdrop blur utilities matching design system */
+  .blur-bartosz {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Preserve 3D transforms */
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

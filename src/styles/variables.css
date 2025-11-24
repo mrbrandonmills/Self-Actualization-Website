@@ -1,0 +1,175 @@
+/**
+ * CSS Custom Properties - Bartosz Kolenda Design System
+ * Extracted from bartoszkolenda.com
+ */
+
+:root {
+  /* ========================================
+     COLORS - Dark Palette
+     ======================================== */
+
+  /* Primary Backgrounds */
+  --color-black-green: #05201f;      /* Deep forest - main background */
+  --color-dark-green: #0a2f2e;       /* Surface panels */
+  --color-deep-forest: #031614;      /* Darkest backgrounds */
+
+  /* Text Colors */
+  --color-creme: #c5d2b7;            /* Primary text - soft sage */
+  --color-text-primary: #c5d2b7;     /* Alias for creme */
+  --color-text-secondary: #8a9a7f;   /* Secondary text */
+  --color-text-tertiary: #5a6a4f;    /* Tertiary text */
+
+  /* Accent Colors */
+  --color-accent-gold: #C9A050;      /* Luxury gold highlights */
+  --color-accent-sage: #9db38a;      /* Sage green accent */
+
+  /* UI Elements */
+  --color-ui-border: rgba(197, 210, 183, 0.1);  /* Subtle borders */
+  --color-ui-hover: rgba(197, 210, 183, 0.05);  /* Hover states */
+  --color-ui-glass: rgba(10, 47, 46, 0.8);      /* Glass panels */
+
+
+  /* ========================================
+     TYPOGRAPHY - Fluid clamp() System
+     ======================================== */
+
+  /* Font Families */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Fluid Font Sizes - Mobile → Desktop */
+  --font-size-h1: clamp(2.5rem, 1.5rem + 2.5vw, 4.5rem);      /* 40px → 72px */
+  --font-size-h2: clamp(2rem, 1.25rem + 1.875vw, 3.5rem);     /* 32px → 56px */
+  --font-size-h3: clamp(1.75rem, 1.125rem + 1.563vw, 3rem);   /* 28px → 48px */
+  --font-size-h4: clamp(1.5rem, 1rem + 1.25vw, 2.5rem);       /* 24px → 40px */
+  --font-size-h5: clamp(1.25rem, 0.875rem + 0.938vw, 2rem);   /* 20px → 32px */
+  --font-size-body: clamp(1rem, 0.875rem + 0.313vw, 1.25rem); /* 16px → 20px */
+  --font-size-small: clamp(0.875rem, 0.813rem + 0.156vw, 1.125rem); /* 14px → 18px */
+  --font-size-xs: clamp(0.75rem, 0.688rem + 0.156vw, 0.875rem);     /* 12px → 14px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line Heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+
+  /* ========================================
+     SPACING - Consistent Scale
+     ======================================== */
+
+  --space-xs: 0.5rem;     /* 8px */
+  --space-sm: 1rem;       /* 16px */
+  --space-md: 1.5rem;     /* 24px */
+  --space-lg: 2rem;       /* 32px */
+  --space-xl: 3rem;       /* 48px */
+  --space-2xl: 4rem;      /* 64px */
+  --space-3xl: 6rem;      /* 96px */
+  --space-4xl: 8rem;      /* 128px */
+  --space-5xl: 12rem;     /* 192px */
+
+
+  /* ========================================
+     TRANSITIONS & ANIMATIONS
+     ======================================== */
+
+  /* Easing Functions */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --ease-smooth: cubic-bezier(0.65, 0.05, 0, 1);      /* Bartosz signature */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Duration */
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 735ms;  /* Bartosz timing */
+
+  /* Transition Presets */
+  --transition-base: var(--duration-normal) var(--ease-standard);
+  --transition-smooth: var(--duration-slower) var(--ease-smooth);
+  --transition-bounce: 600ms var(--ease-bounce);
+
+
+  /* ========================================
+     EFFECTS
+     ======================================== */
+
+  /* Backdrop Blur */
+  --blur-light: blur(10px);
+  --blur-medium: blur(20px);
+  --blur-heavy: blur(40px);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 40px rgba(201, 160, 80, 0.3);
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+
+  /* ========================================
+     LAYOUT
+     ======================================== */
+
+  /* Max Widths */
+  --max-width-sm: 640px;
+  --max-width-md: 768px;
+  --max-width-lg: 1024px;
+  --max-width-xl: 1280px;
+  --max-width-2xl: 1536px;
+  --max-width-full: 100%;
+
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+
+
+  /* ========================================
+     CUSTOM CURSOR
+     ======================================== */
+
+  /* Cursor Sizes */
+  --cursor-default: 20px;
+  --cursor-hover: 60px;
+  --cursor-inspect: 120px;
+
+
+  /* ========================================
+     NOISE OVERLAY
+     ======================================== */
+
+  --noise-opacity: 0.06;
+  --noise-blend-mode: overlay;
+}
