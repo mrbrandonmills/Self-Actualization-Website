@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { useLenisScroll } from '@/hooks/useLenisScroll'
-import { useRef, useState } from 'react'
+import { useRef, useState, useMemo } from 'react'
 import * as THREE from 'three'
 
 /**
@@ -21,20 +21,23 @@ export function StopTransitions() {
   const [triggeredStops, setTriggeredStops] = useState<Set<number>>(new Set())
   const particlesRef = useRef<THREE.Points>(null)
   const particleCount = 100
-  const positions = new Float32Array(particleCount * 3)
   const velocities = useRef(new Float32Array(particleCount * 3))
   const [transitionActive, setTransitionActive] = useState(false)
 
-  // Initialize particle positions
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 2
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 2
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 2
+  // Initialize particle positions and velocities with useMemo
+  const positions = useMemo(() => {
+    const pos = new Float32Array(particleCount * 3)
+    for (let i = 0; i < particleCount; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 2
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 2
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 2
 
-    velocities.current[i * 3] = (Math.random() - 0.5) * 0.1
-    velocities.current[i * 3 + 1] = (Math.random() - 0.5) * 0.1
-    velocities.current[i * 3 + 2] = (Math.random() - 0.5) * 0.1
-  }
+      velocities.current[i * 3] = (Math.random() - 0.5) * 0.1
+      velocities.current[i * 3 + 1] = (Math.random() - 0.5) * 0.1
+      velocities.current[i * 3 + 2] = (Math.random() - 0.5) * 0.1
+    }
+    return pos
+  }, [particleCount])
 
   useFrame(() => {
     // Check if we're near any stop position
@@ -79,9 +82,7 @@ export function StopTransitions() {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={particleCount}
-            array={positions}
-            itemSize={3}
+            args={[positions, 3]}
           />
         </bufferGeometry>
         <pointsMaterial
