@@ -1,0 +1,392 @@
+/**
+ * BookCard3D Styles
+ * Phase 3: Photorealistic 3D Book Cards
+ *
+ * CSS 3D transforms with preserve-3d
+ * Aged paper colors, realistic shadows, visible spine
+ */
+
+/* ========================================
+   CONTAINER & PERSPECTIVE
+   ======================================== */
+
+.bookCard3D {
+  /* Perspective creates 3D space */
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+
+  /* Container sizing */
+  position: relative;
+  display: inline-block;
+
+  /* Smooth transitions */
+  transition: transform 0.3s ease;
+}
+
+.bookCard3D:hover {
+  /* Lift card slightly on hover */
+  transform: translateY(-8px);
+}
+
+/* ========================================
+   BOOK CONTAINER (3D TRANSFORM SPACE)
+   ======================================== */
+
+.bookContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  /* CRITICAL: Preserve 3D transforms */
+  transform-style: preserve-3d;
+
+  /* Smooth rotation transitions */
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* GPU acceleration */
+  will-change: transform;
+  transform: rotateY(0deg) rotateX(0deg) scale(1);
+}
+
+.bookContainer.hovered {
+  /* Rotate book on hover (show spine + depth) */
+  transform: rotateY(-20deg) rotateX(5deg) scale(1.05);
+}
+
+/* ========================================
+   FRONT COVER
+   ======================================== */
+
+.bookCover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  /* Aged paper color */
+  background: #f8f4e8;
+
+  /* Rounded corners (book edges) */
+  border-radius: 4px;
+
+  /* 4-layer shadow system for realism */
+  box-shadow:
+    /* Ambient shadow (soft, large) */
+    0 30px 60px rgba(0, 0, 0, 0.25),
+    /* Direct shadow (sharp, close) */
+    0 15px 30px rgba(0, 0, 0, 0.2),
+    /* Edge shadow (right side depth) */
+    inset -6px 0 16px rgba(0, 0, 0, 0.15),
+    /* Top edge highlight */
+    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+
+  /* Position in 3D space (front) */
+  transform: translateZ(12px);
+
+  /* Preserve 3D for children */
+  transform-style: preserve-3d;
+
+  /* Prevent back showing through */
+  backface-visibility: hidden;
+}
+
+.coverImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.coverImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Cover texture overlay (aged/worn effect) */
+.coverOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(0, 0, 0, 0.05) 50%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Cover text (embossed title/author) */
+.coverText {
+  position: absolute;
+  bottom: 32px;
+  left: 24px;
+  right: 24px;
+  color: white;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.coverTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coverAuthor {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ========================================
+   SPINE (Right Edge, Rotated 90deg)
+   ======================================== */
+
+.bookSpine {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24px;
+  height: 100%;
+
+  /* Gradient for depth */
+  background: linear-gradient(
+    to right,
+    #e8e0cc 0%,
+    #d8d0bc 50%,
+    #c8c0ac 100%
+  );
+
+  /* Rotate 90deg to become spine */
+  transform: rotateY(90deg) translateX(12px);
+  transform-origin: right center;
+
+  /* Flex for centering text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Shadow for depth */
+  box-shadow:
+    inset -2px 0 4px rgba(0, 0, 0, 0.2),
+    inset 2px 0 4px rgba(0, 0, 0, 0.1);
+
+  /* Prevent back showing */
+  backface-visibility: hidden;
+}
+
+.spineText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  /* Truncate if too long */
+  max-height: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========================================
+   BACK COVER
+   ======================================== */
+
+.bookBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  /* Slightly darker aged paper */
+  background: #e8e0cc;
+  border-radius: 4px;
+
+  /* Rotate 180deg to be back */
+  transform: rotateY(180deg) translateZ(12px);
+
+  /* Shadow */
+  box-shadow:
+    inset 6px 0 16px rgba(0, 0, 0, 0.15),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+
+  backface-visibility: hidden;
+}
+
+.backTexture {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.02) 2px,
+    rgba(0, 0, 0, 0.02) 4px
+  );
+  opacity: 0.5;
+}
+
+/* ========================================
+   PAGE EDGES (Stacked Thickness)
+   ======================================== */
+
+.bookPages {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.pageEdge {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  /* Aged paper color (lighter than cover) */
+  background: #f8f8f0;
+
+  /* Right edge border (page separation lines) */
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+
+  /* Slight shadow on each page */
+  box-shadow:
+    1px 0 2px rgba(0, 0, 0, 0.05),
+    inset -1px 0 1px rgba(255, 255, 255, 0.3);
+
+  /* Transform applied via inline style (depth) */
+}
+
+/* ========================================
+   CORNER CURL (Top-Right)
+   ======================================== */
+
+.cornerCurl {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+
+  /* Triangle curl shape */
+  background: linear-gradient(
+    135deg,
+    transparent 50%,
+    rgba(0, 0, 0, 0.1) 50%
+  );
+
+  /* Position slightly above cover */
+  transform: translateZ(13px);
+
+  /* Border radius for corner */
+  border-top-right-radius: 4px;
+
+  pointer-events: none;
+  opacity: 0.6;
+
+  /* Hide when not hovered */
+  transition: opacity 0.3s ease;
+}
+
+.bookContainer:not(.hovered) .cornerCurl {
+  opacity: 0;
+}
+
+/* ========================================
+   METADATA (Below Book)
+   ======================================== */
+
+.bookMetadata {
+  margin-top: 24px;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.metaTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.metaAuthor {
+  font-size: 13px;
+  font-weight: 400;
+  color: #9ca3af;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metaPages {
+  font-size: 11px;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 0;
+  font-family: 'SF Mono', 'Courier New', monospace;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .bookCard3D {
+    /* Reduce perspective on mobile */
+    perspective: 800px;
+  }
+
+  .bookContainer.hovered {
+    /* Less dramatic rotation on mobile */
+    transform: rotateY(-15deg) rotateX(3deg) scale(1.03);
+  }
+
+  .coverTitle {
+    font-size: 20px;
+  }
+
+  .coverAuthor {
+    font-size: 12px;
+  }
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Force GPU acceleration */
+.bookContainer,
+.bookCover,
+.bookSpine,
+.bookBack,
+.bookPages {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .bookCard3D,
+  .bookContainer,
+  .cornerCurl {
+    transition: none;
+  }
+
+  .bookContainer.hovered {
+    transform: scale(1.05);
+  }
+}
