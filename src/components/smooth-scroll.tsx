@@ -27,40 +27,65 @@ import Lenis from 'lenis'
  */
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
-    // Initialize Lenis smooth scroll with luxury settings
-    const lenis = new Lenis({
-      duration: 1.2,                                    // Slow, elegant scrolling (workflow spec)
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration
-      orientation: 'vertical',                          // Vertical scroll only
-      gestureOrientation: 'vertical',                   // Vertical gestures only
-      smoothWheel: true,                                // Smooth wheel scrolling
-      wheelMultiplier: 1,                               // Standard speed (workflow spec)
-      touchMultiplier: 2,                               // Faster on mobile/touch
-      infinite: false,                                  // No infinite scroll
-    })
+    // Dynamically import GSAP ScrollTrigger for integration
+    let lenis: Lenis | null = null
+    let rafId: number
 
-    // Integrate with Framer Motion for scroll-linked animations
-    // This allows components to react to scroll position
-    function onScroll() {
-      // Custom scroll event handling can be added here
-      // For example: updating a scroll progress indicator
+    const initScroll = async () => {
+      // Import ScrollTrigger
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger')
+      const { gsap } = await import('gsap')
+
+      // Register ScrollTrigger
+      gsap.registerPlugin(ScrollTrigger)
+
+      // Initialize Lenis smooth scroll with luxury settings
+      lenis = new Lenis({
+        duration: 1.2,                                    // Slow, elegant scrolling (workflow spec)
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration
+        orientation: 'vertical',                          // Vertical scroll only
+        gestureOrientation: 'vertical',                   // Vertical gestures only
+        smoothWheel: true,                                // Smooth wheel scrolling
+        wheelMultiplier: 1,                               // Standard speed (workflow spec)
+        touchMultiplier: 2,                               // Faster on mobile/touch
+        infinite: false,                                  // No infinite scroll
+      })
+
+      // CRITICAL: Connect Lenis to GSAP ScrollTrigger
+      // This makes ScrollTrigger animations fire during Lenis smooth scroll
+      lenis.on('scroll', ScrollTrigger.update)
+
+      // Also bind ScrollTrigger callbacks to Lenis
+      gsap.ticker.add((time) => {
+        lenis?.raf(time * 1000)
+      })
+
+      // Disable GSAP's default lag smoothing (Lenis handles it)
+      gsap.ticker.lagSmoothing(0)
+
+      // Animation frame loop for 60fps smooth scrolling
+      function raf(time: number) {
+        lenis?.raf(time)
+        rafId = requestAnimationFrame(raf)
+      }
+
+      // Start the animation loop
+      rafId = requestAnimationFrame(raf)
+
+      // Force ScrollTrigger to recalculate after init
+      ScrollTrigger.refresh()
     }
 
-    lenis.on('scroll', onScroll)
-
-    // Animation frame loop for 60fps smooth scrolling
-    function raf(time: number) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
-    }
-
-    // Start the animation loop
-    const rafId = requestAnimationFrame(raf)
+    initScroll()
 
     // Cleanup function to prevent memory leaks
     return () => {
-      lenis.destroy()
-      cancelAnimationFrame(rafId)
+      if (lenis) {
+        lenis.destroy()
+      }
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
     }
   }, [])
 

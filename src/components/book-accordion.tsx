@@ -78,7 +78,8 @@ export function BookAccordion({
             start: 'top top',
             end: 'bottom bottom',
             scrub: 0.5, // Tighter scrub for more responsiveness
-            // markers: true, // Uncomment for debugging
+            markers: true, // DEBUG: See if ScrollTrigger is working
+            id: `page-${index}`,
           },
           // Fly DEEP back in Z-space
           z: -index * depthPerPage,
