@@ -62,29 +62,43 @@ export function BookAccordion({
       // Alternate rotation left/right for asymmetry
       const rotationDirection = index % 2 === 0 ? 1 : -1
 
-      gsap.to(page, {
-        scrollTrigger: {
-          trigger: container,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1, // Smooth 1-second lag
-          // markers: true, // Debug markers
+      gsap.fromTo(
+        page,
+        {
+          // Start position (all stacked)
+          z: 0,
+          rotateX: 0,
+          rotateY: 0,
+          scale: 1,
+          opacity: 1,
         },
-        // Fly back in Z-space
-        z: -index * depthPerPage,
+        {
+          scrollTrigger: {
+            trigger: container,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.5, // Tighter scrub for more responsiveness
+            // markers: true, // Uncomment for debugging
+          },
+          // Fly DEEP back in Z-space
+          z: -index * depthPerPage,
 
-        // Subtle X rotation (tilt up/down)
-        rotateX: index * 3,
+          // More dramatic X rotation (tilt)
+          rotateX: index * 5,
 
-        // Asymmetric Y rotation (alternate left/right)
-        rotateY: rotationDirection * index * rotationIntensity,
+          // DRAMATIC asymmetric Y rotation (like Kasane)
+          rotateY: rotationDirection * index * rotationIntensity,
 
-        // Slight scale down as they recede
-        scale: 1 - index * 0.02,
+          // Scale down as they recede (creates depth)
+          scale: 1 - index * 0.05,
 
-        // No easing (linear with scroll)
-        ease: 'none',
-      })
+          // Fade slightly as they go deep
+          opacity: Math.max(0.3, 1 - index * 0.04),
+
+          // Linear with scroll
+          ease: 'none',
+        }
+      )
     })
 
     // Cleanup ScrollTrigger instances
