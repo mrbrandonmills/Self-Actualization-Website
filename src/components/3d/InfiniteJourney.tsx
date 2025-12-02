@@ -10,7 +10,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import { SelfActualizationJourney } from './SelfActualizationJourney';
+import { BookDoorsJourney } from './BookDoorsJourney';
 
 interface InfiniteJourneyProps {
   scrollProgress: number;
@@ -262,21 +262,18 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
 
   return (
     <>
-      {/* Narrative-driven book journey with three-act structure */}
-      <SelfActualizationJourney scrollProgress={scrollProgress} />
+      {/* Books opening like elevator doors - clean and cinematic */}
+      <BookDoorsJourney scrollProgress={scrollProgress} />
 
-      {/* Floating landmarks */}
-      <FloatingLandmarks speed={speed} />
-
-      {/* Background stars */}
+      {/* Background stars - subtle */}
       <Stars
         radius={100}
         depth={100}
-        count={10000}
-        factor={6}
+        count={5000}
+        factor={4}
         saturation={0}
         fade
-        speed={speed * 5}
+        speed={1}
       />
     </>
   );
