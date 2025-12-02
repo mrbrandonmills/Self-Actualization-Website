@@ -10,6 +10,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Stars } from '@react-three/drei';
 import * as THREE from 'three';
+import { SelfActualizationJourney } from './SelfActualizationJourney';
 
 interface InfiniteJourneyProps {
   scrollProgress: number;
@@ -229,8 +230,6 @@ function FloatingLandmarks({ speed }: { speed: number }) {
 }
 
 export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
-  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
-
   // Speed control - hold mouse to go faster
   const [speed, setSpeed] = useState(0);
   const [isAccelerating, setIsAccelerating] = useState(false);
@@ -254,37 +253,17 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
     };
   }, []);
 
-  // Calculate current zone based on scroll
-  const currentZone = Math.floor(scrollProgress * 10);
-
-  useFrame(({ clock }) => {
+  useFrame(() => {
     // Smooth speed interpolation
     const targetSpeed = isAccelerating ? 1 : 0.3;
     const newSpeed = speed + (targetSpeed - speed) * 0.05;
     setSpeed(newSpeed);
-
-    // Dynamic FOV based on speed
-    if (cameraRef.current) {
-      const targetFov = 75 + newSpeed * 40; // 75 to 115
-      cameraRef.current.fov += (targetFov - cameraRef.current.fov) * 0.1;
-      cameraRef.current.updateProjectionMatrix();
-    }
   });
 
   return (
     <>
-      <PerspectiveCamera
-        ref={cameraRef}
-        makeDefault
-        position={[0, 0, 10]}
-        fov={75}
-      />
-
-      {/* Flying character */}
-      <FlyingCharacter speed={speed} />
-
-      {/* Infinite particle tunnel */}
-      <InfiniteTunnel speed={speed} zone={currentZone} />
+      {/* Narrative-driven book journey with three-act structure */}
+      <SelfActualizationJourney scrollProgress={scrollProgress} />
 
       {/* Floating landmarks */}
       <FloatingLandmarks speed={speed} />
@@ -299,10 +278,6 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
         fade
         speed={speed * 5}
       />
-
-      {/* Lighting */}
-      <ambientLight intensity={0.3} />
-      <pointLight position={[0, 0, 15]} intensity={2} color="#FFFFFF" distance={50} decay={2} />
     </>
   );
 }
