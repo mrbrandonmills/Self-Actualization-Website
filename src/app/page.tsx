@@ -22,44 +22,44 @@ const narrativeOverlays = [
   {
     scrollStart: 0.0,
     scrollEnd: 0.12,
-    title: 'THE JOURNEY BEGINS',
-    subtitle: 'Random Acts of Self-Actualization',
-    description: 'Scroll to fly through 87 pages of transformation.',
+    title: 'WELCOME',
+    subtitle: 'To The Laboratory of Life',
+    description: 'Where self-actualization meets scientific experimentation.',
   },
   {
     scrollStart: 0.15,
     scrollEnd: 0.28,
     title: 'BUILDING BLOCK A',
     subtitle: 'Foundation of Awareness',
-    description: 'Watch as pages spiral through space, each one a step toward understanding.',
+    description: 'The first principles of understanding yourself.',
   },
   {
     scrollStart: 0.3,
     scrollEnd: 0.45,
     title: 'BUILDING BLOCK B',
     subtitle: 'Patterns of Growth',
-    description: 'Multi-dimensional wisdom rotating before your eyes.',
+    description: 'Recognizing the systems that shape your reality.',
   },
   {
     scrollStart: 0.48,
     scrollEnd: 0.62,
     title: 'THE LABORATORY',
     subtitle: 'Block C: Where Theory Meets Practice',
-    description: 'Flying through the experiments that change everything.',
+    description: 'Conducting experiments on your own life.',
   },
   {
     scrollStart: 0.65,
     scrollEnd: 0.78,
     title: 'INTEGRATION',
-    subtitle: 'All Blocks Converge',
-    description: 'As pages align, so does your understanding.',
+    subtitle: 'All Blocks Working Together',
+    description: 'When awareness, patterns, and practice align.',
   },
   {
     scrollStart: 0.8,
     scrollEnd: 0.95,
     title: 'SELF-ACTUALIZATION',
-    subtitle: 'The Complete Trilogy',
-    description: 'You\'ve witnessed all 87 pages. Now, begin your own journey.',
+    subtitle: 'Becoming Your Own Experiment',
+    description: 'The laboratory is your life. The scientist is you.',
   },
 ];
 
@@ -149,18 +149,18 @@ export default function HomePage() {
         <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f0] via-[#faf8f5] to-[var(--bg-primary)]">
           <div className="max-w-3xl text-center px-6 pointer-events-auto">
             <h2 className="text-5xl font-bold text-[var(--olive-dark)] mb-8">
-              Your Journey Through 87 Pages
+              Welcome to The Laboratory of Life
             </h2>
             <p className="text-2xl text-[var(--olive-dark)]/70 mb-12 leading-relaxed">
-              You've witnessed all three Building Blocks flying through space.
+              Where self-actualization meets scientific experimentation.
               <br />
-              Now it's time to dive deeper into the transformative process.
+              Your life is the lab. You are the scientist.
             </p>
             <a
               href="#process"
               className="inline-block px-8 py-4 bg-gradient-to-r from-[var(--accent-warm)] via-[#d4a574] to-[var(--accent-warm)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg text-white font-semibold shadow-2xl hover:shadow-[0_0_40px_rgba(196,163,90,0.6)] transition-all duration-500"
             >
-              Begin Your Transformation →
+              Enter The Laboratory →
             </a>
           </div>
         </section>
