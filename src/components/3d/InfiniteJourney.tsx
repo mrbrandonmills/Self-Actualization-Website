@@ -10,7 +10,7 @@ import React, { useRef, useMemo, useState, useEffect, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Stars, ScrollControls, Scroll, Preload } from '@react-three/drei';
 import * as THREE from 'three';
-import { HorizontalBookPages } from './HorizontalBookGallery';
+import { RotatingBooksJourney } from './RotatingBooksJourney';
 
 interface InfiniteJourneyProps {
   scrollProgress: number;
@@ -261,13 +261,20 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
   });
 
   return (
-    <Suspense fallback={null}>
-      <ScrollControls horizontal damping={4} pages={5} distance={1}>
-        <Scroll>
-          <HorizontalBookPages />
-        </Scroll>
-      </ScrollControls>
-      <Preload />
-    </Suspense>
+    <>
+      {/* Books rotating in 3D space - KASANÉ keyboard style */}
+      <RotatingBooksJourney scrollProgress={scrollProgress} />
+
+      {/* Subtle stars in background */}
+      <Stars
+        radius={100}
+        depth={50}
+        count={3000}
+        factor={3}
+        saturation={0}
+        fade
+        speed={0.5}
+      />
+    </>
   );
 }
