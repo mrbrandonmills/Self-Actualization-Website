@@ -1,0 +1,238 @@
+# Ghost Fade UX — Project Configuration
+# Infrastructure-ready spec for AI orchestrator system
+
+id: self-actualization-website-ghost-fade
+name: "Self-Actualization Website – Ghost Fade UX R&D"
+owner: "Brandon"
+status: "research"
+version: "0.1.0-alpha"
+
+# Project Overview
+description: |
+  Award-winning scroll animation system (Ghost Fade / Multi-State Visual Convergence)
+  for luxury Self-Actualization brand. Combines GSAP, View Transitions API, and WebGPU
+  particles to create scroll experiences worthy of CSS Design Awards + Awwwards.
+
+# Technical Layers (Progressive Enhancement)
+layers:
+  - id: l1_gsap
+    name: "GSAP Baseline"
+    description: "Scroll-driven 3D transformations with multi-state visual convergence"
+    tech_stack:
+      - GSAP + ScrollTrigger
+      - CSS 3D Transforms
+      - Lenis Smooth Scroll
+    browser_support: "95% (all modern browsers)"
+    performance_target: "60 FPS desktop, 56 FPS mobile"
+    status: "prototype"
+    priority: "P0"
+    experimental: false
+
+  - id: l2_view_transitions
+    name: "View Transitions API"
+    description: "Instant page/section transitions with scroll-driven progress"
+    tech_stack:
+      - View Transitions API (document.startViewTransition)
+      - CSS Scroll-Driven Animations
+      - Feature detection + Safari fallback
+    browser_support: "85% (Chrome 140+, Firefox 144+, Safari fallback)"
+    performance_target: "60 FPS desktop, 53 FPS mobile"
+    status: "prototype"
+    priority: "P0"
+    experimental: false
+
+  - id: l3_particles_webgpu
+    name: "WebGPU Particle System"
+    description: "25k-100k scroll-reactive particles using compute shaders"
+    tech_stack:
+      - Three.js WebGPURenderer
+      - TSL (Three Shading Language)
+      - Compute shaders
+      - WebGL fallback
+    browser_support: "50% WebGPU experimental, 100% WebGL fallback"
+    performance_target: "60 FPS desktop (100k particles), 45 FPS mobile (10k particles)"
+    status: "prototype"
+    priority: "P1"
+    experimental: false
+
+  - id: l3_raymarch_sdf
+    name: "Ray Marching SDF (Alternative to particles)"
+    description: "Shape morphing using signed distance fields and ray marching"
+    tech_stack:
+      - Custom GLSL fragment shaders
+      - Glslify SDF libraries
+      - Ray marching algorithm
+    browser_support: "100%"
+    performance_target: "52 FPS desktop, 35 FPS mobile"
+    status: "experimental"
+    priority: "P2"
+    experimental: true
+
+  - id: l4_nn_scroll_prediction
+    name: "Neural Network Scroll Prediction"
+    description: "LSTM model predicts scroll position for anticipatory UI"
+    tech_stack:
+      - TensorFlow.js
+      - LSTM architecture
+      - Web Workers
+    browser_support: "100%"
+    performance_target: "58 FPS desktop, 48 FPS mobile"
+    status: "experimental"
+    priority: "P3"
+    experimental: true
+
+# Chosen Implementation Path
+chosen_option: "D"
+chosen_description: "Balanced Approach — Layers 1 + 2 + 3A (GSAP + View Transitions + Particles)"
+chosen_rationale: |
+  Option D provides the best balance of innovation and performance:
+  - Layer 1 (GSAP) guarantees 60 FPS baseline
+  - Layer 2 (View Transitions) adds cutting-edge Interop 2025 tech
+  - Layer 3A (WebGPU Particles) provides visual "wow factor"
+  - Skips Layer 4 (Neural Network) to avoid scope creep
+  - Timeline: 3 weeks (reasonable)
+  - Award potential: ⭐⭐⭐⭐⭐ (very high)
+
+# Directory Structure
+directories:
+  experiments_dir: "experiments"  # Technical R&D spikes (GSAP, View Transitions, WebGPU)
+  design_prototypes_dir: "src/prototypes"  # Design system reference (colors, modules, patterns)
+  src_dir: "src"
+  docs_dir: "docs"
+  benchmarks_dir: "benchmarks"
+  public_dir: "public"
+
+# Performance Targets (All Layers Combined)
+performance:
+  desktop:
+    target_fps: 60
+    minimum_fps: 55
+    bundle_size_max: "500KB"
+  mobile:
+    target_fps: 45
+    minimum_fps: 40
+    bundle_size_max: "350KB"
+  load_time:
+    target_4g: "3s"
+    target_wifi: "1.5s"
+
+# Browser Compatibility
+browser_compatibility:
+  chrome: "120+"
+  firefox: "144+"
+  safari: "16+ (with fallbacks)"
+  edge: "120+"
+  mobile_safari: "16+"
+  chrome_mobile: "120+"
+
+# Award Submission Goals
+awards:
+  target_score: "8.8-9.2 / 10"
+  submission_targets:
+    - CSS Design Awards (CSSDA)
+    - Awwwards
+  submission_timeline: "Q2 2025"
+  scoring_breakdown:
+    innovation: "30%"
+    aesthetics: "25%"
+    usability: "20%"
+    creativity: "15%"
+    content: "10%"
+
+# Allowed Technologies (Locked)
+allowed_tech:
+  animation:
+    - GSAP
+    - View Transitions API
+    - Scroll-Driven Animations
+  rendering:
+    - CSS 3D Transforms
+    - WebGPU (with WebGL fallback)
+    - Three.js (2024+ TSL features)
+  ai_ml:
+    - TensorFlow.js (Layer 4 experiments only)
+  utilities:
+    - Lenis (smooth scroll)
+    - React (Next.js 15)
+    - TypeScript
+
+# Banned Behaviors (Enforced)
+banned_behaviors:
+  - "Misusing physics terminology (quantum, entanglement, etc.)"
+  - "Proposing impossible browser tech"
+  - "Suggesting experimental APIs without fallback plans"
+  - "Rewriting full architectures unnecessarily"
+  - "File-vomiting or hallucinating new directories"
+  - "Building production site before Mac mini ready"
+  - "Mixing layers prematurely"
+
+# Current Phase
+current_phase: "R&D + Prototyping"
+phase_description: |
+  Building isolated prototype spikes for each layer. NOT integrating into
+  production codebase yet. Waiting for Mac mini infrastructure.
+
+# Timeline (Before Mac Mini)
+timeline_pre_mac:
+  - task: "Create vision doc"
+    status: "✅ Complete"
+    date: "2025-01-25"
+  - task: "Organize repo structure"
+    status: "✅ Complete"
+    date: "2025-01-25"
+  - task: "Create project.yaml"
+    status: "🔄 In Progress"
+    date: "2025-01-25"
+  - task: "Create performance benchmarks"
+    status: "⏳ Pending"
+  - task: "Build GSAP prototype"
+    status: "⏳ Pending"
+  - task: "Build View Transitions prototype"
+    status: "⏳ Pending"
+  - task: "Build WebGPU particles prototype"
+    status: "⏳ Pending"
+
+# Timeline (After Mac Mini)
+timeline_post_mac:
+  - task: "Integrate prototypes into production"
+    status: "⏳ Blocked (waiting for Mac mini)"
+  - task: "Add luxury design polish"
+    status: "⏳ Blocked (waiting for Mac mini)"
+  - task: "Performance optimization"
+    status: "⏳ Blocked (waiting for Mac mini)"
+  - task: "Award submission assets"
+    status: "⏳ Blocked (waiting for Mac mini)"
+  - task: "Deploy to production"
+    status: "⏳ Blocked (waiting for Mac mini)"
+
+# Ecosystem Integration
+ecosystem:
+  current_project: "Luxury Book Museum (Blocks A & B showcase)"
+  future_projects:
+    - "Therapist Tools Dashboard (Q2 2025)"
+    - "AI Concierge Interface (Q3 2025)"
+    - "Luxury Product Showcases (Q4 2025)"
+  reusable_components:
+    - "Ghost Fade Component Library"
+    - "Luxury Design System"
+    - "Performance Monitoring Utils"
+
+# Notes for AI Orchestrator
+ai_orchestrator_notes: |
+  This project defines the visual design language for the entire
+  Self-Actualization brand. Ghost Fade will become a reusable skeleton
+  for future luxury websites, therapist dashboards, and AI interfaces.
+
+  When the Mac mini infrastructure is ready, this project will integrate
+  into the agent-orchestrator system for parallel development, testing,
+  and deployment.
+
+  Until then, maintain strict isolation of prototypes and do NOT build
+  production code.
+
+# Metadata
+created: "2025-01-25"
+last_updated: "2025-01-25"
+maintainers:
+  - "Brandon (Product Owner)"
+  - "Claude (R&D Engineer)"

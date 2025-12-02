@@ -1,0 +1,323 @@
+/* ==================================
+   Layer 1: REFINED Styles
+   Full Ghost Fade Convergence
+   ================================== */
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* FIXED: Allow scrolling */
+html {
+  min-height: 100%;
+  width: 100%;
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto; /* EXPLICITLY enable vertical scroll */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #0A0A0A;
+  color: #F5F5F5;
+}
+
+/* Scroll Spacer (creates scroll distance) */
+.scroll-spacer {
+  height: 500vh; /* 500% of viewport height */
+  pointer-events: none;
+  position: relative;
+  background: linear-gradient(to bottom,
+    rgba(212, 175, 55, 0.03) 0%,
+    rgba(212, 175, 55, 0.01) 50%,
+    rgba(212, 175, 55, 0.03) 100%
+  );
+}
+
+/* Scroll Markers */
+.scroll-markers {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scroll-marker {
+  position: absolute;
+  right: 0;
+  background: rgba(212, 175, 55, 0.9);
+  color: #0A0A0A;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+  border: 2px solid #D4AF37;
+}
+
+/* Scroll Progress Indicator */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 10000;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #D4AF37 0%, #F4D03F 100%);
+  transition: width 0.05s linear;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.progress-text {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #D4AF37;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: 4px;
+  border: 2px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* 3D Stage (fixed viewport) */
+.stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1500px; /* INCREASED for deeper 3D */
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Pages Container (3D space) */
+.pages-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* Page Wrapper (groups ghost + primary states) */
+.page-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+}
+
+/* Individual Page */
+.page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 450px;
+  height: 650px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+
+/* Ghost States - START VERY VISIBLE */
+.ghost-state {
+  opacity: 0.5; /* HIGH starting opacity */
+  filter: blur(40px); /* EXTREME blur */
+  pointer-events: none;
+}
+
+.ghost-state[data-ghost="1"] {
+  border-color: rgba(255, 50, 50, 0.6);
+}
+
+.ghost-state[data-ghost="2"] {
+  border-color: rgba(50, 100, 255, 0.6);
+}
+
+/* Primary State - START NEARLY INVISIBLE */
+.primary-state {
+  opacity: 0.01; /* BARELY visible */
+  filter: blur(30px); /* VERY blurred */
+  border-color: rgba(50, 255, 50, 0.6);
+}
+
+/* State Labels */
+.state-label {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ghost1-label {
+  background: rgba(255, 0, 0, 0.9);
+}
+
+.ghost2-label {
+  background: rgba(0, 100, 255, 0.9);
+}
+
+.primary-label {
+  background: rgba(0, 255, 0, 0.9);
+}
+
+/* Page Content */
+.page-content {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.page-content h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #D4AF37;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 20px rgba(212, 175, 55, 0.5);
+}
+
+.page-content p {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #F5F5F5;
+  opacity: 0.9;
+}
+
+.page-content small {
+  margin-top: 24px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  display: block;
+  line-height: 1.6;
+}
+
+/* FPS Counter */
+.fps-counter {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #00FF00;
+  font-family: 'Courier New', monospace;
+  font-size: 1.125rem;
+  font-weight: bold;
+  padding: 12px 18px;
+  border-radius: 4px;
+  border: 2px solid #00FF00;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+/* State Display Panel */
+.state-display {
+  position: fixed;
+  top: 130px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  padding: 12px 14px;
+  border-radius: 4px;
+  border: 2px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+  line-height: 1.8;
+  min-width: 220px;
+}
+
+.state-display span {
+  color: #00FF00;
+  font-weight: bold;
+}
+
+/* Instructions */
+.instructions {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  padding: 14px 18px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  z-index: 9999;
+  pointer-events: none;
+  line-height: 1.8;
+}
+
+.instructions strong {
+  color: #D4AF37;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .page {
+    width: 320px;
+    height: 480px;
+  }
+
+  .page-content h2 {
+    font-size: 2rem;
+  }
+
+  .page-content p {
+    font-size: 1rem;
+  }
+
+  .ghost-state {
+    filter: blur(20px);
+  }
+
+  .primary-state {
+    filter: blur(15px);
+  }
+
+  .scroll-markers {
+    display: none;
+  }
+}

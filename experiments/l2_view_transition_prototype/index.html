@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layer 2: View Transitions Prototype — Ghost Fade UX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <button class="nav-btn" data-page="0">Page 1</button>
+    <button class="nav-btn" data-page="1">Page 2</button>
+    <button class="nav-btn" data-page="2">Page 3</button>
+  </nav>
+
+  <!-- Page Container (single page visible at a time) -->
+  <main class="page-container">
+    <div class="page active" data-page-id="0">
+      <div class="page-content">
+        <h1>Blocks A & B</h1>
+        <p>Click navigation to see View Transitions API in action.</p>
+        <small>Chrome 140+ / Firefox 144+ for animations</small>
+        <small>Safari: Instant transitions (fallback)</small>
+      </div>
+    </div>
+
+    <div class="page" data-page-id="1">
+      <div class="page-content">
+        <h1>Chapter One</h1>
+        <p>The Journey Begins</p>
+        <small>Smooth morph from previous page</small>
+      </div>
+    </div>
+
+    <div class="page" data-page-id="2">
+      <div class="page-content">
+        <h1>Chapter Two</h1>
+        <p>Clarity Emerges</p>
+        <small>Self-Actualization</small>
+      </div>
+    </div>
+  </main>
+
+  <!-- Browser Support Indicator -->
+  <div class="browser-support">
+    <strong>View Transitions API:</strong>
+    <span id="support-status">Checking...</span>
+  </div>
+
+  <!-- Layout Shift Monitor (CLS) -->
+  <div class="cls-monitor">
+    <strong>CLS:</strong> <span id="cls-value">0</span>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

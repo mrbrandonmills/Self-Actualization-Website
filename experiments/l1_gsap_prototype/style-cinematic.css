@@ -1,0 +1,375 @@
+/* ==================================
+   Layer 1: CINEMATIC Styles
+   Award-Winning Ghost Fade Journey
+   ================================== */
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  width: 100%;
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #0A0A0A;
+  color: #F5F5F5;
+  cursor: default;
+}
+
+/* Scroll Spacer - 3X LONGER for cinematic pacing */
+.scroll-spacer {
+  height: 800vh; /* INCREASED from 500vh → 3x longer journey */
+  pointer-events: none;
+  position: relative;
+  background: linear-gradient(to bottom,
+    rgba(212, 175, 55, 0.02) 0%,
+    rgba(212, 175, 55, 0.005) 50%,
+    rgba(212, 175, 55, 0.02) 100%
+  );
+}
+
+/* Scroll Markers - 5 Transformation Stages */
+.scroll-markers {
+  position: absolute;
+  right: 30px;
+  top: 0;
+  width: 280px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scroll-marker {
+  position: absolute;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  color: #D4AF37;
+  font-size: 0.75rem;
+  font-weight: normal;
+  padding: 12px 14px;
+  border-radius: 6px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+  border: 2px solid #D4AF37;
+  line-height: 1.6;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+}
+
+.scroll-marker strong {
+  display: block;
+  font-size: 0.875rem;
+  color: #F4D03F;
+  margin-bottom: 4px;
+}
+
+.marker-stage1 { border-color: #FF6B6B; background: rgba(255, 107, 107, 0.1); }
+.marker-stage2 { border-color: #FF8E53; background: rgba(255, 142, 83, 0.1); }
+.marker-stage3 { border-color: #FFC952; background: rgba(255, 201, 82, 0.1); }
+.marker-stage4 { border-color: #6BCF7F; background: rgba(107, 207, 127, 0.1); }
+.marker-stage5 { border-color: #00FF00; background: rgba(0, 255, 0, 0.1); }
+
+/* Scroll Progress Indicator */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 10000;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,
+    #FF6B6B 0%,
+    #FF8E53 25%,
+    #FFC952 50%,
+    #6BCF7F 75%,
+    #00FF00 100%
+  );
+  transition: width 0.05s linear;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+.progress-text {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #D4AF37;
+  font-family: 'Courier New', monospace;
+  font-size: 1.125rem;
+  font-weight: bold;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 2px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 4px 30px rgba(212, 175, 55, 0.4);
+}
+
+/* Stage Indicator */
+.stage-indicator {
+  position: fixed;
+  top: 90px;
+  left: 24px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 2px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 4px 30px rgba(212, 175, 55, 0.4);
+}
+
+.stage-indicator strong {
+  color: #D4AF37;
+}
+
+.stage-indicator span {
+  color: #F4D03F;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* 3D Stage (fixed viewport) */
+.stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1800px; /* DEEPER perspective for more dramatic 3D */
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Pages Container (3D space) */
+.pages-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* Page Wrapper */
+.page-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+}
+
+/* Individual Page - LARGER for cinematic impact */
+.page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 700px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+
+/* Ghost States - START VERY VISIBLE */
+.ghost-state {
+  opacity: 0.6; /* VERY high starting opacity */
+  filter: blur(50px); /* EXTREME blur */
+  pointer-events: none;
+}
+
+.ghost-state[data-ghost="1"] {
+  border-color: rgba(255, 107, 107, 0.7);
+}
+
+.ghost-state[data-ghost="2"] {
+  border-color: rgba(83, 142, 255, 0.7);
+}
+
+/* Primary State - START INVISIBLE */
+.primary-state {
+  opacity: 0; /* COMPLETELY invisible at start */
+  filter: blur(40px); /* EXTREMELY blurred */
+  border-color: rgba(107, 207, 127, 0.7);
+}
+
+/* State Labels */
+.state-label {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.ghost1-label {
+  background: rgba(255, 107, 107, 0.95);
+}
+
+.ghost2-label {
+  background: rgba(83, 142, 255, 0.95);
+}
+
+.primary-label {
+  background: rgba(107, 207, 127, 0.95);
+}
+
+/* Page Content */
+.page-content {
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.page-content h2 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #D4AF37;
+  margin-bottom: 24px;
+  text-shadow: 0 4px 30px rgba(212, 175, 55, 0.6);
+  letter-spacing: -0.02em;
+}
+
+.page-content p {
+  font-size: 1.375rem;
+  line-height: 1.8;
+  color: #F5F5F5;
+  opacity: 0.9;
+}
+
+.page-content small {
+  margin-top: 28px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  display: block;
+  line-height: 1.8;
+}
+
+/* FPS Counter */
+.fps-counter {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #00FF00;
+  font-family: 'Courier New', monospace;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 14px 20px;
+  border-radius: 6px;
+  border: 2px solid #00FF00;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 4px 30px rgba(0, 255, 0, 0.3);
+}
+
+/* State Display Panel */
+.state-display {
+  position: fixed;
+  top: 95px;
+  right: 24px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  padding: 14px 16px;
+  border-radius: 6px;
+  border: 2px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+  line-height: 2;
+  min-width: 240px;
+  box-shadow: 0 4px 30px rgba(212, 175, 55, 0.3);
+}
+
+.state-display span {
+  color: #00FF00;
+  font-weight: bold;
+}
+
+/* Instructions */
+.instructions {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: rgba(0, 0, 0, 0.95);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  padding: 16px 20px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  z-index: 9999;
+  pointer-events: none;
+  line-height: 2;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.instructions strong {
+  color: #D4AF37;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .page {
+    width: 340px;
+    height: 500px;
+  }
+
+  .page-content h2 {
+    font-size: 2.25rem;
+  }
+
+  .page-content p {
+    font-size: 1.125rem;
+  }
+
+  .ghost-state {
+    filter: blur(25px);
+  }
+
+  .primary-state {
+    filter: blur(20px);
+  }
+
+  .scroll-markers {
+    display: none;
+  }
+}

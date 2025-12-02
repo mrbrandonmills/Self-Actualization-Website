@@ -70,13 +70,13 @@ html {
    ======================================== */
 
 ::selection {
-  background: var(--color-accent-gold);
-  color: var(--color-black-green);
+  background: var(--accent-warm);
+  color: var(--bg-primary);
 }
 
 ::-moz-selection {
-  background: var(--color-accent-gold);
-  color: var(--color-black-green);
+  background: var(--accent-warm);
+  color: var(--bg-primary);
 }
 
 /* ========================================
@@ -86,7 +86,7 @@ html {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-accent-gold) var(--color-dark-green);
+  scrollbar-color: var(--accent-warm) var(--bg-tertiary);
 }
 
 /* Webkit browsers (Chrome, Safari, Edge) */
@@ -96,16 +96,16 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-dark-green);
+  background: var(--bg-tertiary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-accent-gold);
+  background: var(--accent-warm);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-sage);
+  background: var(--olive-mid);
 }
 
 /* Hide scrollbar but keep functionality (for Lenis smooth scroll) */

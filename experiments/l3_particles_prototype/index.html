@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layer 3: WebGPU Particles Prototype — Ghost Fade UX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Full-screen Canvas -->
+  <canvas id="webgpu-canvas"></canvas>
+
+  <!-- Stats Panel -->
+  <div class="stats-panel">
+    <div class="stat">
+      <span class="label">Renderer:</span>
+      <span id="renderer-type" class="value">Loading...</span>
+    </div>
+    <div class="stat">
+      <span class="label">Particles:</span>
+      <span id="particle-count" class="value">0</span>
+    </div>
+    <div class="stat">
+      <span class="label">FPS:</span>
+      <span id="fps" class="value fps-value">60</span>
+    </div>
+    <div class="stat">
+      <span class="label">GPU Memory:</span>
+      <span id="gpu-memory" class="value">N/A</span>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <h3>WebGPU Particle System</h3>
+    <p><strong>Chrome with flag:</strong> 100k particles</p>
+    <p><strong>WebGL fallback:</strong> 25k particles</p>
+    <p><strong>Scroll</strong> to see particles react</p>
+    <small>Press <kbd>Space</kbd> to toggle auto-rotate</small>
+  </div>
+
+  <!-- Three.js (via CDN) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <!-- Particle System Script -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>

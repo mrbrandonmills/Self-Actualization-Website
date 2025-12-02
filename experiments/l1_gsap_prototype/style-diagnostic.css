@@ -1,0 +1,317 @@
+/* ==================================
+   Layer 1: DIAGNOSTIC Styles
+   ================================== */
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* FIXED: Changed from height: 100% to min-height: 100% */
+html {
+  min-height: 100%; /* Allow document to grow beyond viewport */
+  width: 100%;
+}
+
+body {
+  min-height: 100%; /* Allow body to grow beyond viewport */
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll only */
+  overflow-y: auto; /* EXPLICITLY enable vertical scroll */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #0A0A0A; /* Deep black */
+  color: #F5F5F5; /* Soft white */
+}
+
+/* Scroll Spacer (creates scroll distance) */
+.scroll-spacer {
+  height: 500vh; /* 500% of viewport height - CREATES SCROLLABLE SPACE */
+  pointer-events: none;
+  position: relative;
+  background: linear-gradient(to bottom,
+    rgba(212, 175, 55, 0.05) 0%,
+    rgba(212, 175, 55, 0.02) 25%,
+    rgba(212, 175, 55, 0.02) 50%,
+    rgba(212, 175, 55, 0.02) 75%,
+    rgba(212, 175, 55, 0.05) 100%
+  ); /* Subtle gradient to visualize scroll space */
+}
+
+/* Scroll Markers (visual indicators) */
+.scroll-markers {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scroll-marker {
+  position: absolute;
+  right: 0;
+  background: rgba(212, 175, 55, 0.8);
+  color: #0A0A0A;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: 'Courier New', monospace;
+  border: 2px solid #D4AF37;
+}
+
+/* Scroll Progress Indicator */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 10000;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #D4AF37 0%, #F4D03F 100%);
+  transition: width 0.1s ease-out;
+}
+
+.progress-text {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #D4AF37;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* 3D Stage (fixed viewport) */
+.stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1200px; /* INCREASED for more dramatic 3D */
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+  pointer-events: none; /* Allow scroll events to pass through */
+}
+
+/* Pages Container (3D space) */
+.pages-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d; /* CRITICAL for 3D transforms */
+}
+
+/* Page Wrapper (groups ghost + primary states) */
+.page-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+}
+
+/* Individual Page (ghost or primary) */
+.page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2); /* Increased border visibility */
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transform-style: preserve-3d;
+  backface-visibility: hidden; /* Culling optimization */
+  will-change: transform, opacity, filter; /* GPU acceleration hint */
+}
+
+/* Ghost States (multiple copies) - MORE DRAMATIC */
+.ghost-state {
+  opacity: 0.4; /* INCREASED from 0.3 for MORE visibility */
+  filter: blur(30px); /* INCREASED from 25px */
+  pointer-events: none;
+}
+
+.ghost-state[data-ghost="1"] {
+  border-color: rgba(255, 0, 0, 0.5); /* Red tint - MORE VISIBLE */
+}
+
+.ghost-state[data-ghost="2"] {
+  border-color: rgba(0, 100, 255, 0.5); /* Blue tint - MORE VISIBLE */
+}
+
+/* Primary State (main visible page) - MORE DRAMATIC START */
+.primary-state {
+  opacity: 0.05; /* REDUCED from 0.1 for MORE dramatic reveal */
+  filter: blur(20px); /* INCREASED from 15px */
+  border-color: rgba(0, 255, 0, 0.5); /* Green tint - MORE VISIBLE */
+}
+
+/* State Labels (for debugging) */
+.state-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+}
+
+/* Page Content */
+.page-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.page-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #D4AF37; /* Luxury gold */
+  margin-bottom: 16px;
+  text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+}
+
+.page-content p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #F5F5F5;
+  opacity: 0.8;
+}
+
+.page-content small {
+  margin-top: 20px;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  display: block;
+}
+
+/* FPS Counter */
+.fps-counter {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #00FF00;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: 1px solid #00FF00;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#fps {
+  font-weight: bold;
+  color: #00FF00;
+}
+
+/* Diagnostics Panel */
+.diagnostics-panel {
+  position: fixed;
+  top: 110px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid #D4AF37;
+  z-index: 9999;
+  pointer-events: none;
+  line-height: 1.6;
+  min-width: 200px;
+}
+
+.diagnostics-panel span {
+  color: #00FF00;
+  font-weight: bold;
+}
+
+/* Instructions */
+.instructions {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #F5F5F5;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 9999;
+  pointer-events: none;
+  line-height: 1.6;
+}
+
+.instructions strong {
+  color: #D4AF37;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .page {
+    width: 300px;
+    height: 450px;
+  }
+
+  .page-content h2 {
+    font-size: 1.75rem;
+  }
+
+  .page-content p {
+    font-size: 1rem;
+  }
+
+  /* Reduce blur on mobile (performance) */
+  .ghost-state {
+    filter: blur(15px);
+  }
+
+  .primary-state {
+    filter: blur(10px);
+  }
+
+  .scroll-markers {
+    display: none; /* Hide markers on mobile */
+  }
+}
+
+/* Low-end device optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .ghost-state,
+  .primary-state {
+    filter: none !important; /* Disable blur entirely */
+  }
+}

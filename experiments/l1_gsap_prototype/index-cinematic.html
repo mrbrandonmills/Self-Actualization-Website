@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layer 1: CINEMATIC Ghost Fade — Award-Winning Journey</title>
+  <link rel="stylesheet" href="style-cinematic.css">
+</head>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress">
+    <div class="progress-bar" id="progress-bar"></div>
+    <div class="progress-text" id="progress-text">Scroll: 0%</div>
+  </div>
+
+  <!-- Transformation Stage Indicator -->
+  <div class="stage-indicator" id="stage-indicator">
+    <strong>Stage:</strong> <span id="stage-name">Uncertainty</span>
+  </div>
+
+  <!-- Scroll Container (creates EXTENDED scroll distance) -->
+  <div class="scroll-spacer">
+    <div class="scroll-markers">
+      <div class="scroll-marker marker-stage1" style="top: 0%;">
+        <strong>STAGE 1</strong><br>Uncertainty<br>(Multiple Possibilities)
+      </div>
+      <div class="scroll-marker marker-stage2" style="top: 25%;">
+        <strong>STAGE 2</strong><br>Ghost 2 Fading<br>(Options Narrowing)
+      </div>
+      <div class="scroll-marker marker-stage3" style="top: 50%;">
+        <strong>STAGE 3</strong><br>Ghost 1 Fading<br>(Single Path Emerging)
+      </div>
+      <div class="scroll-marker marker-stage4" style="top: 75%;">
+        <strong>STAGE 4</strong><br>Primary Solidifying<br>(Clarity Building)
+      </div>
+      <div class="scroll-marker marker-stage5" style="top: 100%;">
+        <strong>STAGE 5</strong><br>Mastery<br>(Complete Clarity)
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Stage (fixed viewport) -->
+  <div class="stage">
+    <div class="pages-container" id="pages-container">
+      <!-- Page 1 (Blocks A & B) -->
+      <div class="page-wrapper" data-page-index="0">
+        <div class="page ghost-state" data-ghost="1">
+          <div class="page-content">
+            <h2>Blocks A & B</h2>
+            <p>Possibility 1</p>
+            <span class="state-label ghost1-label">🔴 Ghost 1</span>
+          </div>
+        </div>
+        <div class="page ghost-state" data-ghost="2">
+          <div class="page-content">
+            <h2>Blocks A & B</h2>
+            <p>Possibility 2</p>
+            <span class="state-label ghost2-label">🔵 Ghost 2</span>
+          </div>
+        </div>
+        <div class="page primary-state">
+          <div class="page-content">
+            <h2>Blocks A & B</h2>
+            <p>The Path to Self-Actualization</p>
+            <small>⬇️ SCROLL SLOWLY to witness the transformation ⬇️</small>
+            <small style="color: #D4AF37; margin-top: 8px;">✨ CINEMATIC: 5-stage convergence journey</small>
+            <span class="state-label primary-label">🟢 Primary</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page 2 (Chapter One) -->
+      <div class="page-wrapper" data-page-index="1">
+        <div class="page ghost-state" data-ghost="1">
+          <div class="page-content">
+            <h2>Chapter One</h2>
+            <p>Possibility 1</p>
+            <span class="state-label ghost1-label">🔴 Ghost 1</span>
+          </div>
+        </div>
+        <div class="page ghost-state" data-ghost="2">
+          <div class="page-content">
+            <h2>Chapter One</h2>
+            <p>Possibility 2</p>
+            <span class="state-label ghost2-label">🔵 Ghost 2</span>
+          </div>
+        </div>
+        <div class="page primary-state">
+          <div class="page-content">
+            <h2>Chapter One</h2>
+            <p>The Journey Begins</p>
+            <span class="state-label primary-label">🟢 Primary</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page 3 (Chapter Two) -->
+      <div class="page-wrapper" data-page-index="2">
+        <div class="page ghost-state" data-ghost="1">
+          <div class="page-content">
+            <h2>Chapter Two</h2>
+            <p>Possibility 1</p>
+            <span class="state-label ghost1-label">🔴 Ghost 1</span>
+          </div>
+        </div>
+        <div class="page ghost-state" data-ghost="2">
+          <div class="page-content">
+            <h2>Chapter Two</h2>
+            <p>Possibility 2</p>
+            <span class="state-label ghost2-label">🔵 Ghost 2</span>
+          </div>
+        </div>
+        <div class="page primary-state">
+          <div class="page-content">
+            <h2>Chapter Two</h2>
+            <p>Clarity Emerges</p>
+            <span class="state-label primary-label">🟢 Primary</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FPS Counter -->
+  <div class="fps-counter">FPS: <span id="fps">60</span></div>
+
+  <!-- Animation State Display -->
+  <div class="state-display">
+    <strong style="color: #D4AF37;">Animation State:</strong><br>
+    Ghost 1: <span id="ghost1-opacity">...</span><br>
+    Ghost 2: <span id="ghost2-opacity">...</span><br>
+    Primary: <span id="primary-opacity">...</span><br>
+    Blur: <span id="primary-blur">...</span>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <strong>Experience Guide:</strong><br>
+    1. Scroll SLOWLY<br>
+    2. Watch 5 transformation stages<br>
+    3. Notice: Ghosts fade FIRST,<br>
+    &nbsp;&nbsp;&nbsp;then Primary solidifies<br>
+    4. 3x longer journey (800vh)
+  </div>
+
+  <!-- Dependencies (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  <!-- Animation Logic (CINEMATIC VERSION) -->
+  <script src="script-cinematic.js"></script>
+</body>
+</html>
