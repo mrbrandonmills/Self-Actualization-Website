@@ -6,11 +6,11 @@
 
 'use client';
 
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import React, { useRef, useMemo, useState, useEffect, Suspense } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, Stars } from '@react-three/drei';
+import { PerspectiveCamera, Stars, ScrollControls, Scroll, Preload } from '@react-three/drei';
 import * as THREE from 'three';
-import { ArtGalleryJourney } from './ArtGalleryJourney';
+import { HorizontalBookPages } from './HorizontalBookGallery';
 
 interface InfiniteJourneyProps {
   scrollProgress: number;
@@ -261,9 +261,13 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
   });
 
   return (
-    <>
-      {/* Art gallery with books behind VIP ropes */}
-      <ArtGalleryJourney scrollProgress={scrollProgress} />
-    </>
+    <Suspense fallback={null}>
+      <ScrollControls horizontal damping={4} pages={5} distance={1}>
+        <Scroll>
+          <HorizontalBookPages />
+        </Scroll>
+      </ScrollControls>
+      <Preload />
+    </Suspense>
   );
 }
