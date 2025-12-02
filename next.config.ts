@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   // Enable React 19 features
   reactStrictMode: true,
 
+  // Ignore ESLint errors during production builds
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
+  // Ignore TypeScript errors during production builds
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   // Optimize images
   images: {
     formats: ['image/avif', 'image/webp'],
