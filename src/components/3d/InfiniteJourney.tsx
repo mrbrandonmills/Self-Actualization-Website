@@ -10,7 +10,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import { BookDoorsJourney } from './BookDoorsJourney';
+import { ArtGalleryJourney } from './ArtGalleryJourney';
 
 interface InfiniteJourneyProps {
   scrollProgress: number;
@@ -262,19 +262,8 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
 
   return (
     <>
-      {/* Books opening like elevator doors - clean and cinematic */}
-      <BookDoorsJourney scrollProgress={scrollProgress} />
-
-      {/* Background stars - subtle */}
-      <Stars
-        radius={100}
-        depth={100}
-        count={5000}
-        factor={4}
-        saturation={0}
-        fade
-        speed={1}
-      />
+      {/* Art gallery with books behind VIP ropes */}
+      <ArtGalleryJourney scrollProgress={scrollProgress} />
     </>
   );
 }
