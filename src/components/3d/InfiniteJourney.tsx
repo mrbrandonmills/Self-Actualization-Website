@@ -189,7 +189,7 @@ function InfiniteTunnel({ speed, zone }: { speed: number; zone: number }) {
 }
 
 // Floating obstacles/landmarks
-function FloatingLandmarks({ scrollProgress, speed }: { scrollProgress: number; speed: number }) {
+function FloatingLandmarks({ speed }: { speed: number }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock }) => {
@@ -287,7 +287,7 @@ export function InfiniteJourney({ scrollProgress }: InfiniteJourneyProps) {
       <InfiniteTunnel speed={speed} zone={currentZone} />
 
       {/* Floating landmarks */}
-      <FloatingLandmarks scrollProgress={scrollProgress} speed={speed} />
+      <FloatingLandmarks speed={speed} />
 
       {/* Background stars */}
       <Stars
