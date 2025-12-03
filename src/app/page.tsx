@@ -16,6 +16,8 @@ import {
 } from '@/components/sections';
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { LoadingScreen } from '@/components/LoadingScreen';
+import { useBookPreloader } from '@/hooks/useBookPreloader';
 
 // Narrative overlays that appear as you scroll through the 3D journey
 const narrativeOverlays = [
@@ -65,6 +67,10 @@ const narrativeOverlays = [
 
 export default function HomePage() {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showContent, setShowContent] = useState(false);
+
+  // Preload all book assets
+  const { progress, isLoaded } = useBookPreloader();
 
   useEffect(() => {
     // Initialize Lenis smooth scroll
@@ -97,6 +103,16 @@ export default function HomePage() {
       lenis.destroy();
     };
   }, []);
+
+  // Show loading screen until all assets are loaded
+  if (!showContent) {
+    return (
+      <LoadingScreen
+        progress={progress}
+        onComplete={() => setShowContent(true)}
+      />
+    );
+  }
 
   return (
     <main className="min-h-screen">

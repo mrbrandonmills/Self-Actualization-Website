@@ -142,13 +142,17 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       bookRef.current.scale.setScalar(2.0);
     }
 
-    // FADE OUT
+    // FADE OUT - but NEVER fade covers (they stay solid)
     if (scrollProgress >= 0.98) {
       const fadeProgress = (scrollProgress - 0.98) / 0.02;
       const opacity = 1 - fadeProgress;
 
       bookRef.current.traverse((child) => {
         if (child instanceof THREE.Mesh && child.material) {
+          // NEVER make covers transparent
+          const isCover = child.name === 'front-cover' || child.name === 'back-cover';
+          if (isCover) return;
+
           if (Array.isArray(child.material)) {
             child.material.forEach((mat) => {
               mat.transparent = true;
@@ -209,23 +213,29 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       />
 
       <group ref={bookRef} position={[0, 0, 70]}>
-        {/* Front Cover - ALWAYS VISIBLE, positioned forward of all pages */}
-        <mesh position={[-1.55, 0, -0.5]} castShadow>
+        {/* Front Cover - ALWAYS VISIBLE, NEVER TRANSPARENT, positioned forward of all pages */}
+        <mesh position={[-1.55, 0, -0.5]} castShadow name="front-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={coverTexture}
             roughness={0.7}
             metalness={0.15}
+            transparent={false}
+            opacity={1}
+            side={THREE.FrontSide}
           />
         </mesh>
 
-        {/* Back Cover */}
-        <mesh position={[1.55, 0, 0.2]} castShadow>
+        {/* Back Cover - ALWAYS SOLID, NEVER TRANSPARENT */}
+        <mesh position={[1.55, 0, 0.2]} castShadow name="back-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             color="#6b5d4f"
             roughness={0.75}
             metalness={0.15}
+            transparent={false}
+            opacity={1}
+            side={THREE.FrontSide}
           />
         </mesh>
 
