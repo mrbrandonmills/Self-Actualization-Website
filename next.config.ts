@@ -1,8 +1,9 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // Enable React 19 features
-  reactStrictMode: true,
+  // Disabled for React Three Fiber WebGL compatibility
+  // Strict mode double-renders cause "Canvas has existing context" error
+  reactStrictMode: false,
 
   // Ignore ESLint errors during production builds
   eslint: {
