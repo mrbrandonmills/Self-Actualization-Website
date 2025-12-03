@@ -90,10 +90,11 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.4}
+            roughness={0.3}
             metalness={0.0}
             emissive="#ffffff"
-            emissiveIntensity={0.15}
+            emissiveIntensity={0.5}
+            color="#ffffff"
           />
         </mesh>
       </group>
@@ -299,34 +300,48 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           decay={2}
         />
 
-        {/* REDUCED INTERNAL LIGHTS - prevent washout */}
+        {/* INTERNAL PAGE LIGHTS - make texture content visible */}
         <pointLight
           position={[0, 0, 0]}
           color="#ffffff"
-          intensity={5}
+          intensity={12}
+          distance={12}
+          decay={0.8}
+        />
+        <pointLight
+          position={[0, 3, 0]}
+          color="#ffffff"
+          intensity={8}
           distance={10}
-          decay={1}
+          decay={0.8}
         />
         <pointLight
-          position={[0, 2, 0]}
+          position={[0, -3, 0]}
           color="#ffffff"
-          intensity={3}
-          distance={8}
-          decay={1}
+          intensity={8}
+          distance={10}
+          decay={0.8}
         />
         <pointLight
-          position={[0, -2, 0]}
+          position={[1.5, 0, 0]}
           color="#ffffff"
-          intensity={3}
+          intensity={6}
           distance={8}
-          decay={1}
+          decay={0.8}
+        />
+        <pointLight
+          position={[-1.5, 0, 0]}
+          color="#ffffff"
+          intensity={6}
+          distance={8}
+          decay={0.8}
         />
       </group>
 
       <color attach="background" args={['#f5f3ef']} />
 
-      {/* REDUCED AMBIENT - prevent washout */}
-      <ambientLight intensity={1.2} color="#ffffff" />
+      {/* BALANCED AMBIENT - pages visible but covers not washed out */}
+      <ambientLight intensity={2.0} color="#ffffff" />
 
       {/* KEY LIGHT - main light reduced with soft shadows */}
       <directionalLight
