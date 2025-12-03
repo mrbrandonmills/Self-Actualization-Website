@@ -1,7 +1,7 @@
 /**
- * KasaneBookJourney - Flying Book Through Space
- * Complete book with 87 pages that flies and flips as you scroll
- * KASANÉ-style camera action following the book
+ * KasaneBookJourney - Flying Book with Drone Camera
+ * Natural page flipping from spine + orbiting drone camera
+ * Artistic choreography between book and camera
  */
 
 'use client';
@@ -19,56 +19,74 @@ interface BookPageProps {
 
 function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   // Load page texture
   const texture = useLoader(THREE.TextureLoader, `/book-pages/${pageNumber}.png`);
 
   // Calculate which page should be flipping based on scroll
-  const pageProgress = (pageNumber - 1) / totalPages;
+  const pageIndex = pageNumber - 1;
+  const pageProgress = pageIndex / totalPages;
+
+  // Each page flips when its turn comes in the scroll
+  const flipStart = pageProgress;
+  const flipEnd = pageProgress + (1 / totalPages) * 2; // Slightly overlap for smooth effect
+
   const flipProgress = THREE.MathUtils.clamp(
-    (scrollProgress - pageProgress) / (1 / totalPages),
+    (scrollProgress - flipStart) / (flipEnd - flipStart),
     0,
     1
   );
 
   // Easing for smooth page flip
-  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-  const easedFlip = easeOutCubic(flipProgress);
+  const easeInOutCubic = (t: number) => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+  const easedFlip = easeInOutCubic(flipProgress);
+
+  // Determine if this is a left or right page
+  const isLeftPage = pageNumber % 2 === 1; // Odd pages on left
 
   useFrame(() => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || !groupRef.current) return;
 
-    // Pages start flat (closed book), rotate to open as scroll progresses
-    const isLeftPage = pageNumber % 2 === 0;
+    // Pages stack at spine with slight offset for thickness
+    const pageThickness = 0.003;
+    const stackOffset = (pageNumber - totalPages / 2) * pageThickness;
 
     if (isLeftPage) {
-      // Left pages rotate to the left
-      meshRef.current.rotation.y = -Math.PI * easedFlip;
+      // Left pages start at left position, flip to the left
+      groupRef.current.position.set(-1.5, 0, stackOffset);
+
+      // Rotate around the right edge (spine) - pivot point at x=1.5 (right edge of left page)
+      meshRef.current.position.x = 1.5; // Offset so rotation happens at spine
+      meshRef.current.rotation.y = -Math.PI * easedFlip; // Flip left
     } else {
-      // Right pages rotate to the right
-      meshRef.current.rotation.y = Math.PI * easedFlip;
+      // Right pages start at right position, flip to the right
+      groupRef.current.position.set(1.5, 0, stackOffset);
+
+      // Rotate around the left edge (spine) - pivot point at x=-1.5 (left edge of right page)
+      meshRef.current.position.x = -1.5; // Offset so rotation happens at spine
+      meshRef.current.rotation.y = Math.PI * easedFlip; // Flip right
     }
 
-    // Stack pages slightly offset for thickness
-    const pageThickness = 0.002;
-    const zOffset = (pageNumber - totalPages / 2) * pageThickness;
-    meshRef.current.position.z = zOffset;
-
-    // Pages at the spine
-    const xOffset = isLeftPage ? -1.5 : 1.5;
-    meshRef.current.position.x = xOffset;
+    // Slight curl/bend effect for realism
+    const curlAmount = Math.sin(easedFlip * Math.PI) * 0.1;
+    meshRef.current.rotation.x = curlAmount;
   });
 
   return (
-    <mesh ref={meshRef}>
-      <planeGeometry args={[3, 4]} />
-      <meshStandardMaterial
-        map={texture}
-        side={THREE.DoubleSide}
-        roughness={0.4}
-        metalness={0.1}
-      />
-    </mesh>
+    <group ref={groupRef}>
+      <mesh ref={meshRef}>
+        <planeGeometry args={[3, 4]} />
+        <meshStandardMaterial
+          map={texture}
+          side={THREE.DoubleSide}
+          roughness={0.5}
+          metalness={0.1}
+        />
+      </mesh>
+    </group>
   );
 }
 
@@ -83,102 +101,111 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
   const totalPages = 87;
   const pages = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages]);
 
-  // Book movement and rotation based on scroll
+  // BOOK CHOREOGRAPHY - Artistic movement through space
   useFrame(({ clock }) => {
     if (!bookRef.current) return;
 
     const time = clock.getElapsedTime();
 
-    // Book flies through space - moves along Z axis
-    const zPosition = THREE.MathUtils.lerp(50, -50, scrollProgress);
+    // Book moves along Z axis (toward camera)
+    const zPosition = THREE.MathUtils.lerp(60, -40, scrollProgress);
     bookRef.current.position.z = zPosition;
 
-    // Book spirals as it flies
-    const spiralAngle = scrollProgress * Math.PI * 4; // 2 full rotations
-    const spiralRadius = 10 * (1 - scrollProgress * 0.5); // Spiral inward
-    bookRef.current.position.x = Math.cos(spiralAngle) * spiralRadius;
-    bookRef.current.position.y = Math.sin(spiralAngle) * spiralRadius * 0.5;
+    // Book follows a flowing path in X and Y
+    const pathFrequency = scrollProgress * Math.PI * 3; // 1.5 cycles
+    bookRef.current.position.x = Math.sin(pathFrequency) * 8 + Math.cos(time * 0.2) * 1;
+    bookRef.current.position.y = Math.cos(pathFrequency * 0.7) * 5 + Math.sin(time * 0.15) * 0.8;
 
-    // Multi-axis rotation of the entire book (KASANÉ style)
-    bookRef.current.rotation.x = scrollProgress * Math.PI * 2 + Math.sin(time * 0.5) * 0.1;
-    bookRef.current.rotation.y = scrollProgress * Math.PI * 6 + Math.cos(time * 0.3) * 0.15;
-    bookRef.current.rotation.z = Math.sin(scrollProgress * Math.PI * 3) * 0.3;
+    // Book rotation - elegant tumbling
+    bookRef.current.rotation.x = scrollProgress * Math.PI * 1.5 + Math.sin(time * 0.3) * 0.15;
+    bookRef.current.rotation.y = scrollProgress * Math.PI * 4 + Math.cos(time * 0.25) * 0.2;
+    bookRef.current.rotation.z = Math.sin(scrollProgress * Math.PI * 2) * 0.4 + Math.cos(time * 0.2) * 0.1;
 
-    // Scale changes - book gets larger as it approaches
-    const scale = THREE.MathUtils.lerp(0.5, 2.0, scrollProgress);
+    // Scale - book grows as it approaches
+    const scale = THREE.MathUtils.lerp(0.6, 2.2, scrollProgress);
     bookRef.current.scale.setScalar(scale);
   });
 
-  // ACTION MOVIE CAMERA - Follows the book
+  // DRONE CAMERA - Orbiting around the book with artistic movement
   useFrame(({ clock }) => {
     if (!cameraRef.current || !bookRef.current) return;
 
     const time = clock.getElapsedTime();
 
-    // Camera follows the book's position with smooth interpolation
-    const targetX = bookRef.current.position.x * 0.3;
-    const targetY = bookRef.current.position.y * 0.3;
-    const targetZ = bookRef.current.position.z + 15; // Stay behind the book
+    // Camera orbits around the book
+    const orbitAngle = scrollProgress * Math.PI * 6 + time * 0.3; // 3 full orbits + rotation
+    const orbitRadius = 18 - scrollProgress * 5; // Gets closer as we progress
 
-    cameraRef.current.position.x += (targetX - cameraRef.current.position.x) * 0.05;
-    cameraRef.current.position.y += (targetY - cameraRef.current.position.y) * 0.05;
-    cameraRef.current.position.z += (targetZ - cameraRef.current.position.z) * 0.05;
+    // Camera height varies - swooping motion
+    const heightVariation = Math.sin(scrollProgress * Math.PI * 4) * 8;
 
-    // Camera sway for dynamic feel
-    const swayX = Math.sin(time * 0.5) * 1.5;
-    const swayY = Math.cos(time * 0.3) * 1.0;
-    cameraRef.current.position.x += swayX * 0.1;
-    cameraRef.current.position.y += swayY * 0.1;
+    // Calculate camera position in orbit
+    const targetX = bookRef.current.position.x + Math.cos(orbitAngle) * orbitRadius;
+    const targetY = bookRef.current.position.y + heightVariation + Math.sin(orbitAngle * 0.5) * 4;
+    const targetZ = bookRef.current.position.z + Math.sin(orbitAngle) * orbitRadius + 12;
 
-    // Look at the book
+    // Smooth camera movement with interpolation
+    cameraRef.current.position.x += (targetX - cameraRef.current.position.x) * 0.08;
+    cameraRef.current.position.y += (targetY - cameraRef.current.position.y) * 0.08;
+    cameraRef.current.position.z += (targetZ - cameraRef.current.position.z) * 0.08;
+
+    // Camera shake/sway for organic feel
+    const shakeX = Math.sin(time * 2) * 0.3;
+    const shakeY = Math.cos(time * 1.5) * 0.2;
+    cameraRef.current.position.x += shakeX;
+    cameraRef.current.position.y += shakeY;
+
+    // Always look at the book
     cameraRef.current.lookAt(bookRef.current.position);
 
-    // Dynamic FOV for drama
-    const fovChange = Math.sin(scrollProgress * Math.PI * 4) * 10;
-    cameraRef.current.fov = 70 + fovChange;
+    // Dynamic FOV - zoom in/out for drama
+    const fovBase = 65;
+    const fovVariation = Math.sin(scrollProgress * Math.PI * 5) * 15;
+    const fovShake = Math.sin(time * 3) * 2;
+    cameraRef.current.fov = fovBase + fovVariation + fovShake;
     cameraRef.current.updateProjectionMatrix();
   });
 
   return (
     <>
-      {/* Action Movie Camera */}
+      {/* Drone Camera */}
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
-        position={[0, 0, 65]}
-        fov={70}
+        position={[20, 10, 70]}
+        fov={65}
         near={0.1}
-        far={200}
+        far={300}
       />
 
-      {/* The Flying Book - All Pages Together */}
-      <group ref={bookRef} position={[0, 0, 50]}>
-        {/* Book Cover - Front */}
-        <mesh position={[1.5, 0, -0.1]}>
-          <boxGeometry args={[3, 4, 0.05]} />
+      {/* The Flying Book */}
+      <group ref={bookRef} position={[0, 0, 60]}>
+        {/* Front Cover */}
+        <mesh position={[-1.5, 0, -0.15]} castShadow>
+          <boxGeometry args={[3, 4, 0.08]} />
           <meshStandardMaterial
-            color="#8b7355"
-            roughness={0.6}
-            metalness={0.2}
+            color="#6b5d4f"
+            roughness={0.7}
+            metalness={0.15}
           />
         </mesh>
 
-        {/* Book Cover - Back */}
-        <mesh position={[-1.5, 0, 0.1]}>
-          <boxGeometry args={[3, 4, 0.05]} />
+        {/* Back Cover */}
+        <mesh position={[1.5, 0, 0.15]} castShadow>
+          <boxGeometry args={[3, 4, 0.08]} />
           <meshStandardMaterial
-            color="#8b7355"
-            roughness={0.6}
-            metalness={0.2}
+            color="#6b5d4f"
+            roughness={0.7}
+            metalness={0.15}
           />
         </mesh>
 
         {/* Spine */}
-        <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-          <boxGeometry args={[0.2, 4, 0.3]} />
+        <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow>
+          <boxGeometry args={[0.3, 4, 0.4]} />
           <meshStandardMaterial
-            color="#5c4033"
-            roughness={0.8}
+            color="#4a3f35"
+            roughness={0.85}
           />
         </mesh>
 
@@ -192,49 +219,73 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           />
         ))}
 
-        {/* Book glow/aura */}
+        {/* Dynamic book glow - intensifies as pages flip */}
         <pointLight
           position={[0, 0, 0]}
           color="#FFD700"
-          intensity={3 + scrollProgress * 5}
-          distance={20}
+          intensity={2 + scrollProgress * 8}
+          distance={25}
+          decay={2}
+        />
+
+        {/* Rim light on book edges */}
+        <pointLight
+          position={[0, 0, 3]}
+          color="#FFF8DC"
+          intensity={4}
+          distance={15}
           decay={2}
         />
       </group>
 
       {/* BRIGHT Environment */}
-      <color attach="background" args={['#faf8f5']} />
+      <color attach="background" args={['#f8f6f2']} />
 
-      {/* Beautiful lighting */}
-      <ambientLight intensity={1.0} color="#ffffff" />
+      {/* Cinematic Lighting */}
+      <ambientLight intensity={1.2} color="#ffffff" />
 
-      {/* Key light */}
+      {/* Key light - from above and front */}
       <directionalLight
-        position={[15, 25, 15]}
-        intensity={2.0}
-        color="#fff8e7"
+        position={[20, 30, 20]}
+        intensity={2.5}
+        color="#fffaf0"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
+        shadow-camera-far={150}
+        shadow-camera-left={-50}
+        shadow-camera-right={50}
+        shadow-camera-top={50}
+        shadow-camera-bottom={-50}
       />
 
-      {/* Rim light */}
+      {/* Rim light - creates edge definition */}
       <directionalLight
-        position={[-15, 10, -10]}
-        intensity={1.0}
-        color="#e8d5b7"
+        position={[-20, 15, -15]}
+        intensity={1.5}
+        color="#e8dcc8"
       />
 
-      {/* Fill light */}
+      {/* Fill light - from below */}
       <pointLight
-        position={[0, -15, 10]}
-        intensity={0.8}
-        color="#ffe4b5"
-        distance={60}
+        position={[0, -20, 15]}
+        intensity={1.2}
+        color="#ffefd5"
+        distance={80}
       />
 
-      {/* Subtle fog for depth */}
-      <fog attach="fog" args={['#faf8f5', 40, 120]} />
+      {/* Accent light - follows the book */}
+      <spotLight
+        position={[10, 20, 30]}
+        intensity={2}
+        angle={0.5}
+        penumbra={0.5}
+        color="#fff5e6"
+        castShadow
+      />
+
+      {/* Atmospheric fog for depth */}
+      <fog attach="fog" args={['#f8f6f2', 50, 150]} />
 
       {/* Environment for reflections */}
       <Environment preset="apartment" />
