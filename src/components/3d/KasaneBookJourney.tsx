@@ -32,10 +32,10 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
   // Pages start stacked on the right, flip over to the left
 
   // Calculate when this page flips
-  // EXTENDED Opening: 0% to 85% scroll (longer journey)
-  // ULTRA SLOW: 75% slower = 0.15 duration (was 0.05, then 0.1, now 0.15)
-  const flipStartProgress = (pageNumber - 1) / totalPages * 0.85;
-  const flipDuration = 0.15; // 15% of scroll per page - ultra elegant slow reveal
+  // EXTENDED Opening: 0% to 90% scroll (even longer journey)
+  // EXTRA ULTRA SLOW: 0.20 duration = 20% of scroll per page for maximum immersion
+  const flipStartProgress = (pageNumber - 1) / totalPages * 0.90;
+  const flipDuration = 0.20; // 20% of scroll per page - ultra elegant slow reveal
   const flipEndProgress = flipStartProgress + flipDuration;
 
   useFrame(() => {
@@ -43,8 +43,8 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
 
     let rotationAmount = 0;
 
-    if (scrollProgress < 0.85) {
-      // OPENING PHASE (extended to 85% for longer journey)
+    if (scrollProgress < 0.90) {
+      // OPENING PHASE (extended to 90% for extra long journey)
       const pageProgress = THREE.MathUtils.clamp(
         (scrollProgress - flipStartProgress) / flipDuration,
         0,
@@ -57,11 +57,11 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
         : 1 - Math.pow(-2 * pageProgress + 2, 3) / 2;
 
       rotationAmount = eased;
-    } else if (scrollProgress >= 0.85 && scrollProgress < 0.97) {
-      // OPEN STATE (longer hold time)
+    } else if (scrollProgress >= 0.90 && scrollProgress < 0.97) {
+      // OPEN STATE (hold time)
       rotationAmount = 1;
     } else {
-      // CLOSING PHASE (starts at 97% instead of 95%)
+      // CLOSING PHASE (starts at 97%)
       const closeProgress = (scrollProgress - 0.97) / 0.03;
       const eased = closeProgress < 0.5
         ? 4 * closeProgress * closeProgress * closeProgress
