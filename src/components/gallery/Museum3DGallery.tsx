@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, PerspectiveCamera, Float, Text3D, Center } from '@react-three/drei';
+import { Environment, PerspectiveCamera, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { AnimatePresence } from 'framer-motion';
 import { FlipBook } from '@/components/books/FlipBook';
@@ -279,23 +279,6 @@ export function Museum3DGallery({ books, title, subtitle }: Museum3DGalleryProps
                   onClick={() => setSelectedBook(book)}
                 />
               ))}
-
-              {/* Museum Title in 3D */}
-              <Center position={[0, 6, -5]}>
-                <Text3D
-                  font="/fonts/playfair-display-regular.json"
-                  size={0.8}
-                  height={0.2}
-                  curveSegments={12}
-                >
-                  THE LABORATORY OF LIFE
-                  <meshStandardMaterial
-                    color="#C9A050"
-                    roughness={0.2}
-                    metalness={0.8}
-                  />
-                </Text3D>
-              </Center>
             </Suspense>
           </Canvas>
         </div>
