@@ -214,37 +214,44 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
       <group ref={bookRef} position={[0, 0, 70]}>
         {/* Front Cover - ALWAYS VISIBLE, NEVER TRANSPARENT, positioned forward of all pages */}
-        <mesh position={[-1.55, 0, -0.5]} castShadow name="front-cover">
+        <mesh position={[-1.55, 0, -0.5]} castShadow receiveShadow name="front-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={coverTexture}
-            roughness={0.7}
-            metalness={0.15}
+            roughness={0.5}
+            metalness={0.1}
             transparent={false}
             opacity={1}
-            side={THREE.FrontSide}
+            side={THREE.DoubleSide}
+            emissive="#2a2420"
+            emissiveIntensity={0.15}
           />
         </mesh>
 
         {/* Back Cover - ALWAYS SOLID, NEVER TRANSPARENT */}
-        <mesh position={[1.55, 0, 0.2]} castShadow name="back-cover">
+        <mesh position={[1.55, 0, 0.2]} castShadow receiveShadow name="back-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             color="#6b5d4f"
-            roughness={0.75}
-            metalness={0.15}
+            roughness={0.6}
+            metalness={0.1}
             transparent={false}
             opacity={1}
-            side={THREE.FrontSide}
+            side={THREE.DoubleSide}
+            emissive="#3a3228"
+            emissiveIntensity={0.12}
           />
         </mesh>
 
         {/* Spine */}
-        <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow>
+        <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
           <boxGeometry args={[0.4, 4.1, 0.6]} />
           <meshStandardMaterial
             color="#4a3f35"
-            roughness={0.85}
+            roughness={0.7}
+            metalness={0.05}
+            emissive="#2a2420"
+            emissiveIntensity={0.1}
           />
         </mesh>
 
@@ -267,77 +274,102 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           decay={2}
         />
 
-        {/* BRIGHT INTERNAL PAGE LIGHTS - illuminate pages from inside */}
+        {/* OPTIMIZED INTERNAL PAGE LIGHTS - illuminate pages from inside */}
         <pointLight
           position={[0, 0, 0]}
+          color="#fffef8"
+          intensity={18}
+          distance={12}
+          decay={0.8}
+        />
+        <pointLight
+          position={[0, 2.5, 0]}
           color="#ffffff"
-          intensity={15}
-          distance={10}
-          decay={0.5}
+          intensity={14}
+          distance={9}
+          decay={0.6}
         />
         <pointLight
-          position={[0, 2, 0]}
-          color="#fffef8"
-          intensity={12}
-          distance={8}
-          decay={0.5}
+          position={[0, -2.5, 0]}
+          color="#ffffff"
+          intensity={14}
+          distance={9}
+          decay={0.6}
+        />
+        {/* Front and back internal lights for cover illumination */}
+        <pointLight
+          position={[-2, 0, 0]}
+          color="#fffbf5"
+          intensity={10}
+          distance={6}
+          decay={0.8}
         />
         <pointLight
-          position={[0, -2, 0]}
-          color="#fffef8"
-          intensity={12}
-          distance={8}
-          decay={0.5}
+          position={[2, 0, 0]}
+          color="#fffbf5"
+          intensity={10}
+          distance={6}
+          decay={0.8}
         />
       </group>
 
       <color attach="background" args={['#f5f3ef']} />
 
-      <ambientLight intensity={2.5} color="#ffffff" />
+      {/* OPTIMIZED AMBIENT - soft base illumination */}
+      <ambientLight intensity={2.8} color="#fffef8" />
 
+      {/* KEY LIGHT - main dramatic light from top-right */}
       <directionalLight
-        position={[25, 35, 25]}
-        intensity={4.5}
+        position={[30, 40, 30]}
+        intensity={5.5}
         color="#fffbf5"
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
+        shadow-bias={-0.0001}
       />
 
+      {/* FILL LIGHT - softer light from left to reduce harsh shadows */}
       <directionalLight
-        position={[-20, 18, -18]}
-        intensity={3.5}
+        position={[-25, 20, -20]}
+        intensity={3.8}
         color="#ffffff"
       />
 
+      {/* RIM LIGHT - backlight for edge definition */}
       <directionalLight
-        position={[0, 0, 50]}
-        intensity={4.0}
-        color="#ffffff"
-      />
-
-      <pointLight
-        position={[0, -25, 20]}
-        intensity={3.5}
-        color="#fffef8"
-        distance={100}
-      />
-
-      <spotLight
-        position={[15, 25, 35]}
+        position={[0, 5, -50]}
         intensity={4.5}
-        angle={0.6}
-        penumbra={0.6}
+        color="#fffbf5"
+      />
+
+      {/* BOTTOM FILL - illuminate underside */}
+      <pointLight
+        position={[0, -30, 25]}
+        intensity={4.0}
+        color="#fffef8"
+        distance={120}
+        decay={1.5}
+      />
+
+      {/* ACCENT SPOTLIGHT - focused drama on book */}
+      <spotLight
+        position={[18, 30, 40]}
+        intensity={5.5}
+        angle={0.5}
+        penumbra={0.5}
         color="#ffffff"
         castShadow
+        shadow-bias={-0.0001}
       />
 
+      {/* FRONT SPOTLIGHT - ensures front is well-lit */}
       <spotLight
-        position={[0, 0, 20]}
-        intensity={5.0}
-        angle={1.2}
-        penumbra={0.3}
-        color="#ffffff"
+        position={[0, 0, 25]}
+        intensity={6.0}
+        angle={1.0}
+        penumbra={0.4}
+        color="#fffef8"
       />
 
       <fog attach="fog" args={['#f5f3ef', 60, 180]} />
