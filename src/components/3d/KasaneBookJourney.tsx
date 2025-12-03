@@ -240,7 +240,7 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
       <group ref={bookRef} position={[0, 0, 70]}>
         {/* Front Cover (RIGHT SIDE) - Vitruvian Man design - ALWAYS VISIBLE */}
-        <mesh position={[1.55, 0, -0.5]} rotation={[0, 0, Math.PI]} castShadow receiveShadow name="front-cover">
+        <mesh position={[1.55, 0, -0.5]} rotation={[Math.PI, 0, 0]} receiveShadow name="front-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={frontCoverTexture}
@@ -253,7 +253,7 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         </mesh>
 
         {/* Back Cover (LEFT SIDE/SPINE) - Text description - ALWAYS VISIBLE */}
-        <mesh position={[-1.55, 0, 0.2]} rotation={[0, 0, Math.PI]} castShadow receiveShadow name="back-cover">
+        <mesh position={[-1.55, 0, 0.2]} rotation={[Math.PI, 0, 0]} receiveShadow name="back-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={backCoverTexture}
@@ -326,15 +326,16 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       {/* REDUCED AMBIENT - prevent washout */}
       <ambientLight intensity={1.2} color="#ffffff" />
 
-      {/* KEY LIGHT - main light reduced */}
+      {/* KEY LIGHT - main light reduced with soft shadows */}
       <directionalLight
         position={[25, 35, 25]}
         intensity={1.5}
         color="#fffbf5"
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-bias={-0.0001}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-bias={-0.001}
+        shadow-radius={8}
       />
 
       {/* FILL LIGHT - softer */}
@@ -360,15 +361,16 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         decay={2}
       />
 
-      {/* ACCENT SPOTLIGHT - gentle */}
+      {/* ACCENT SPOTLIGHT - gentle with soft shadows */}
       <spotLight
         position={[15, 25, 35]}
         intensity={1.5}
         angle={0.6}
-        penumbra={0.6}
+        penumbra={0.8}
         color="#ffffff"
         castShadow
-        shadow-bias={-0.0001}
+        shadow-bias={-0.001}
+        shadow-radius={6}
       />
 
       <fog attach="fog" args={['#f5f3ef', 60, 180]} />
