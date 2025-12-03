@@ -28,6 +28,9 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
     console.warn(`Failed to load page ${pageNumber}:`, error);
   });
 
+  // Fix upside-down texture orientation
+  texture.flipY = false;
+
   // ALL PAGES TURN RIGHT TO LEFT (like a real book)
   // Pages start stacked on the right, flip over to the left
 
@@ -118,6 +121,9 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       console.error('Failed to load cover texture:', error);
     }
   );
+
+  // Fix upside-down cover texture orientation
+  coverTexture.flipY = false;
 
   // BOOK MOVEMENT
   useFrame(({ clock }) => {
