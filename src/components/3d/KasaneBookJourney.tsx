@@ -239,22 +239,23 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       />
 
       <group ref={bookRef} position={[0, 0, 70]}>
-        {/* Front Cover (RIGHT SIDE) - Vitruvian Man design - ALWAYS VISIBLE */}
-        <mesh position={[1.55, 0, -0.5]} rotation={[Math.PI, 0, 0]} receiveShadow name="front-cover">
-          <boxGeometry args={[3.1, 4.1, 0.12]} />
+        {/* Front Cover (RIGHT SIDE) - Vitruvian Man design - THICKER, NO BLEED-THROUGH */}
+        <mesh position={[1.55, 0, -0.8]} rotation={[Math.PI, 0, 0]} receiveShadow name="front-cover">
+          <boxGeometry args={[3.1, 4.1, 0.25]} />
           <meshStandardMaterial
             map={frontCoverTexture}
             roughness={0.6}
             metalness={0.0}
             transparent={false}
             opacity={1}
-            side={THREE.DoubleSide}
+            side={THREE.FrontSide}
+            depthWrite={true}
           />
         </mesh>
 
-        {/* Back Cover (LEFT SIDE/SPINE) - Text description - ALWAYS VISIBLE */}
-        <mesh position={[-1.55, 0, 0.2]} rotation={[Math.PI, 0, 0]} receiveShadow name="back-cover">
-          <boxGeometry args={[3.1, 4.1, 0.12]} />
+        {/* Back Cover (LEFT SIDE/SPINE) - Text description - THICKER, NO BLEED-THROUGH */}
+        <mesh position={[-1.55, 0, 0.4]} rotation={[Math.PI, 0, 0]} receiveShadow name="back-cover">
+          <boxGeometry args={[3.1, 4.1, 0.25]} />
           <meshStandardMaterial
             map={backCoverTexture}
             color="#c4a35a"
@@ -262,7 +263,8 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
             metalness={0.0}
             transparent={false}
             opacity={1}
-            side={THREE.DoubleSide}
+            side={THREE.FrontSide}
+            depthWrite={true}
           />
         </mesh>
 
