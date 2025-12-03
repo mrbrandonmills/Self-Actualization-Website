@@ -241,7 +241,7 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
       <group ref={bookRef} position={[0, 0, 70]}>
         {/* Front Cover (RIGHT SIDE) - Vitruvian Man design - THICKER, NO BLEED-THROUGH */}
-        <mesh position={[1.55, 0, -0.8]} rotation={[Math.PI, 0, 0]} receiveShadow name="front-cover">
+        <mesh position={[1.55, 0, -0.8]} receiveShadow name="front-cover">
           <boxGeometry args={[3.1, 4.1, 0.25]} />
           <meshStandardMaterial
             map={frontCoverTexture}
@@ -255,7 +255,7 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         </mesh>
 
         {/* Back Cover (LEFT SIDE/SPINE) - Text description - THICKER, NO BLEED-THROUGH */}
-        <mesh position={[-1.55, 0, 0.4]} rotation={[Math.PI, 0, 0]} receiveShadow name="back-cover">
+        <mesh position={[-1.55, 0, 0.4]} receiveShadow name="back-cover">
           <boxGeometry args={[3.1, 4.1, 0.25]} />
           <meshStandardMaterial
             map={backCoverTexture}
