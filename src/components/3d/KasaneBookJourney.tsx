@@ -340,13 +340,13 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
       <color attach="background" args={['#f5f3ef']} />
 
-      {/* BALANCED AMBIENT - pages visible but covers not washed out */}
-      <ambientLight intensity={2.0} color="#ffffff" />
+      {/* SCROLL-ADJUSTED AMBIENT - stronger at beginning, softer later */}
+      <ambientLight intensity={2.0 + (1 - scrollProgress) * 1.5} color="#ffffff" />
 
-      {/* KEY LIGHT - main light reduced with soft shadows */}
+      {/* KEY LIGHT - stronger at beginning for visibility */}
       <directionalLight
         position={[25, 35, 25]}
-        intensity={1.5}
+        intensity={1.5 + (1 - scrollProgress) * 1.0}
         color="#fffbf5"
         castShadow
         shadow-mapSize-width={1024}
@@ -355,17 +355,17 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         shadow-radius={8}
       />
 
-      {/* FILL LIGHT - softer */}
+      {/* FILL LIGHT - stronger at beginning */}
       <directionalLight
         position={[-20, 18, -18]}
-        intensity={1.0}
+        intensity={1.0 + (1 - scrollProgress) * 0.8}
         color="#ffffff"
       />
 
-      {/* FRONT LIGHT - reduced */}
+      {/* FRONT LIGHT - much stronger at beginning for initial visibility */}
       <directionalLight
         position={[0, 0, 40]}
-        intensity={1.2}
+        intensity={1.2 + (1 - scrollProgress) * 1.5}
         color="#fffbf5"
       />
 
