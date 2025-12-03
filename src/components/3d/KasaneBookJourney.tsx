@@ -124,7 +124,8 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       bookRef.current.position.z = zPosition;
 
       const pathFreq = scrollProgress * Math.PI * 2;
-      bookRef.current.position.x = Math.sin(pathFreq) * 6 + Math.cos(time * 0.15) * 0.8;
+      // WIDER sideways movement: 6 → 12 for more dramatic horizontal sweep
+      bookRef.current.position.x = Math.sin(pathFreq) * 12 + Math.cos(time * 0.15) * 1.5;
       bookRef.current.position.y = Math.cos(pathFreq * 0.8) * 4 + Math.sin(time * 0.12) * 0.6;
 
       bookRef.current.rotation.x = scrollProgress * Math.PI * 1.2 + Math.sin(time * 0.25) * 0.1;
