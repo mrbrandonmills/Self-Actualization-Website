@@ -72,8 +72,12 @@ export default function HomePage() {
   // Preload all book assets
   const { progress, isLoaded } = useBookPreloader();
 
+  // ONLY initialize scroll AFTER loading is complete
   useEffect(() => {
-    // Initialize Lenis smooth scroll
+    // Don't initialize anything until content is ready to show
+    if (!showContent) return;
+
+    // Initialize Lenis smooth scroll ONLY when ready
     const lenis = new Lenis({
       duration: 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -102,7 +106,7 @@ export default function HomePage() {
       window.removeEventListener('scroll', handleScroll);
       lenis.destroy();
     };
-  }, []);
+  }, [showContent]); // Only run when showContent changes to true
 
   // Show loading screen until all assets are loaded
   if (!showContent) {

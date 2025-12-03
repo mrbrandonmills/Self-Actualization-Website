@@ -109,8 +109,15 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
   const totalPages = 87;
   const pages = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages]);
 
-  // Load actual book cover texture
-  const coverTexture = useLoader(THREE.TextureLoader, '/textures/books/block-a-b-cover.png');
+  // Load actual book cover texture with error handling
+  const coverTexture = useLoader(
+    THREE.TextureLoader,
+    '/textures/books/block-a-b-cover.png',
+    undefined,
+    (error) => {
+      console.error('Failed to load cover texture:', error);
+    }
+  );
 
   // BOOK MOVEMENT
   useFrame(({ clock }) => {
@@ -218,13 +225,13 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={coverTexture}
-            roughness={0.5}
-            metalness={0.1}
+            roughness={0.65}
+            metalness={0.08}
             transparent={false}
             opacity={1}
             side={THREE.DoubleSide}
-            emissive="#2a2420"
-            emissiveIntensity={0.15}
+            emissive="#1a1410"
+            emissiveIntensity={0.05}
           />
         </mesh>
 
@@ -233,13 +240,13 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             color="#6b5d4f"
-            roughness={0.6}
-            metalness={0.1}
+            roughness={0.7}
+            metalness={0.08}
             transparent={false}
             opacity={1}
             side={THREE.DoubleSide}
-            emissive="#3a3228"
-            emissiveIntensity={0.12}
+            emissive="#2a2420"
+            emissiveIntensity={0.05}
           />
         </mesh>
 
@@ -274,54 +281,39 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           decay={2}
         />
 
-        {/* OPTIMIZED INTERNAL PAGE LIGHTS - illuminate pages from inside */}
+        {/* BALANCED INTERNAL PAGE LIGHTS - illuminate pages from inside */}
         <pointLight
           position={[0, 0, 0]}
           color="#fffef8"
-          intensity={18}
-          distance={12}
+          intensity={10}
+          distance={10}
+          decay={1.0}
+        />
+        <pointLight
+          position={[0, 2, 0]}
+          color="#ffffff"
+          intensity={8}
+          distance={8}
           decay={0.8}
         />
         <pointLight
-          position={[0, 2.5, 0]}
+          position={[0, -2, 0]}
           color="#ffffff"
-          intensity={14}
-          distance={9}
-          decay={0.6}
-        />
-        <pointLight
-          position={[0, -2.5, 0]}
-          color="#ffffff"
-          intensity={14}
-          distance={9}
-          decay={0.6}
-        />
-        {/* Front and back internal lights for cover illumination */}
-        <pointLight
-          position={[-2, 0, 0]}
-          color="#fffbf5"
-          intensity={10}
-          distance={6}
-          decay={0.8}
-        />
-        <pointLight
-          position={[2, 0, 0]}
-          color="#fffbf5"
-          intensity={10}
-          distance={6}
+          intensity={8}
+          distance={8}
           decay={0.8}
         />
       </group>
 
       <color attach="background" args={['#f5f3ef']} />
 
-      {/* OPTIMIZED AMBIENT - soft base illumination */}
-      <ambientLight intensity={2.8} color="#fffef8" />
+      {/* BALANCED AMBIENT - soft base illumination */}
+      <ambientLight intensity={1.8} color="#fffef8" />
 
       {/* KEY LIGHT - main dramatic light from top-right */}
       <directionalLight
-        position={[30, 40, 30]}
-        intensity={5.5}
+        position={[25, 35, 25]}
+        intensity={3.2}
         color="#fffbf5"
         castShadow
         shadow-mapSize-width={2048}
@@ -329,47 +321,38 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         shadow-bias={-0.0001}
       />
 
-      {/* FILL LIGHT - softer light from left to reduce harsh shadows */}
+      {/* FILL LIGHT - softer light from left */}
       <directionalLight
-        position={[-25, 20, -20]}
-        intensity={3.8}
+        position={[-20, 18, -18]}
+        intensity={2.5}
         color="#ffffff"
       />
 
-      {/* RIM LIGHT - backlight for edge definition */}
+      {/* FRONT LIGHT - ensures visibility */}
       <directionalLight
-        position={[0, 5, -50]}
-        intensity={4.5}
+        position={[0, 0, 40]}
+        intensity={2.8}
         color="#fffbf5"
       />
 
-      {/* BOTTOM FILL - illuminate underside */}
+      {/* BOTTOM FILL - subtle underside illumination */}
       <pointLight
-        position={[0, -30, 25]}
-        intensity={4.0}
+        position={[0, -25, 20]}
+        intensity={2.2}
         color="#fffef8"
-        distance={120}
-        decay={1.5}
+        distance={100}
+        decay={2}
       />
 
-      {/* ACCENT SPOTLIGHT - focused drama on book */}
+      {/* ACCENT SPOTLIGHT - focused book emphasis */}
       <spotLight
-        position={[18, 30, 40]}
-        intensity={5.5}
-        angle={0.5}
-        penumbra={0.5}
+        position={[15, 25, 35]}
+        intensity={3.0}
+        angle={0.6}
+        penumbra={0.6}
         color="#ffffff"
         castShadow
         shadow-bias={-0.0001}
-      />
-
-      {/* FRONT SPOTLIGHT - ensures front is well-lit */}
-      <spotLight
-        position={[0, 0, 25]}
-        intensity={6.0}
-        angle={1.0}
-        penumbra={0.4}
-        color="#fffef8"
       />
 
       <fog attach="fog" args={['#f5f3ef', 60, 180]} />
