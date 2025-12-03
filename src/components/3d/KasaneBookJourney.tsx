@@ -90,10 +90,10 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.3}
+            roughness={0.4}
             metalness={0.0}
             emissive="#ffffff"
-            emissiveIntensity={0.6}
+            emissiveIntensity={0.15}
           />
         </mesh>
       </group>
@@ -288,62 +288,48 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           />
         ))}
 
-        {/* Dynamic glow */}
+        {/* Subtle dynamic glow */}
         <pointLight
           position={[0, 0, 0]}
           color="#FFD700"
-          intensity={1 + scrollProgress * 6}
-          distance={30}
+          intensity={0.3 + scrollProgress * 1.5}
+          distance={20}
           decay={2}
         />
 
-        {/* BRIGHT INTERNAL PAGE LIGHTS - make pages clearly readable */}
+        {/* REDUCED INTERNAL LIGHTS - prevent washout */}
         <pointLight
           position={[0, 0, 0]}
           color="#ffffff"
-          intensity={25}
-          distance={15}
-          decay={0.5}
+          intensity={5}
+          distance={10}
+          decay={1}
         />
         <pointLight
-          position={[0, 3, 0]}
+          position={[0, 2, 0]}
           color="#ffffff"
-          intensity={20}
-          distance={12}
-          decay={0.5}
-        />
-        <pointLight
-          position={[0, -3, 0]}
-          color="#ffffff"
-          intensity={20}
-          distance={12}
-          decay={0.5}
-        />
-        <pointLight
-          position={[-1.5, 0, 0]}
-          color="#ffffff"
-          intensity={15}
+          intensity={3}
           distance={8}
-          decay={0.5}
+          decay={1}
         />
         <pointLight
-          position={[1.5, 0, 0]}
+          position={[0, -2, 0]}
           color="#ffffff"
-          intensity={15}
+          intensity={3}
           distance={8}
-          decay={0.5}
+          decay={1}
         />
       </group>
 
       <color attach="background" args={['#f5f3ef']} />
 
-      {/* BRIGHT AMBIENT - ensure everything is visible */}
-      <ambientLight intensity={3.5} color="#ffffff" />
+      {/* REDUCED AMBIENT - prevent washout */}
+      <ambientLight intensity={1.2} color="#ffffff" />
 
-      {/* KEY LIGHT - main dramatic light from top-right */}
+      {/* KEY LIGHT - main light reduced */}
       <directionalLight
         position={[25, 35, 25]}
-        intensity={3.2}
+        intensity={1.5}
         color="#fffbf5"
         castShadow
         shadow-mapSize-width={2048}
@@ -351,33 +337,33 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         shadow-bias={-0.0001}
       />
 
-      {/* FILL LIGHT - softer light from left */}
+      {/* FILL LIGHT - softer */}
       <directionalLight
         position={[-20, 18, -18]}
-        intensity={2.5}
+        intensity={1.0}
         color="#ffffff"
       />
 
-      {/* FRONT LIGHT - ensures visibility */}
+      {/* FRONT LIGHT - reduced */}
       <directionalLight
         position={[0, 0, 40]}
-        intensity={2.8}
+        intensity={1.2}
         color="#fffbf5"
       />
 
-      {/* BOTTOM FILL - subtle underside illumination */}
+      {/* BOTTOM FILL - subtle */}
       <pointLight
         position={[0, -25, 20]}
-        intensity={2.2}
+        intensity={0.8}
         color="#fffef8"
         distance={100}
         decay={2}
       />
 
-      {/* ACCENT SPOTLIGHT - focused book emphasis */}
+      {/* ACCENT SPOTLIGHT - gentle */}
       <spotLight
         position={[15, 25, 35]}
-        intensity={3.0}
+        intensity={1.5}
         angle={0.6}
         penumbra={0.6}
         color="#ffffff"
