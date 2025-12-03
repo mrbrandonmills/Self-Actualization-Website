@@ -90,11 +90,12 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.3}
+            roughness={0.2}
             metalness={0.0}
             emissive="#ffffff"
-            emissiveIntensity={0.5}
+            emissiveIntensity={1.5}
             color="#ffffff"
+            toneMapped={false}
           />
         </mesh>
       </group>
@@ -300,41 +301,41 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           decay={2}
         />
 
-        {/* INTERNAL PAGE LIGHTS - make texture content visible */}
+        {/* MAXIMUM INTERNAL LIGHTS - eliminate ALL gray */}
         <pointLight
           position={[0, 0, 0]}
           color="#ffffff"
-          intensity={12}
-          distance={12}
-          decay={0.8}
+          intensity={20}
+          distance={15}
+          decay={0.5}
         />
         <pointLight
           position={[0, 3, 0]}
           color="#ffffff"
-          intensity={8}
-          distance={10}
-          decay={0.8}
+          intensity={15}
+          distance={12}
+          decay={0.5}
         />
         <pointLight
           position={[0, -3, 0]}
           color="#ffffff"
-          intensity={8}
-          distance={10}
-          decay={0.8}
+          intensity={15}
+          distance={12}
+          decay={0.5}
         />
         <pointLight
           position={[1.5, 0, 0]}
           color="#ffffff"
-          intensity={6}
-          distance={8}
-          decay={0.8}
+          intensity={12}
+          distance={10}
+          decay={0.5}
         />
         <pointLight
           position={[-1.5, 0, 0]}
           color="#ffffff"
-          intensity={6}
-          distance={8}
-          decay={0.8}
+          intensity={12}
+          distance={10}
+          decay={0.5}
         />
       </group>
 
