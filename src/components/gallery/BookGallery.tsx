@@ -14,9 +14,11 @@ interface Book {
   subtitle: string
   category: string
   coverImage: string
-  price: number
+  price: string
   featured?: boolean
   slug: string
+  amazonUrl: string
+  format?: string
 }
 
 interface BookGalleryProps {

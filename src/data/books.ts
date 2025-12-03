@@ -1,6 +1,7 @@
 /**
- * Books Data
- * Sample book catalog for The Self Actualized Life
+ * Books Data - The Self Actualized Life
+ * Amazon Affiliate Integration
+ * Associates ID: selfactualize.life-20
  */
 
 export interface Book {
@@ -9,82 +10,78 @@ export interface Book {
   subtitle: string
   description: string
   coverImage: string
-  price: number
-  category: 'Philosophy' | 'Psychology' | 'Practice'
+  price: string
+  category: 'Philosophy' | 'Psychology' | 'Practice' | 'Laboratory'
   slug: string
   author?: string
   featured?: boolean
+  amazonUrl: string
+  format?: string
+  publishDate?: string
+}
+
+// Amazon Associates ID for affiliate tracking
+export const AMAZON_ASSOCIATES_ID = 'selfactualize.life-20'
+
+/**
+ * Helper function to create Amazon affiliate link
+ */
+export function createAffiliateLink(amazonUrl: string): string {
+  try {
+    const url = new URL(amazonUrl)
+    url.searchParams.set('tag', AMAZON_ASSOCIATES_ID)
+    return url.toString()
+  } catch (error) {
+    console.error('Invalid Amazon URL:', amazonUrl)
+    return amazonUrl
+  }
 }
 
 export const books: Book[] = [
   {
-    id: '1',
-    title: 'The Authentic Path',
-    subtitle: 'Discovering Your True Self',
-    description: 'A profound exploration of authenticity and self-discovery. Learn to shed societal masks and embrace your genuine nature through philosophical wisdom and practical exercises.',
-    coverImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&h=1200&fit=crop&q=80',
-    price: 29,
-    category: 'Philosophy',
-    slug: 'the-authentic-path',
-    author: 'Dr. Marcus Stone',
+    id: 'random-acts-building-blocks-a-b',
+    title: 'Random Acts of Self-Actualization',
+    subtitle: 'Building Block A & Building Block B - Foundations of Self-Actualization',
+    description: 'Every one of us is trapped by problems we believe can\'t be solved. Some think they are stuck forever. Others keep trying random solutions, only to find themselves back where they started. Both are right. Until now.\n\nThis laboratory of life welcomes all the lost wisdom of the Ancients blended with the psychology and philosophy of the modern world. That includes everything from, how they built up cities, and how we ended beyond them. Most importantly, we can discover what continues to stick with us no matter how we wish it wouldn\'t.\n\nBuilding Blocks A and B are the foundational laboratories every person needs for a powerful, sustainable, and addictive self-actualization. Block A helps us engineer new patterns using what you already know. Block B lays the foundation of how to make the right judgments in an increasingly turbulent world.',
+    coverImage: '/textures/books/front-cover-highres.png',
+    price: '$9.99',
+    category: 'Laboratory',
+    slug: 'random-acts-building-blocks-a-b',
+    author: 'Rock Q Cool Box',
     featured: true,
+    amazonUrl: 'https://www.amazon.com/Random-Acts-Self-Actualization-Building-Addictive-ebook/dp/B0DRDXCJZQ/ref=sr_1_1',
+    format: 'Kindle',
+    publishDate: '2024',
   },
   {
-    id: '2',
-    title: 'Mind Mastery',
-    subtitle: 'The Psychology of Peak Performance',
-    description: 'Unlock your mental potential through cutting-edge neuroscience and time-tested psychological principles. Transform your thinking patterns and achieve extraordinary results.',
-    coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=1200&fit=crop&q=80',
-    price: 34,
-    category: 'Psychology',
-    slug: 'mind-mastery',
-    author: 'Dr. Sarah Chen',
+    id: 'random-acts-block-b',
+    title: 'Random Acts of Self-Actualization',
+    subtitle: 'Block B - The Laboratory of Judgment',
+    description: 'Block B lays the foundation of how to make the right judgments in an increasingly turbulent world. Learn to structure your decision-making processes and navigate complexity with confidence.\n\nThis is the second building block in the Laboratory of Life series, focusing on developing the critical thinking and judgment skills necessary for self-actualization in modern times.',
+    coverImage: '/textures/books/back-cover-text.png',
+    price: '$9.99',
+    category: 'Laboratory',
+    slug: 'random-acts-block-b',
+    author: 'Rock Q Cool Box',
     featured: true,
+    amazonUrl: 'https://www.amazon.com/Random-Acts-Self-Actualization-Block-B-ebook/dp/B0DSY6Z4YP/ref=sr_1_2',
+    format: 'Kindle',
+    publishDate: '2024',
   },
   {
-    id: '3',
-    title: 'Daily Practices',
-    subtitle: 'Rituals for Self-Actualization',
-    description: 'Transform your life through powerful daily rituals. Simple, science-backed practices that compound into extraordinary personal growth over time.',
-    coverImage: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=800&h=1200&fit=crop&q=80',
-    price: 24,
-    category: 'Practice',
-    slug: 'daily-practices',
-    author: 'Michael Rivers',
-  },
-  {
-    id: '4',
-    title: 'Becoming Whole',
-    subtitle: 'Integration and Inner Harmony',
-    description: 'Navigate the journey of integration where all aspects of self unite in harmony. A philosophical guide to wholeness, completeness, and inner peace.',
-    coverImage: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800&h=1200&fit=crop&q=80',
-    price: 39,
-    category: 'Philosophy',
-    slug: 'becoming-whole',
-    author: 'Dr. Elena Martinez',
+    id: 'block-c-laboratory-of-living',
+    title: 'BLOCK C: THE LABORATORY OF LIVING',
+    subtitle: 'Random Acts of Self-Actualization',
+    description: 'Block C introduces how to structure our social ecosystems in such a way that not only accelerates self-actualization but assures transformation feels momentum, not uphill struggle.\n\nThe final building block completes the Laboratory of Life trilogy, showing you how to engineer your environment and relationships for sustainable growth and transformation.',
+    coverImage: '/textures/books/front-cover-highres.png',
+    price: '$9.99',
+    category: 'Laboratory',
+    slug: 'block-c-laboratory-of-living',
+    author: 'Rock Q Cool Box',
     featured: true,
-  },
-  {
-    id: '5',
-    title: 'The Inner Journey',
-    subtitle: 'Mapping Your Psychological Landscape',
-    description: 'Explore the depths of your psyche with expert guidance. Understand your shadows, embrace your light, and navigate the complex terrain of human consciousness.',
-    coverImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1200&fit=crop&q=80',
-    price: 29,
-    category: 'Psychology',
-    slug: 'the-inner-journey',
-    author: 'Dr. James Whitmore',
-  },
-  {
-    id: '6',
-    title: 'Conscious Living',
-    subtitle: 'Mindfulness in Modern Life',
-    description: 'Bring awareness to every moment. Practical techniques for maintaining presence, clarity, and purpose in the chaos of contemporary existence.',
-    coverImage: 'https://images.unsplash.com/photo-1516414447565-b14be0adf13e?w=800&h=1200&fit=crop&q=80',
-    price: 27,
-    category: 'Practice',
-    slug: 'conscious-living',
-    author: 'Alexandra Sun',
+    amazonUrl: 'https://www.amazon.com/BLOCK-LABORATORY-LIVING-Random-Self-Actualization-ebook/dp/B0G3VGJM1F/ref=sr_1_3',
+    format: 'Kindle',
+    publishDate: '2024',
   },
 ]
 

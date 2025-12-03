@@ -176,12 +176,20 @@ export default function HomePage() {
               <br />
               Your life is the lab. You are the scientist.
             </p>
-            <a
-              href="#process"
-              className="inline-block px-8 py-4 bg-gradient-to-r from-[var(--accent-warm)] via-[#d4a574] to-[var(--accent-warm)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg text-white font-semibold shadow-2xl hover:shadow-[0_0_40px_rgba(196,163,90,0.6)] transition-all duration-500"
-            >
-              Enter The Laboratory →
-            </a>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <a
+                href="#process"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-[var(--accent-warm)] via-[#d4a574] to-[var(--accent-warm)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg text-white font-semibold shadow-2xl hover:shadow-[0_0_40px_rgba(196,163,90,0.6)] transition-all duration-500"
+              >
+                Enter The Laboratory →
+              </a>
+              <a
+                href="/books"
+                className="inline-block px-8 py-4 bg-white border-2 border-[var(--accent-warm)] rounded-lg text-[var(--accent-warm)] font-semibold shadow-xl hover:bg-[var(--accent-warm)] hover:text-white transition-all duration-300"
+              >
+                Shop Books 📚
+              </a>
+            </div>
           </div>
         </section>
       </div>

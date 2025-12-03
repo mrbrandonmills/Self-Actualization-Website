@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
 import Image from 'next/image'
+import { createAffiliateLink } from '@/data/books'
 
 interface Book {
   id: string
@@ -11,9 +11,11 @@ interface Book {
   subtitle: string
   category: string
   coverImage: string
-  price: number
+  price: string
   featured?: boolean
   slug: string
+  amazonUrl: string
+  format?: string
 }
 
 interface BookGalleryItemProps {
@@ -22,19 +24,28 @@ interface BookGalleryItemProps {
 }
 
 /**
- * BookGalleryItem - Individual book card with House of Corto interactions
+ * BookGalleryItem - Individual book card with Amazon affiliate integration
  *
  * Features:
  * - Text swap animation on hover (0.8s ease)
  * - Lift effect with 0.7s cubic-bezier
  * - Sage green category badge
+ * - Amazon affiliate links with target="_blank"
  * - Smooth transitions matching Corto aesthetic
  */
 export function BookGalleryItem({ book }: BookGalleryItemProps) {
   const [isHovered, setIsHovered] = useState(false)
 
+  // Create Amazon affiliate link with tracking
+  const amazonLink = createAffiliateLink(book.amazonUrl)
+
   return (
-    <Link href={`/books/${book.slug}`}>
+    <a
+      href={amazonLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+    >
       <motion.div
         className="gallery-item"
         onMouseEnter={() => setIsHovered(true)}
@@ -96,15 +107,29 @@ export function BookGalleryItem({ book }: BookGalleryItemProps) {
               <p className="gallery-item-subtitle">
                 {book.subtitle}
               </p>
-              <div className="gallery-item-price">
-                <span className="price-amount">${book.price}</span>
-                <span className="price-label">USD</span>
+              <div className="gallery-item-footer">
+                <div className="gallery-item-price">
+                  <span className="price-amount">{book.price}</span>
+                  {book.format && (
+                    <span className="price-label">{book.format}</span>
+                  )}
+                </div>
+                <button className="amazon-cta">
+                  View on Amazon →
+                </button>
               </div>
             </div>
           </motion.div>
         </div>
+      </motion.div>
+    </a>
+  )
+}
 
-        <style jsx global>{`
+// Styles are now global
+export const BookGalleryItemStyles = () => (
+  <>
+    <style jsx global>{`
           /* Gallery Item Container */
           .gallery-item-inner {
             position: relative;
@@ -207,11 +232,21 @@ export function BookGalleryItem({ book }: BookGalleryItemProps) {
             overflow: hidden;
           }
 
+          /* Footer with Price and CTA */
+          .gallery-item-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+          }
+
           /* Price */
           .gallery-item-price {
             display: flex;
             align-items: baseline;
             gap: var(--space-xs);
+            flex-shrink: 0;
           }
 
           .price-amount {
@@ -225,6 +260,30 @@ export function BookGalleryItem({ book }: BookGalleryItemProps) {
             color: var(--color-text-tertiary);
             text-transform: uppercase;
             letter-spacing: var(--tracking-wider);
+          }
+
+          /* Amazon CTA Button */
+          .amazon-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-accent-gold);
+            color: var(--color-black-green);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-small);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wide);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+          }
+
+          .amazon-cta:hover {
+            background: #d4af37;
+            transform: translateX(4px);
           }
 
           /* Responsive */
@@ -253,9 +312,18 @@ export function BookGalleryItem({ book }: BookGalleryItemProps) {
             .gallery-item-title {
               font-size: var(--font-size-h5);
             }
+
+            .gallery-item-footer {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: var(--space-sm);
+            }
+
+            .amazon-cta {
+              width: 100%;
+              justify-content: center;
+            }
           }
         `}</style>
-      </motion.div>
-    </Link>
-  )
-}
+  </>
+)
