@@ -5,15 +5,13 @@ const nextConfig: NextConfig = {
   // Strict mode double-renders cause "Canvas has existing context" error
   reactStrictMode: false,
 
-  // Ignore ESLint errors during production builds
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   // Ignore TypeScript errors during production builds
   typescript: {
     ignoreBuildErrors: true,
   },
+
+  // Enable Turbopack (Next.js 16 default bundler)
+  turbopack: {},
 
   // Optimize images
   images: {
