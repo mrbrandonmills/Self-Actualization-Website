@@ -1,6 +1,6 @@
 'use client'
 
-import { BookGallery } from '@/components/gallery/BookGallery'
+import { Museum3DGallery } from '@/components/gallery/Museum3DGallery'
 import { books } from '@/data/books'
 import { CustomCursor } from '@/components/bartosz/CustomCursor'
 import { VideoNoise } from '@/components/bartosz/VideoNoise'
@@ -52,7 +52,7 @@ export default function BooksPage() {
 
       {/* Gallery Section */}
       <section className="section">
-        <BookGallery
+        <Museum3DGallery
           books={books}
           title="The Museum of Becoming"
           subtitle="Curated Collection"
