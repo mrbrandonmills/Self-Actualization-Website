@@ -1,7 +1,9 @@
 /**
- * KasaneBookJourney - Book Opens RIGHT TO LEFT, Slower Page Turns
+ * KasaneBookJourney - Book Opens RIGHT TO LEFT, Ultra-Slow Elegant Page Turns
  * All pages flip from right to left like a real book
- * 50% slower page turning for elegant unveiling
+ * ULTRA SLOW: 75% slower page turning for maximum elegance
+ * EXTENDED JOURNEY: Longer scroll animation for immersive experience
+ * COVER ALWAYS VISIBLE: Front cover stays attached and visible
  */
 
 'use client';
@@ -21,17 +23,19 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
   const pivotRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // Load page texture
-  const texture = useLoader(THREE.TextureLoader, `/book-pages/${pageNumber}.png`);
+  // Load page texture with error handling
+  const texture = useLoader(THREE.TextureLoader, `/book-pages/${pageNumber}.png`, undefined, (error) => {
+    console.warn(`Failed to load page ${pageNumber}:`, error);
+  });
 
   // ALL PAGES TURN RIGHT TO LEFT (like a real book)
   // Pages start stacked on the right, flip over to the left
 
   // Calculate when this page flips
-  // Opening: 0% to 80% scroll
-  // 50% SLOWER = double the flip duration (0.05 → 0.1)
-  const flipStartProgress = (pageNumber - 1) / totalPages * 0.8;
-  const flipDuration = 0.1; // 10% of scroll per page (was 0.05)
+  // EXTENDED Opening: 0% to 85% scroll (longer journey)
+  // ULTRA SLOW: 75% slower = 0.15 duration (was 0.05, then 0.1, now 0.15)
+  const flipStartProgress = (pageNumber - 1) / totalPages * 0.85;
+  const flipDuration = 0.15; // 15% of scroll per page - ultra elegant slow reveal
   const flipEndProgress = flipStartProgress + flipDuration;
 
   useFrame(() => {
@@ -39,8 +43,8 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
 
     let rotationAmount = 0;
 
-    if (scrollProgress < 0.8) {
-      // OPENING PHASE
+    if (scrollProgress < 0.85) {
+      // OPENING PHASE (extended to 85% for longer journey)
       const pageProgress = THREE.MathUtils.clamp(
         (scrollProgress - flipStartProgress) / flipDuration,
         0,
@@ -53,12 +57,12 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
         : 1 - Math.pow(-2 * pageProgress + 2, 3) / 2;
 
       rotationAmount = eased;
-    } else if (scrollProgress >= 0.8 && scrollProgress < 0.95) {
-      // OPEN STATE
+    } else if (scrollProgress >= 0.85 && scrollProgress < 0.97) {
+      // OPEN STATE (longer hold time)
       rotationAmount = 1;
     } else {
-      // CLOSING PHASE
-      const closeProgress = (scrollProgress - 0.95) / 0.05;
+      // CLOSING PHASE (starts at 97% instead of 95%)
+      const closeProgress = (scrollProgress - 0.97) / 0.03;
       const eased = closeProgress < 0.5
         ? 4 * closeProgress * closeProgress * closeProgress
         : 1 - Math.pow(-2 * closeProgress + 2, 3) / 2;
@@ -112,9 +116,9 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
     const time = clock.getElapsedTime();
 
-    if (scrollProgress < 0.95) {
-      // Flying phase
-      const zPosition = THREE.MathUtils.lerp(70, -30, scrollProgress / 0.95);
+    if (scrollProgress < 0.97) {
+      // Flying phase (extended to 97%)
+      const zPosition = THREE.MathUtils.lerp(70, -30, scrollProgress / 0.97);
       bookRef.current.position.z = zPosition;
 
       const pathFreq = scrollProgress * Math.PI * 2;
@@ -125,10 +129,10 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       bookRef.current.rotation.y = scrollProgress * Math.PI * 3 + Math.cos(time * 0.2) * 0.15;
       bookRef.current.rotation.z = Math.sin(scrollProgress * Math.PI * 1.5) * 0.3;
 
-      const scale = THREE.MathUtils.lerp(0.7, 2.0, scrollProgress / 0.95);
+      const scale = THREE.MathUtils.lerp(0.7, 2.0, scrollProgress / 0.97);
       bookRef.current.scale.setScalar(scale);
     } else {
-      // Stopped phase
+      // Stopped phase (starts at 97%)
       bookRef.current.position.z = -30;
       bookRef.current.position.y = Math.sin(time * 0.5) * 0.2;
       bookRef.current.rotation.y = Math.PI * 3 + Math.cos(time * 0.3) * 0.05;
@@ -202,8 +206,8 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       />
 
       <group ref={bookRef} position={[0, 0, 70]}>
-        {/* Front Cover - with actual book cover texture */}
-        <mesh position={[-1.55, 0, -0.2]} castShadow>
+        {/* Front Cover - ALWAYS VISIBLE, positioned forward of all pages */}
+        <mesh position={[-1.55, 0, -0.5]} castShadow>
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={coverTexture}
