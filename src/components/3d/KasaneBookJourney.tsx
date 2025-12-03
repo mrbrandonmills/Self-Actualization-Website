@@ -112,18 +112,31 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
   const totalPages = 87;
   const pages = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages]);
 
-  // Load actual book cover texture with error handling
-  const coverTexture = useLoader(
+  // Load FRONT cover texture (Vitruvian Man design)
+  const frontCoverTexture = useLoader(
     THREE.TextureLoader,
     '/textures/books/block-a-b-cover.png',
     undefined,
     (error) => {
-      console.error('Failed to load cover texture:', error);
+      console.error('Failed to load front cover texture:', error);
     }
   );
 
-  // Fix upside-down cover texture orientation
-  coverTexture.flipY = false;
+  // Fix upside-down texture orientation
+  frontCoverTexture.flipY = false;
+
+  // Load BACK cover texture (text description) - will use solid color if not found
+  const backCoverTexture = useLoader(
+    THREE.TextureLoader,
+    '/textures/books/back-cover-text.png',
+    undefined,
+    (error) => {
+      console.warn('Back cover texture not found, will use solid color:', error);
+    }
+  );
+
+  // Fix upside-down texture orientation
+  backCoverTexture.flipY = false;
 
   // BOOK MOVEMENT
   useFrame(({ clock }) => {
@@ -226,11 +239,11 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
       />
 
       <group ref={bookRef} position={[0, 0, 70]}>
-        {/* Front Cover (RIGHT SIDE) - ALWAYS VISIBLE, NEVER TRANSPARENT, where book starts */}
+        {/* Front Cover (RIGHT SIDE) - Vitruvian Man design - ALWAYS VISIBLE */}
         <mesh position={[1.55, 0, -0.5]} castShadow receiveShadow name="front-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
-            map={coverTexture}
+            map={frontCoverTexture}
             roughness={0.6}
             metalness={0.0}
             transparent={false}
@@ -239,11 +252,12 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           />
         </mesh>
 
-        {/* Back Cover (LEFT SIDE/SPINE) - ALWAYS VISIBLE, ALSO HAS VITRUVIAN MAN */}
+        {/* Back Cover (LEFT SIDE/SPINE) - Text description - ALWAYS VISIBLE */}
         <mesh position={[-1.55, 0, 0.2]} castShadow receiveShadow name="back-cover">
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
-            map={coverTexture}
+            map={backCoverTexture}
+            color="#c4a35a"
             roughness={0.6}
             metalness={0.0}
             transparent={false}

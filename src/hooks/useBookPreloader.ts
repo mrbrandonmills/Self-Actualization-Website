@@ -10,12 +10,13 @@ export function useBookPreloader() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const totalAssets = 88; // 87 pages + 1 cover
+    const totalAssets = 89; // 87 pages + 2 covers (front + back)
     let loadedAssets = 0;
 
     // Array of all assets to preload
     const assetUrls = [
-      '/textures/books/block-a-b-cover.png', // Book cover
+      '/textures/books/block-a-b-cover.png', // Front cover (Vitruvian Man)
+      '/textures/books/back-cover-text.png', // Back cover (text description)
       ...Array.from({ length: 87 }, (_, i) => `/book-pages/${i + 1}.png`), // All 87 pages
     ];
 
