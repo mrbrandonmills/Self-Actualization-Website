@@ -87,8 +87,10 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.65}
-            metalness={0.05}
+            roughness={0.4}
+            metalness={0.0}
+            emissive="#ffffff"
+            emissiveIntensity={0.3}
           />
         </mesh>
       </group>
@@ -253,15 +255,38 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           distance={30}
           decay={2}
         />
+
+        {/* BRIGHT INTERNAL PAGE LIGHTS - illuminate pages from inside */}
+        <pointLight
+          position={[0, 0, 0]}
+          color="#ffffff"
+          intensity={15}
+          distance={10}
+          decay={0.5}
+        />
+        <pointLight
+          position={[0, 2, 0]}
+          color="#fffef8"
+          intensity={12}
+          distance={8}
+          decay={0.5}
+        />
+        <pointLight
+          position={[0, -2, 0]}
+          color="#fffef8"
+          intensity={12}
+          distance={8}
+          decay={0.5}
+        />
       </group>
 
       <color attach="background" args={['#f5f3ef']} />
 
-      <ambientLight intensity={1.3} color="#ffffff" />
+      <ambientLight intensity={2.5} color="#ffffff" />
 
       <directionalLight
         position={[25, 35, 25]}
-        intensity={2.8}
+        intensity={4.5}
         color="#fffbf5"
         castShadow
         shadow-mapSize-width={2048}
@@ -270,24 +295,38 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
       <directionalLight
         position={[-20, 18, -18]}
-        intensity={1.8}
-        color="#e8dcc0"
+        intensity={3.5}
+        color="#ffffff"
+      />
+
+      <directionalLight
+        position={[0, 0, 50]}
+        intensity={4.0}
+        color="#ffffff"
       />
 
       <pointLight
         position={[0, -25, 20]}
-        intensity={1.5}
-        color="#fff5e0"
+        intensity={3.5}
+        color="#fffef8"
         distance={100}
       />
 
       <spotLight
         position={[15, 25, 35]}
-        intensity={2.5}
+        intensity={4.5}
         angle={0.6}
         penumbra={0.6}
-        color="#fff8eb"
+        color="#ffffff"
         castShadow
+      />
+
+      <spotLight
+        position={[0, 0, 20]}
+        intensity={5.0}
+        angle={1.2}
+        penumbra={0.3}
+        color="#ffffff"
       />
 
       <fog attach="fog" args={['#f5f3ef', 60, 180]} />
