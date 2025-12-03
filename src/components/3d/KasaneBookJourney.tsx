@@ -87,10 +87,10 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.4}
+            roughness={0.3}
             metalness={0.0}
             emissive="#ffffff"
-            emissiveIntensity={0.3}
+            emissiveIntensity={0.6}
           />
         </mesh>
       </group>
@@ -225,13 +225,11 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
             map={coverTexture}
-            roughness={0.65}
-            metalness={0.08}
+            roughness={0.6}
+            metalness={0.0}
             transparent={false}
             opacity={1}
             side={THREE.DoubleSide}
-            emissive="#1a1410"
-            emissiveIntensity={0.05}
           />
         </mesh>
 
@@ -281,34 +279,48 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
           decay={2}
         />
 
-        {/* BALANCED INTERNAL PAGE LIGHTS - illuminate pages from inside */}
+        {/* BRIGHT INTERNAL PAGE LIGHTS - make pages clearly readable */}
         <pointLight
           position={[0, 0, 0]}
-          color="#fffef8"
-          intensity={10}
-          distance={10}
-          decay={1.0}
+          color="#ffffff"
+          intensity={25}
+          distance={15}
+          decay={0.5}
         />
         <pointLight
-          position={[0, 2, 0]}
+          position={[0, 3, 0]}
           color="#ffffff"
-          intensity={8}
-          distance={8}
-          decay={0.8}
+          intensity={20}
+          distance={12}
+          decay={0.5}
         />
         <pointLight
-          position={[0, -2, 0]}
+          position={[0, -3, 0]}
           color="#ffffff"
-          intensity={8}
+          intensity={20}
+          distance={12}
+          decay={0.5}
+        />
+        <pointLight
+          position={[-1.5, 0, 0]}
+          color="#ffffff"
+          intensity={15}
           distance={8}
-          decay={0.8}
+          decay={0.5}
+        />
+        <pointLight
+          position={[1.5, 0, 0]}
+          color="#ffffff"
+          intensity={15}
+          distance={8}
+          decay={0.5}
         />
       </group>
 
       <color attach="background" args={['#f5f3ef']} />
 
-      {/* BALANCED AMBIENT - soft base illumination */}
-      <ambientLight intensity={1.8} color="#fffef8" />
+      {/* BRIGHT AMBIENT - ensure everything is visible */}
+      <ambientLight intensity={3.5} color="#ffffff" />
 
       {/* KEY LIGHT - main dramatic light from top-right */}
       <directionalLight
