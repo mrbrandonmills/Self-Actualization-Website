@@ -1,6 +1,7 @@
 /**
- * KasaneBookJourney - Book Opens, Pages Flip, Camera 360°, Book Closes & Fades
- * Starts closed → Pages flip naturally → Camera orbits 360° → Book closes → Fades out
+ * KasaneBookJourney - Book Opens RIGHT TO LEFT, Slower Page Turns
+ * All pages flip from right to left like a real book
+ * 50% slower page turning for elegant unveiling
  */
 
 'use client';
@@ -17,23 +18,21 @@ interface BookPageProps {
 }
 
 function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
-  const pivotRef = useRef<THREE.Group>(null); // Pivot at spine
+  const pivotRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
 
   // Load page texture
   const texture = useLoader(THREE.TextureLoader, `/book-pages/${pageNumber}.png`);
 
-  // Determine if left or right page
-  const isLeftPage = pageNumber % 2 === 1;
+  // ALL PAGES TURN RIGHT TO LEFT (like a real book)
+  // Pages start stacked on the right, flip over to the left
 
-  // Calculate when this specific page should flip
-  // Book opens gradually: pages flip sequentially from 0% to 80% of scroll
+  // Calculate when this page flips
+  // Opening: 0% to 80% scroll
+  // 50% SLOWER = double the flip duration (0.05 → 0.1)
   const flipStartProgress = (pageNumber - 1) / totalPages * 0.8;
-  const flipDuration = 0.05; // Each page takes 5% of scroll to flip
+  const flipDuration = 0.1; // 10% of scroll per page (was 0.05)
   const flipEndProgress = flipStartProgress + flipDuration;
-
-  // At 80%-95% all pages are open (pause for viewing)
-  // At 95%-100% book closes back up
 
   useFrame(() => {
     if (!pivotRef.current || !meshRef.current) return;
@@ -41,56 +40,50 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
     let rotationAmount = 0;
 
     if (scrollProgress < 0.8) {
-      // OPENING PHASE (0% - 80%)
+      // OPENING PHASE
       const pageProgress = THREE.MathUtils.clamp(
         (scrollProgress - flipStartProgress) / flipDuration,
         0,
         1
       );
 
-      // Ease for smooth flip
+      // Smooth easing
       const eased = pageProgress < 0.5
         ? 4 * pageProgress * pageProgress * pageProgress
         : 1 - Math.pow(-2 * pageProgress + 2, 3) / 2;
 
       rotationAmount = eased;
     } else if (scrollProgress >= 0.8 && scrollProgress < 0.95) {
-      // OPEN STATE (80% - 95%) - All pages fully open
+      // OPEN STATE
       rotationAmount = 1;
     } else {
-      // CLOSING PHASE (95% - 100%)
+      // CLOSING PHASE
       const closeProgress = (scrollProgress - 0.95) / 0.05;
       const eased = closeProgress < 0.5
         ? 4 * closeProgress * closeProgress * closeProgress
         : 1 - Math.pow(-2 * closeProgress + 2, 3) / 2;
 
-      rotationAmount = 1 - eased; // Reverse from 1 to 0
+      rotationAmount = 1 - eased;
     }
 
-    // Apply rotation at pivot (spine)
-    if (isLeftPage) {
-      pivotRef.current.rotation.y = -Math.PI * rotationAmount; // Flip left
-    } else {
-      pivotRef.current.rotation.y = Math.PI * rotationAmount; // Flip right
-    }
+    // ALL PAGES FLIP RIGHT TO LEFT (positive Y rotation)
+    pivotRef.current.rotation.y = Math.PI * rotationAmount;
 
-    // Slight bend/curl for realism
-    const curlAmount = Math.sin(rotationAmount * Math.PI) * 0.08;
+    // Curl effect
+    const curlAmount = Math.sin(rotationAmount * Math.PI) * 0.1;
     meshRef.current.rotation.x = curlAmount;
   });
 
   return (
-    <group
-      position={isLeftPage ? [-1.5, 0, (pageNumber - totalPages / 2) * 0.003] : [1.5, 0, (pageNumber - totalPages / 2) * 0.003]}
-    >
-      {/* Pivot point at spine for rotation */}
-      <group ref={pivotRef} position={isLeftPage ? [1.5, 0, 0] : [-1.5, 0, 0]}>
-        <mesh ref={meshRef} position={isLeftPage ? [-1.5, 0, 0] : [1.5, 0, 0]}>
+    <group position={[1.5, 0, (pageNumber - totalPages / 2) * 0.003]}>
+      {/* Pivot at left edge (spine) for right-to-left flip */}
+      <group ref={pivotRef} position={[-1.5, 0, 0]}>
+        <mesh ref={meshRef} position={[1.5, 0, 0]}>
           <planeGeometry args={[3, 4]} />
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.6}
+            roughness={0.65}
             metalness={0.05}
           />
         </mesh>
@@ -110,51 +103,43 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
   const totalPages = 87;
   const pages = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages]);
 
-  // BOOK MOVEMENT - Flies through space, stops at end, fades
+  // Load actual book cover texture
+  const coverTexture = useLoader(THREE.TextureLoader, '/textures/books/block-a-b-cover.png');
+
+  // BOOK MOVEMENT
   useFrame(({ clock }) => {
     if (!bookRef.current) return;
 
     const time = clock.getElapsedTime();
 
-    // Book flies forward until 95%, then stops
     if (scrollProgress < 0.95) {
+      // Flying phase
       const zPosition = THREE.MathUtils.lerp(70, -30, scrollProgress / 0.95);
       bookRef.current.position.z = zPosition;
 
-      // Flowing path while flying
       const pathFreq = scrollProgress * Math.PI * 2;
       bookRef.current.position.x = Math.sin(pathFreq) * 6 + Math.cos(time * 0.15) * 0.8;
       bookRef.current.position.y = Math.cos(pathFreq * 0.8) * 4 + Math.sin(time * 0.12) * 0.6;
 
-      // Elegant rotation while flying
       bookRef.current.rotation.x = scrollProgress * Math.PI * 1.2 + Math.sin(time * 0.25) * 0.1;
       bookRef.current.rotation.y = scrollProgress * Math.PI * 3 + Math.cos(time * 0.2) * 0.15;
       bookRef.current.rotation.z = Math.sin(scrollProgress * Math.PI * 1.5) * 0.3;
 
-      // Scale grows as it approaches
       const scale = THREE.MathUtils.lerp(0.7, 2.0, scrollProgress / 0.95);
       bookRef.current.scale.setScalar(scale);
     } else {
-      // STOP MOVEMENT at 95% - Book freezes in space
-      // Position locked at final position
+      // Stopped phase
       bookRef.current.position.z = -30;
-
-      // Slight hover in place
       bookRef.current.position.y = Math.sin(time * 0.5) * 0.2;
-
-      // Subtle rotation
       bookRef.current.rotation.y = Math.PI * 3 + Math.cos(time * 0.3) * 0.05;
-
-      // Scale locked
       bookRef.current.scale.setScalar(2.0);
     }
 
-    // FADE OUT at very end (98% - 100%)
+    // FADE OUT
     if (scrollProgress >= 0.98) {
       const fadeProgress = (scrollProgress - 0.98) / 0.02;
       const opacity = 1 - fadeProgress;
 
-      // Fade all children
       bookRef.current.traverse((child) => {
         if (child instanceof THREE.Mesh && child.material) {
           if (Array.isArray(child.material)) {
@@ -171,40 +156,33 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
     }
   });
 
-  // CAMERA 360° ORBIT - Full rotation around the book
+  // CAMERA 360°
   useFrame(({ clock }) => {
     if (!cameraRef.current || !bookRef.current) return;
 
     const time = clock.getElapsedTime();
 
-    // Camera does FULL 360° orbit (2π radians = 360 degrees)
-    const orbitAngle = scrollProgress * Math.PI * 2 + time * 0.25; // 1 full rotation + continuous spin
-    const orbitRadius = 20 - scrollProgress * 6; // Gets closer: 20 → 14
+    const orbitAngle = scrollProgress * Math.PI * 2 + time * 0.25;
+    const orbitRadius = 20 - scrollProgress * 6;
 
-    // Height variation - swooping up and down
     const heightBase = Math.sin(scrollProgress * Math.PI * 3) * 10;
     const heightWave = Math.sin(orbitAngle * 0.6) * 3;
 
-    // Calculate camera orbit position
     const targetX = bookRef.current.position.x + Math.cos(orbitAngle) * orbitRadius;
     const targetY = bookRef.current.position.y + heightBase + heightWave;
     const targetZ = bookRef.current.position.z + Math.sin(orbitAngle) * orbitRadius + 10;
 
-    // Smooth camera movement
     cameraRef.current.position.x += (targetX - cameraRef.current.position.x) * 0.1;
     cameraRef.current.position.y += (targetY - cameraRef.current.position.y) * 0.1;
     cameraRef.current.position.z += (targetZ - cameraRef.current.position.z) * 0.1;
 
-    // Organic camera sway
     const swayX = Math.sin(time * 1.8) * 0.4;
     const swayY = Math.cos(time * 1.5) * 0.3;
     cameraRef.current.position.x += swayX;
     cameraRef.current.position.y += swayY;
 
-    // Always look at book
     cameraRef.current.lookAt(bookRef.current.position);
 
-    // Dynamic FOV zoom
     const fovBase = 68;
     const fovZoom = Math.sin(scrollProgress * Math.PI * 4) * 12;
     const fovShake = Math.sin(time * 2.5) * 1.5;
@@ -214,7 +192,6 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
 
   return (
     <>
-      {/* 360° Orbiting Camera */}
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
@@ -224,38 +201,37 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         far={300}
       />
 
-      {/* The Flying Book */}
       <group ref={bookRef} position={[0, 0, 70]}>
-        {/* Front Cover - CLOSED at start, visible */}
-        <mesh position={[-1.5, 0, -0.2]} castShadow>
-          <boxGeometry args={[3, 4, 0.1]} />
+        {/* Front Cover - with actual book cover texture */}
+        <mesh position={[-1.55, 0, -0.2]} castShadow>
+          <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
-            color="#5a4a3a"
-            roughness={0.75}
-            metalness={0.2}
+            map={coverTexture}
+            roughness={0.7}
+            metalness={0.15}
           />
         </mesh>
 
         {/* Back Cover */}
-        <mesh position={[1.5, 0, 0.2]} castShadow>
-          <boxGeometry args={[3, 4, 0.1]} />
+        <mesh position={[1.55, 0, 0.2]} castShadow>
+          <boxGeometry args={[3.1, 4.1, 0.12]} />
           <meshStandardMaterial
-            color="#5a4a3a"
+            color="#6b5d4f"
             roughness={0.75}
-            metalness={0.2}
+            metalness={0.15}
           />
         </mesh>
 
         {/* Spine */}
         <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]} castShadow>
-          <boxGeometry args={[0.4, 4, 0.5]} />
+          <boxGeometry args={[0.4, 4.1, 0.6]} />
           <meshStandardMaterial
-            color="#3d2f25"
+            color="#4a3f35"
             roughness={0.85}
           />
         </mesh>
 
-        {/* All 87 Pages - Start CLOSED */}
+        {/* All 87 Pages - RIGHT TO LEFT */}
         {pages.map((pageNum) => (
           <BookPage
             key={pageNum}
@@ -275,10 +251,8 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
         />
       </group>
 
-      {/* BRIGHT Background */}
       <color attach="background" args={['#f5f3ef']} />
 
-      {/* Cinematic Lighting */}
       <ambientLight intensity={1.3} color="#ffffff" />
 
       <directionalLight
