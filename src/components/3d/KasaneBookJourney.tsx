@@ -90,12 +90,9 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
           <meshStandardMaterial
             map={texture}
             side={THREE.DoubleSide}
-            roughness={0.2}
+            roughness={0.4}
             metalness={0.0}
-            emissive="#ffffff"
-            emissiveIntensity={1.5}
             color="#ffffff"
-            toneMapped={false}
           />
         </mesh>
       </group>
