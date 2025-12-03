@@ -112,10 +112,10 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
   const totalPages = 87;
   const pages = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages]);
 
-  // Load FRONT cover texture (Vitruvian Man design)
+  // Load FRONT cover texture (Vitruvian Man design - HIGH RES)
   const frontCoverTexture = useLoader(
     THREE.TextureLoader,
-    '/textures/books/block-a-b-cover.png',
+    '/textures/books/front-cover-highres.png',
     undefined,
     (error) => {
       console.error('Failed to load front cover texture:', error);

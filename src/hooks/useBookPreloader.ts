@@ -15,8 +15,8 @@ export function useBookPreloader() {
 
     // Array of all assets to preload
     const assetUrls = [
-      '/textures/books/block-a-b-cover.png', // Front cover (Vitruvian Man)
-      '/textures/books/back-cover-text.png', // Back cover (text description)
+      '/textures/books/front-cover-highres.png', // Front cover (Vitruvian Man - HIGH RES)
+      '/textures/books/back-cover-text.png', // Back cover (text description - HIGH RES)
       ...Array.from({ length: 87 }, (_, i) => `/book-pages/${i + 1}.png`), // All 87 pages
     ];
 
