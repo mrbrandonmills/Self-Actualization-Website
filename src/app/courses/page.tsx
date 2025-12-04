@@ -12,9 +12,9 @@ import dynamic from 'next/dynamic';
 import { courses, Course } from '@/data/courses';
 import { CoursePreviewPanel } from '@/components/courses/CoursePreviewPanel';
 
-// Dynamic import with no SSR for 3D component
+// Dynamic import with no SSR for 3D component (using hybrid video+3D version)
 const AlchemistLaboratory = dynamic(
-  () => import('@/components/3d/AlchemistLaboratory'),
+  () => import('@/components/3d/AlchemistLaboratoryHybrid'),
   {
     ssr: false,
     loading: () => <AlchemistLabLoader />
