@@ -1,9 +1,10 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Course } from '@/data/courses'
-import { X, BookOpen, Clock, Award, Sparkles } from 'lucide-react'
+import { X, BookOpen, Clock, Award, Sparkles, Loader2 } from 'lucide-react'
+import { getStripe } from '@/lib/stripe'
 
 interface CoursePreviewPanelProps {
   course: Course | null
@@ -27,6 +28,46 @@ export function CoursePreviewPanel({
   onClose,
   liquidColor,
 }: CoursePreviewPanelProps) {
+  const [isEnrolling, setIsEnrolling] = useState(false)
+
+  // Handle Stripe checkout
+  const handleEnroll = async () => {
+    if (!course) return
+
+    setIsEnrolling(true)
+
+    try {
+      // Create checkout session
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { sessionId } = await response.json()
+
+      // Redirect to Stripe Checkout
+      const stripe = await getStripe()
+      if (!stripe) {
+        throw new Error('Stripe failed to load')
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId })
+
+      if (error) {
+        throw error
+      }
+    } catch (error) {
+      console.error('Enrollment error:', error)
+      alert('Failed to start enrollment. Please try again.')
+      setIsEnrolling(false)
+    }
+  }
+
   // Close panel on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -306,37 +347,51 @@ export function CoursePreviewPanel({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 }}
-                    onClick={() => {
-                      console.log('Enrolling in course:', course.id)
-                      // TODO: Implement enrollment flow
-                    }}
+                    onClick={handleEnroll}
+                    disabled={isEnrolling}
                     className="w-full py-4 rounded-xl text-lg font-medium tracking-wide relative overflow-hidden group mb-4"
                     style={{
-                      background: 'linear-gradient(135deg, #C9A050 0%, #D4AF37 50%, #C9A050 100%)',
-                      boxShadow: '0 8px 32px rgba(201, 160, 80, 0.4)',
+                      background: isEnrolling
+                        ? 'linear-gradient(135deg, #8B8B8B 0%, #A0A0A0 50%, #8B8B8B 100%)'
+                        : 'linear-gradient(135deg, #C9A050 0%, #D4AF37 50%, #C9A050 100%)',
+                      boxShadow: isEnrolling
+                        ? '0 8px 32px rgba(139, 139, 139, 0.4)'
+                        : '0 8px 32px rgba(201, 160, 80, 0.4)',
+                      cursor: isEnrolling ? 'not-allowed' : 'pointer',
                     }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={isEnrolling ? {} : { scale: 1.02 }}
+                    whileTap={isEnrolling ? {} : { scale: 0.98 }}
                   >
                     {/* Shimmer effect */}
-                    <motion.div
-                      className="absolute inset-0"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
-                        backgroundSize: '50% 100%',
-                      }}
-                      animate={{
-                        x: ['-100%', '200%'],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: 'linear',
-                      }}
-                    />
+                    {!isEnrolling && (
+                      <motion.div
+                        className="absolute inset-0"
+                        style={{
+                          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+                          backgroundSize: '50% 100%',
+                        }}
+                        animate={{
+                          x: ['-100%', '200%'],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'linear',
+                        }}
+                      />
+                    )}
 
                     <span className="relative z-10 text-gray-900 flex items-center justify-center gap-2">
-                      Enroll Now - ${course.price} USD
+                      {isEnrolling ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Enroll Now - ${course.price} USD
+                        </>
+                      )}
                     </span>
                   </motion.button>
 
