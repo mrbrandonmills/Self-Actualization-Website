@@ -3,8 +3,7 @@
 import { useRef, useState, useMemo } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Environment, Float, Sparkles } from '@react-three/drei'
-import { EffectComposer, Bloom, ToneMapping } from '@react-three/postprocessing'
-import { ToneMappingMode } from 'postprocessing'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
@@ -123,7 +122,7 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
         <meshPhysicalMaterial
           color="#ffffff"
           transparent
-          opacity={0.15}
+          opacity={1.0}
           metalness={0.1}
           roughness={0.05}
           transmission={0.9}
@@ -131,6 +130,7 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
           envMapIntensity={1.5}
           clearcoat={1.0}
           clearcoatRoughness={0.1}
+          ior={1.5}
         />
       </mesh>
 
@@ -142,16 +142,13 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
         receiveShadow
       >
         <cylinderGeometry args={[0.28, 0.33, 1.4, 32]} />
-        <meshPhysicalMaterial
+        <meshStandardMaterial
           color={liquidColor}
-          transparent
-          opacity={0.7}
-          metalness={0.2}
-          roughness={0.3}
+          transparent={false}
+          metalness={0.3}
+          roughness={0.4}
           emissive={liquidColor}
-          emissiveIntensity={isHovered || isSelected ? 0.6 : 0.3}
-          transmission={0.4}
-          thickness={0.8}
+          emissiveIntensity={isHovered || isSelected ? 0.8 : 0.5}
         />
       </mesh>
 
@@ -402,17 +399,14 @@ function AlchemistLaboratoryScene({ courses, onBeakerClick, selectedCourseId }: 
         dampingFactor={0.05}
       />
 
-      {/* Post-processing effects for museum-quality rendering */}
+      {/* Post-processing for glowing liquid effects */}
       <EffectComposer>
-        {/* Bloom effect for glowing liquids and atmospheric quality */}
         <Bloom
           luminanceThreshold={0.3}
           luminanceSmoothing={0.9}
-          intensity={1.5}
+          intensity={2.0}
           radius={0.8}
         />
-        {/* Additional tone mapping pass for consistent color grading */}
-        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>
     </>
   )
