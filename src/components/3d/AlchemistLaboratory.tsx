@@ -3,6 +3,8 @@
 import { useRef, useState, useMemo } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Environment, Float, Sparkles } from '@react-three/drei'
+import { EffectComposer, Bloom, ToneMapping } from '@react-three/postprocessing'
+import { ToneMappingMode } from 'postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
@@ -278,8 +280,8 @@ function LaboratoryEnvironment({ isMobile }: { isMobile: boolean }) {
         </>
       )}
 
-      {/* Environment map for reflections */}
-      <Environment preset="night" />
+      {/* Environment map for reflections - sunset provides better illumination for glass materials */}
+      <Environment preset="sunset" />
     </>
   )
 }
@@ -399,6 +401,19 @@ function AlchemistLaboratoryScene({ courses, onBeakerClick, selectedCourseId }: 
         enableDamping
         dampingFactor={0.05}
       />
+
+      {/* Post-processing effects for museum-quality rendering */}
+      <EffectComposer>
+        {/* Bloom effect for glowing liquids and atmospheric quality */}
+        <Bloom
+          luminanceThreshold={0.3}
+          luminanceSmoothing={0.9}
+          intensity={1.5}
+          radius={0.8}
+        />
+        {/* Additional tone mapping pass for consistent color grading */}
+        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+      </EffectComposer>
     </>
   )
 }
@@ -419,6 +434,12 @@ export default function AlchemistLaboratory(props: AlchemistLaboratoryProps) {
           powerPreference: 'high-performance',
         }}
         performance={{ min: 0.5 }}
+        onCreated={({ gl }) => {
+          // Enable tone mapping for realistic PBR materials (glass transmission)
+          gl.toneMapping = THREE.ACESFilmicToneMapping
+          gl.toneMappingExposure = 1.2
+          gl.outputColorSpace = THREE.SRGBColorSpace
+        }}
       >
         <AlchemistLaboratoryScene {...props} />
       </Canvas>
