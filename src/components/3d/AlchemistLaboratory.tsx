@@ -84,22 +84,7 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
 
   return (
     <group ref={beakerRef} position={position}>
-      {/* Golden stopper/cap */}
-      <mesh
-        position={[0, 1.2, 0]}
-        castShadow
-      >
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshStandardMaterial
-          color="#D4AF37"
-          metalness={0.9}
-          roughness={0.1}
-          emissive="#D4AF37"
-          emissiveIntensity={isHovered || isSelected ? 0.5 : 0.2}
-        />
-      </mesh>
-
-      {/* Glass beaker - simple recognizable shape */}
+      {/* Glass beaker - wide laboratory beaker shape */}
       <mesh
         position={[0, 0, 0]}
         castShadow
@@ -118,24 +103,38 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
           document.body.style.cursor = 'default'
         }}
       >
-        <cylinderGeometry args={[0.4, 0.35, 2, 32]} />
+        <cylinderGeometry args={[0.6, 0.5, 2.2, 32]} />
         <meshPhysicalMaterial
           color="#ffffff"
           transparent
-          opacity={0.25}
-          roughness={0.1}
+          opacity={0.15}
+          roughness={0.05}
           metalness={0}
           side={THREE.DoubleSide}
         />
       </mesh>
 
+      {/* Measurement markings */}
+      <mesh position={[0.52, 0.5, 0]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[0.15, 0.05]} />
+        <meshBasicMaterial color="#666666" transparent opacity={0.6} />
+      </mesh>
+      <mesh position={[0.52, 0, 0]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[0.15, 0.05]} />
+        <meshBasicMaterial color="#666666" transparent opacity={0.6} />
+      </mesh>
+      <mesh position={[0.52, -0.5, 0]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[0.15, 0.05]} />
+        <meshBasicMaterial color="#666666" transparent opacity={0.6} />
+      </mesh>
+
       {/* Bright visible liquid inside */}
       <mesh
         ref={liquidRef}
-        position={[0, -0.3, 0]}
+        position={[0, -0.4, 0]}
         castShadow
       >
-        <cylinderGeometry args={[0.35, 0.32, 1.4, 32]} />
+        <cylinderGeometry args={[0.55, 0.45, 1.6, 32]} />
         <meshStandardMaterial
           color={liquidColor}
           emissive={liquidColor}
