@@ -46,9 +46,6 @@ export function LoadingScreen({ progress, onComplete }: LoadingScreenProps) {
         <h1 className="text-5xl font-bold text-[var(--olive-dark)]/90 mb-3">
           The Laboratory of Life
         </h1>
-        <p className="text-xl text-[var(--olive-dark)]/50 italic">
-          Preparing your experiment...
-        </p>
       </div>
 
       {/* Bunsen Burner + Beaker Setup */}
