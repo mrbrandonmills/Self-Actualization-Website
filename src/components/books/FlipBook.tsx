@@ -133,20 +133,18 @@ export function FlipBook({ pages, bookTitle, onClose, amazonUrl }: FlipBookProps
           </button>
         </div>
 
-        {/* Amazon CTA (appears on last page) */}
-        {isLastPage && (
-          <motion.a
-            href={amazonUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flip-book-amazon-cta"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            📚 Buy on Amazon
-          </motion.a>
-        )}
+        {/* Amazon CTA (appears on all pages) */}
+        <motion.a
+          href={amazonUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flip-book-amazon-cta"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          📚 Buy on Amazon
+        </motion.a>
       </div>
 
       <style jsx global>{`

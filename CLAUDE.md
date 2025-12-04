@@ -7,9 +7,10 @@
 **Brand Positioning:** Museum-quality self-development platform combining philosophy, psychology, and practical transformation tools.
 
 **Tech Stack:**
-- Next.js 15 (App Router)
-- TypeScript
+- Next.js 16.0.7 (App Router + Turbopack)
+- TypeScript 5.7.2
 - Tailwind CSS + Framer Motion
+- React Three Fiber + Drei (3D experiences)
 - Vercel (Hosting + Edge Functions)
 - Database: TBD (PostgreSQL via Vercel or Supabase for collective writing AI)
 - Stripe (Premium course payments)
@@ -196,13 +197,19 @@ export async function POST(request: Request) {
 - [x] High-res cover textures (front + back)
 - [x] Dynamic scroll-based lighting system
 - [x] Page preloading system (89 assets)
+- [x] **Museum3D Gallery** - Award-worthy 3D book display with pedestals
+- [x] **FlipBook Component** - 19-page interactive preview with CSS 3D transforms
+- [x] Amazon affiliate integration (selfactualize.life-20)
+- [x] Security updates (Next.js 16.0.7, React 19.2.1)
 
 **Review Requirements:**
 - luxury-visual-designer: ALL visual components
 - backend-developer: Project setup, database schema
 
-### Phase 2: Content Migration (Week 2-3)
-- [ ] Books catalog page
+### Phase 2: Content Migration (Week 2-3) 🚧 IN PROGRESS
+- [x] Books catalog page - Museum3D Gallery implemented
+- [x] FlipBook preview system - Working with 19 pages
+- [ ] **PENDING:** Blocks B & C page integration (user will provide)
 - [ ] Course catalog page
 - [ ] Blog migration from Squarespace
 - [ ] About/Mission pages
@@ -594,6 +601,122 @@ Task(backend-developer, "Review API route")
 - [ ] Certification programs
 - [ ] Affiliate program
 - [ ] Advanced AI features (voice synthesis, image generation)
+
+---
+
+## 🏛️ Museum3D Gallery Implementation
+
+### Component Architecture
+**File:** `src/components/gallery/Museum3DGallery.tsx`
+
+**Features:**
+- React Three Fiber 3D canvas with Turbopack optimization
+- 3D book models on museum pedestals (dark teal + gold)
+- Interactive hover effects (lift, rotate, golden glow)
+- Click to preview flip book (not direct Amazon links)
+- Dramatic lighting system (spotlights + ambient)
+- Floating animations via Drei Float component
+- 2D card grid fallback below 3D scene
+- Amazon affiliate CTA on last page of flip book
+
+### Custom Texture Loading Pattern
+```typescript
+function useTexture(url: string) {
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load(url, (loadedTexture) => {
+      loadedTexture.flipY = false;
+      setTexture(loadedTexture);
+    });
+  }, [url]);
+
+  return texture;
+}
+```
+
+### Critical Lessons Learned
+
+#### 1. Text3D Component Requires Font Files
+**Problem:** Text3D from `@react-three/drei` needs font JSON files or causes production crash.
+
+```typescript
+// ❌ FAILS without /public/fonts/playfair-display-regular.json
+<Text3D font="/fonts/playfair-display-regular.json" ...>
+  THE LABORATORY OF LIFE
+</Text3D>
+```
+
+**Solution Options:**
+- Generate font JSON using Facetype.js
+- Use troika-three-text (no JSON required)
+- Use HTML text overlays
+- Skip 3D text entirely
+
+#### 2. Turbopack CSS Import Order
+**Critical:** Next.js 16 Turbopack enforces strict CSS import order.
+
+```css
+/* ❌ WRONG - Build fails */
+@tailwind base;
+@import '../styles/globals.css';
+
+/* ✅ CORRECT - @import FIRST */
+@import '../styles/globals.css';
+@tailwind base;
+```
+
+#### 3. Next.js 16 Turbopack Configuration
+```typescript
+// next.config.ts
+const nextConfig: NextConfig = {
+  reactStrictMode: false, // Required for R3F
+  turbopack: {}, // Required for Next.js 16
+
+  // REMOVED - deprecated in Next.js 16
+  // eslint: { ignoreDuringBuilds: true },
+}
+```
+
+### Flip Book Integration
+**File:** `src/components/books/FlipBook.tsx`
+
+**Working Features:**
+- 19 pages per book (Block A fully functional)
+- CSS 3D page turn animation (600ms duration)
+- Keyboard navigation (Arrow keys, Escape)
+- Progress bar and page counter
+- Amazon affiliate link on last page
+- AnimatePresence for smooth modal transitions
+- Mobile responsive
+
+**Page Structure:**
+```
+/public/books/
+  /block-a/
+    1.png   → Front cover (Vitruvian brain)
+    2-18.png → Content pages
+    19.png  → Conclusion + Amazon CTA
+```
+
+### Pending Tasks
+1. **Receive Blocks B & C from user** (ZIP files)
+2. Extract pages to `/public/books/block-b/` and `/public/books/block-c/`
+3. Update `src/data/books.ts` with correct cover paths
+4. Update `getBookPages()` function in Museum3DGallery for dynamic routing
+5. Mobile testing (iOS Safari, Android Chrome)
+6. WebGL fallback for older devices
+
+### Production Status
+- ✅ Next.js 16.0.7 (0 vulnerabilities)
+- ✅ React 19.2.1 (0 vulnerabilities)
+- ✅ Turbopack enabled and working
+- ✅ CSS import order compliant
+- ✅ 3D gallery stable in production
+- ✅ All builds passing
+
+**Live URL:** https://selfactualize-git-main-brandons-projects-c4dfa14a.vercel.app/books
 
 ---
 
