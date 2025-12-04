@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Environment, Float, Sparkles, MeshTransmissionMaterial } from '@react-three/drei'
+import { OrbitControls, Environment, Float, Sparkles } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
@@ -99,7 +99,7 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
         />
       </mesh>
 
-      {/* Glass cylinder beaker */}
+      {/* Glass beaker - simple recognizable shape */}
       <mesh
         position={[0, 0, 0]}
         castShadow
@@ -118,37 +118,30 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
           document.body.style.cursor = 'default'
         }}
       >
-        <cylinderGeometry args={[0.3, 0.35, 2, 32, 1, true]} />
-        <MeshTransmissionMaterial
-          transmission={1}
-          roughness={0}
-          thickness={0.5}
-          ior={1.2}
-          chromaticAberration={0.02}
-          backside={true}
-          samples={isMobile ? 6 : 10}
-          resolution={isMobile ? 512 : 1024}
-          anisotropicBlur={0.1}
+        <cylinderGeometry args={[0.4, 0.35, 2, 32]} />
+        <meshPhysicalMaterial
           color="#ffffff"
-          envMapIntensity={1.5}
+          transparent
+          opacity={0.25}
+          roughness={0.1}
+          metalness={0}
+          side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* Swirling liquid inside */}
+      {/* Bright visible liquid inside */}
       <mesh
         ref={liquidRef}
         position={[0, -0.3, 0]}
         castShadow
-        receiveShadow
       >
-        <cylinderGeometry args={[0.28, 0.33, 1.4, 32]} />
+        <cylinderGeometry args={[0.35, 0.32, 1.4, 32]} />
         <meshStandardMaterial
           color={liquidColor}
-          transparent={false}
-          metalness={0.3}
-          roughness={0.4}
           emissive={liquidColor}
-          emissiveIntensity={isHovered || isSelected ? 0.8 : 0.5}
+          emissiveIntensity={isHovered || isSelected ? 1.2 : 0.9}
+          metalness={0.2}
+          roughness={0.3}
         />
       </mesh>
 
