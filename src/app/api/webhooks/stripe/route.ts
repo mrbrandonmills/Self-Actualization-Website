@@ -8,6 +8,23 @@ import { stripe } from '@/lib/stripe-server';
 import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
+  // Runtime validation of Stripe credentials
+  if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_placeholder') {
+    console.error('STRIPE_SECRET_KEY is not configured');
+    return NextResponse.json(
+      { error: 'Webhook handler is not configured' },
+      { status: 500 }
+    );
+  }
+
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.error('STRIPE_WEBHOOK_SECRET is not configured');
+    return NextResponse.json(
+      { error: 'Webhook secret is not configured' },
+      { status: 500 }
+    );
+  }
+
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
 
@@ -24,7 +41,7 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (error) {
     console.error('Webhook signature verification failed:', error);

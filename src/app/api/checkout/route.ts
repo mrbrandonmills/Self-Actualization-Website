@@ -9,6 +9,15 @@ import { Course } from '@/data/courses';
 
 export async function POST(request: NextRequest) {
   try {
+    // Runtime validation of Stripe credentials
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_placeholder') {
+      console.error('STRIPE_SECRET_KEY is not configured');
+      return NextResponse.json(
+        { error: 'Payment system is not configured. Please contact support.' },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
     const { course }: { course: Course } = body;
 

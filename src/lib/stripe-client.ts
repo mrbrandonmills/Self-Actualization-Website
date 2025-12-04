@@ -7,10 +7,6 @@
 
 import { loadStripe, Stripe as StripeJS } from '@stripe/stripe-js';
 
-if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-  throw new Error('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set');
-}
-
 // Client-side Stripe promise (memoized)
 let stripePromise: Promise<StripeJS | null>;
 
@@ -20,7 +16,12 @@ let stripePromise: Promise<StripeJS | null>;
  */
 export const getStripe = () => {
   if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+    const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+    if (!key) {
+      console.error('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set');
+      return Promise.resolve(null);
+    }
+    stripePromise = loadStripe(key);
   }
   return stripePromise;
 };
