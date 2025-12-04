@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Environment, Float, Sparkles } from '@react-three/drei'
+import { OrbitControls, Environment, Float, Sparkles, MeshTransmissionMaterial } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
@@ -119,18 +119,18 @@ function Beaker3D({ course, position, index, onClick, isSelected, isMobile }: Be
         }}
       >
         <cylinderGeometry args={[0.3, 0.35, 2, 32, 1, true]} />
-        <meshPhysicalMaterial
-          color="#ffffff"
-          transparent
-          opacity={1.0}
-          metalness={0.1}
-          roughness={0.05}
-          transmission={0.9}
+        <MeshTransmissionMaterial
+          transmission={1}
+          roughness={0}
           thickness={0.5}
+          ior={1.2}
+          chromaticAberration={0.02}
+          backside={true}
+          samples={isMobile ? 6 : 10}
+          resolution={isMobile ? 512 : 1024}
+          anisotropicBlur={0.1}
+          color="#ffffff"
           envMapIntensity={1.5}
-          clearcoat={1.0}
-          clearcoatRoughness={0.1}
-          ior={1.5}
         />
       </mesh>
 
