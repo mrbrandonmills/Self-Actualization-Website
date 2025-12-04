@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Course } from '@/data/courses'
 import { X, BookOpen, Clock, Award, Sparkles, Loader2 } from 'lucide-react'
-import { getStripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe-client'
 
 interface CoursePreviewPanelProps {
   course: Course | null

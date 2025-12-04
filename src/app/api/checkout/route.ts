@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe, formatPriceForStripe } from '@/lib/stripe';
+import { stripe, formatPriceForStripe } from '@/lib/stripe-server';
 import { Course } from '@/data/courses';
 
 export async function POST(request: NextRequest) {

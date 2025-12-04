@@ -14,7 +14,7 @@ import { CoursePreviewPanel } from '@/components/courses/CoursePreviewPanel';
 
 // Dynamic import with no SSR for 3D component
 const AlchemistLaboratory = dynamic(
-  () => import('@/components/3d/AlchemistLaboratory').then(mod => mod.AlchemistLaboratory),
+  () => import('@/components/3d/AlchemistLaboratory'),
   {
     ssr: false,
     loading: () => <AlchemistLabLoader />
