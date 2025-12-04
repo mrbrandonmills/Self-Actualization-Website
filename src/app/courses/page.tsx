@@ -21,7 +21,7 @@ const AlchemistLaboratory = dynamic(
   }
 );
 
-// Loading screen
+// Loading screen - Clean and minimal
 function AlchemistLabLoader() {
   return (
     <div className="loading-screen">
@@ -40,14 +40,16 @@ function AlchemistLabLoader() {
         >
           🧪
         </motion.div>
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="loading-text"
+          className="loading-dots"
         >
-          Preparing the Laboratory...
-        </motion.p>
+          <span>•</span>
+          <span>•</span>
+          <span>•</span>
+        </motion.div>
       </div>
 
       <style jsx>{`
@@ -71,11 +73,37 @@ function AlchemistLabLoader() {
           margin-bottom: 1rem;
         }
 
-        .loading-text {
+        .loading-dots {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: center;
+        }
+
+        .loading-dots span {
           color: #C9A050;
-          font-size: 0.875rem;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
+          font-size: 1.5rem;
+          animation: pulse 1.5s infinite;
+        }
+
+        .loading-dots span:nth-child(1) {
+          animation-delay: 0s;
+        }
+
+        .loading-dots span:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 1;
+          }
         }
       `}</style>
     </div>
