@@ -257,7 +257,7 @@ export default function CoursesPage() {
         .courses-page {
           min-height: 100vh;
           background: #05201f;
-          padding: 8rem 1.5rem 4rem;
+          padding: 12rem 1.5rem 4rem;
           position: relative;
           overflow-x: hidden;
         }
@@ -384,7 +384,7 @@ export default function CoursesPage() {
         /* Responsive */
         @media (max-width: 768px) {
           .courses-page {
-            padding: 6rem 1rem 3rem;
+            padding: 8rem 1rem 3rem;
           }
 
           .canvas-container {
