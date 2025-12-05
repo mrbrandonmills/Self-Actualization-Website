@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Large 3D model assets - hosted on Vercel Blob Storage
+public/assets/laboratory-in-the-swamp/
+public/assets/lab-models/
+*.glb

@@ -1,9 +1,9 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, Suspense } from 'react'
 import { Canvas, useFrame, useLoader } from '@react-three/fiber'
-import { OrbitControls, Environment, Sparkles } from '@react-three/drei'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { OrbitControls, Environment, Sparkles, useGLTF, Html } from '@react-three/drei'
+import { EffectComposer, Bloom, SSAO, DepthOfField } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
@@ -32,188 +32,36 @@ interface BeakerSpriteProps {
   index: number
 }
 
-// Laboratory Table Component
-function LabTable() {
+// Professional Laboratory Model Component - "Laboratory in the Swamp"
+function ProfessionalLaboratory() {
+  const { scene } = useGLTF('/assets/laboratory-in-the-swamp/source/scene.glb')
+
+  // Clone the scene to prevent multiple instances from sharing state
+  const clonedScene = scene.clone()
+
+  // Traverse and enhance materials for PBR quality
+  useEffect(() => {
+    clonedScene.traverse((child: any) => {
+      if (child.isMesh) {
+        child.castShadow = true
+        child.receiveShadow = true
+
+        // Enhance material properties for realistic rendering
+        if (child.material) {
+          child.material.envMapIntensity = 1.5
+          child.material.needsUpdate = true
+        }
+      }
+    })
+  }, [clonedScene])
+
   return (
-    <group position={[0, -3, 0]}>
-      {/* Main table top */}
-      <mesh position={[0, 0.5, 0]} receiveShadow castShadow>
-        <boxGeometry args={[28, 0.4, 8]} />
-        <meshStandardMaterial
-          color="#3d2817"
-          roughness={0.8}
-          metalness={0.1}
-        />
-      </mesh>
-
-      {/* Table legs */}
-      {[
-        [-13, -1.5, 3.5],
-        [13, -1.5, 3.5],
-        [-13, -1.5, -3.5],
-        [13, -1.5, -3.5],
-      ].map((pos, i) => (
-        <mesh key={i} position={pos as [number, number, number]} castShadow>
-          <cylinderGeometry args={[0.3, 0.3, 3, 8]} />
-          <meshStandardMaterial color="#2d1f12" roughness={0.9} />
-        </mesh>
-      ))}
-
-      {/* Support beam */}
-      <mesh position={[0, -2.5, 0]}>
-        <boxGeometry args={[26, 0.3, 0.3]} />
-        <meshStandardMaterial color="#2d1f12" roughness={0.9} />
-      </mesh>
-    </group>
-  )
-}
-
-// Stone Wall Component
-function StoneWall() {
-  return (
-    <group position={[0, 0, -8]}>
-      {/* Main wall */}
-      <mesh receiveShadow>
-        <boxGeometry args={[40, 20, 1]} />
-        <meshStandardMaterial
-          color="#4a4a4a"
-          roughness={0.95}
-          metalness={0}
-        />
-      </mesh>
-
-      {/* Stone texture detail blocks */}
-      {Array.from({ length: 20 }).map((_, i) => {
-        const x = (Math.random() - 0.5) * 35
-        const y = (Math.random() - 0.5) * 15
-        return (
-          <mesh key={i} position={[x, y, 0.6]}>
-            <boxGeometry args={[2 + Math.random(), 1.5 + Math.random(), 0.2]} />
-            <meshStandardMaterial
-              color={`#${Math.floor(Math.random() * 0x333333 + 0x333333).toString(16)}`}
-              roughness={0.95}
-            />
-          </mesh>
-        )
-      })}
-    </group>
-  )
-}
-
-// Wooden Shelving
-function Shelving() {
-  return (
-    <group position={[-16, 2, -6]}>
-      {/* Vertical supports */}
-      {[-2, 2].map((x, i) => (
-        <mesh key={i} position={[x, 0, 0]} castShadow>
-          <boxGeometry args={[0.3, 8, 0.3]} />
-          <meshStandardMaterial color="#3d2817" roughness={0.8} />
-        </mesh>
-      ))}
-
-      {/* Shelves */}
-      {[0, 2, 4].map((y, i) => (
-        <mesh key={i} position={[0, y, 0]} receiveShadow castShadow>
-          <boxGeometry args={[5, 0.2, 1.5]} />
-          <meshStandardMaterial color="#3d2817" roughness={0.8} />
-        </mesh>
-      ))}
-
-      {/* Books on shelves */}
-      {[0, 2, 4].map((shelfY, shelfIndex) => (
-        <group key={shelfIndex}>
-          {Array.from({ length: 3 }).map((_, bookIndex) => {
-            const x = -1.5 + bookIndex * 1.5
-            return (
-              <mesh
-                key={bookIndex}
-                position={[x, shelfY + 0.4, 0]}
-                rotation={[0, Math.random() * 0.3 - 0.15, 0]}
-              >
-                <boxGeometry args={[0.8, 1.2, 0.3]} />
-                <meshStandardMaterial
-                  color={['#8B4513', '#654321', '#A0522D', '#CD853F'][Math.floor(Math.random() * 4)]}
-                  roughness={0.7}
-                />
-              </mesh>
-            )
-          })}
-        </group>
-      ))}
-    </group>
-  )
-}
-
-// Floor Component
-function Floor() {
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5.5, 0]} receiveShadow>
-      <planeGeometry args={[60, 40]} />
-      <meshStandardMaterial
-        color="#2a2520"
-        roughness={0.9}
-        metalness={0}
-      />
-    </mesh>
-  )
-}
-
-// Ambient Laboratory Objects
-function AmbientObjects() {
-  return (
-    <group>
-      {/* Glass bottles on table */}
-      {[
-        { pos: [-7, -1.5, 2], color: '#4ade80', height: 1.5 },
-        { pos: [7, -1.5, 2.5], color: '#3b82f6', height: 1.2 },
-        { pos: [-11, -1.5, -2], color: '#a855f7', height: 1.8 },
-      ].map((bottle, i) => (
-        <group key={i} position={bottle.pos as [number, number, number]}>
-          <mesh castShadow>
-            <cylinderGeometry args={[0.3, 0.3, bottle.height, 16]} />
-            <meshPhysicalMaterial
-              color={bottle.color}
-              transparent
-              opacity={0.6}
-              roughness={0.1}
-              metalness={0.1}
-              transmission={0.9}
-            />
-          </mesh>
-        </group>
-      ))}
-
-      {/* Candles */}
-      {[
-        { pos: [-14, -1.8, 3] },
-        { pos: [14, -1.8, -3] },
-      ].map((candle, i) => (
-        <group key={i} position={candle.pos as [number, number, number]}>
-          <mesh castShadow>
-            <cylinderGeometry args={[0.2, 0.25, 1, 8]} />
-            <meshStandardMaterial color="#f5e6d3" roughness={0.6} />
-          </mesh>
-          {/* Flame glow */}
-          <pointLight
-            position={[0, 0.7, 0]}
-            intensity={0.5}
-            distance={3}
-            color="#ff6b35"
-          />
-          <mesh position={[0, 0.6, 0]}>
-            <sphereGeometry args={[0.1, 8, 8]} />
-            <meshBasicMaterial color="#ff6b35" />
-          </mesh>
-        </group>
-      ))}
-
-      {/* Scroll/Paper on table */}
-      <mesh position={[11, -1.7, 1]} rotation={[-Math.PI / 2, 0, 0.3]} receiveShadow>
-        <planeGeometry args={[2, 3]} />
-        <meshStandardMaterial color="#f5e6d3" roughness={0.8} />
-      </mesh>
-    </group>
+    <primitive
+      object={clonedScene}
+      scale={[0.5, 0.5, 0.5]}
+      position={[0, -4, 0]}
+      rotation={[0, 0, 0]}
+    />
   )
 }
 
@@ -442,12 +290,10 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         color="#D4AF37"
       />
 
-      {/* Laboratory Environment Components */}
-      <Floor />
-      <StoneWall />
-      <LabTable />
-      <Shelving />
-      <AmbientObjects />
+      {/* Professional Laboratory Model with Loading */}
+      <Suspense fallback={<Html center><div style={{ color: '#D4AF37', fontSize: '20px', fontWeight: 'bold' }}>Loading Award-Winning Laboratory...</div></Html>}>
+        <ProfessionalLaboratory />
+      </Suspense>
 
       {/* Beaker sprites positioned on table with entrance animations */}
       {beakerMappings.map((mapping, index) => (
@@ -476,13 +322,31 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         target={[0, -1, 0]}
       />
 
-      {/* Enhanced bloom for magical laboratory atmosphere */}
+      {/* Award-Winning Post-Processing Pipeline */}
       <EffectComposer>
+        {/* SSAO for realistic ambient occlusion and depth */}
+        <SSAO
+          samples={31}
+          radius={0.1}
+          intensity={30}
+          luminanceInfluence={0.5}
+          color="black"
+        />
+
+        {/* Cinematic depth of field */}
+        <DepthOfField
+          focusDistance={0.02}
+          focalLength={0.05}
+          bokehScale={3}
+          height={480}
+        />
+
+        {/* Enhanced bloom for magical atmosphere */}
         <Bloom
-          luminanceThreshold={0.3}
+          luminanceThreshold={0.2}
           luminanceSmoothing={0.9}
-          intensity={1.2}
-          radius={0.6}
+          intensity={1.5}
+          radius={0.8}
         />
       </EffectComposer>
     </>
