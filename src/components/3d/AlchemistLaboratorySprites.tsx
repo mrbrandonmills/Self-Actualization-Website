@@ -100,22 +100,22 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
 }
 
 function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: AlchemistLaboratorySpriteProps) {
-  // Map beakers to courses
+  // Map beakers to courses (using proper extracted PNG files)
   const beakerMappings = [
     {
-      imagePath: '/assets/beakers/individual/beaker-green-1.png',
+      imagePath: '/assets/beakers/individual/beaker-1-green.png',
       position: [-4, 0, 0] as [number, number, number],
-      course: courses[0], // Block A
+      course: courses[0], // Block A - Beginner
     },
     {
-      imagePath: '/assets/beakers/individual/beaker-blue-2.png',
+      imagePath: '/assets/beakers/individual/beaker-2-blue.png',
       position: [-1.5, -0.3, 0.5] as [number, number, number],
-      course: courses[1], // Block B
+      course: courses[1], // Block B - Intermediate
     },
     {
-      imagePath: '/assets/beakers/individual/beaker-purple-3.png',
+      imagePath: '/assets/beakers/individual/beaker-3-purple.png',
       position: [1.5, 0.2, 0] as [number, number, number],
-      course: courses[2], // Block C
+      course: courses[2], // Block C - Advanced
     },
     {
       imagePath: '/assets/beakers/individual/beaker-4.png',
