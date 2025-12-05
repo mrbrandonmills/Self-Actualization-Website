@@ -127,7 +127,7 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
         document.body.style.cursor = 'default'
       }}
     >
-      <planeGeometry args={[6, 7.5]} />
+      <planeGeometry args={[4, 5]} />
       <meshBasicMaterial
         map={texture}
         transparent
@@ -138,7 +138,7 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
       {/* Glow ring on hover/selected */}
       {(isHovered || isSelected) && (
         <mesh position={[0, 0, -0.1]}>
-          <ringGeometry args={[3.6, 4.2, 32]} />
+          <ringGeometry args={[2.4, 2.8, 32]} />
           <meshBasicMaterial
             color="#D4AF37"
             transparent

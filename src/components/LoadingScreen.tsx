@@ -40,6 +40,7 @@ export function LoadingScreen({ progress, onComplete }: LoadingScreenProps) {
       className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-b from-[#e8e6e1] via-[#f0eee9] to-[#f5f3ef] transition-opacity duration-1000 ${
         isComplete ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
+      style={{ paddingTop: '6rem' }}
     >
       {/* Laboratory Title */}
       <div className="mb-16 text-center">
