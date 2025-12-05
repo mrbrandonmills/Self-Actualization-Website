@@ -34,7 +34,12 @@ interface BeakerSpriteProps {
 
 // Professional Laboratory Model Component - "Laboratory in the Swamp"
 function ProfessionalLaboratory() {
-  const { scene } = useGLTF('/assets/laboratory-in-the-swamp/source/scene.glb')
+  // Use Supabase CDN in production, local file in development
+  const assetPath = process.env.NEXT_PUBLIC_ASSETS_CDN
+    ? `${process.env.NEXT_PUBLIC_ASSETS_CDN}/laboratory-in-the-swamp/source/scene.glb`
+    : '/assets/laboratory-in-the-swamp/source/scene.glb'
+
+  const { scene } = useGLTF(assetPath)
 
   // Clone the scene to prevent multiple instances from sharing state
   const clonedScene = scene.clone()
