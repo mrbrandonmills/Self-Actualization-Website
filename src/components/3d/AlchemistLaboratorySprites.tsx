@@ -456,11 +456,11 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
           color="black"
         />
 
-        {/* Cinematic depth of field */}
+        {/* Cinematic depth of field - reduced for better clarity */}
         <DepthOfField
-          focusDistance={0.02}
-          focalLength={0.05}
-          bokehScale={3}
+          focusDistance={0.05}
+          focalLength={0.1}
+          bokehScale={1}
           height={480}
         />
 
