@@ -32,6 +32,120 @@ interface BeakerSpriteProps {
   index: number
 }
 
+interface GlowingHotspotProps {
+  position: [number, number, number]
+  course: Course
+  onClick: () => void
+  isSelected: boolean
+  color: string
+  label: string
+}
+
+// Glowing Interactive Hotspot Component
+function GlowingHotspot({ position, course, onClick, isSelected, color, label }: GlowingHotspotProps) {
+  const meshRef = useRef<THREE.Mesh>(null)
+  const [isHovered, setIsHovered] = useState(false)
+
+  // Pulsing glow animation
+  useFrame((state) => {
+    if (!meshRef.current) return
+
+    const time = state.clock.getElapsedTime()
+
+    // Pulse scale
+    const pulseScale = 1 + Math.sin(time * 2) * 0.15
+    meshRef.current.scale.set(pulseScale, pulseScale, pulseScale)
+
+    // Pulse intensity on material
+    const material = meshRef.current.material as THREE.MeshStandardMaterial
+    if (material.emissive) {
+      const intensity = 0.8 + Math.sin(time * 2) * 0.2
+      material.emissiveIntensity = intensity
+    }
+
+    // Hover lift
+    if (isHovered || isSelected) {
+      meshRef.current.position.y = position[1] + Math.sin(time * 3) * 0.1
+    } else {
+      meshRef.current.position.y = position[1]
+    }
+  })
+
+  return (
+    <group>
+      {/* Glowing orb */}
+      <mesh
+        ref={meshRef}
+        position={position}
+        onClick={(e) => {
+          e.stopPropagation()
+          onClick()
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation()
+          setIsHovered(true)
+          document.body.style.cursor = 'pointer'
+        }}
+        onPointerOut={() => {
+          setIsHovered(false)
+          document.body.style.cursor = 'default'
+        }}
+      >
+        <sphereGeometry args={[0.3, 32, 32]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={0.8}
+          transparent
+          opacity={isHovered || isSelected ? 0.9 : 0.7}
+          roughness={0.2}
+          metalness={0.8}
+        />
+      </mesh>
+
+      {/* Glow ring around hotspot */}
+      <mesh position={position} rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.4, 0.6, 32]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={isHovered || isSelected ? 0.6 : 0.3}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Point light for extra glow */}
+      <pointLight
+        position={position}
+        color={color}
+        intensity={isHovered || isSelected ? 3 : 1.5}
+        distance={5}
+      />
+
+      {/* Floating label on hover */}
+      {isHovered && (
+        <Html position={[position[0], position[1] + 0.8, position[2]]} center>
+          <div
+            style={{
+              background: 'rgba(0, 0, 0, 0.8)',
+              color: '#D4AF37',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              whiteSpace: 'nowrap',
+              border: '1px solid #D4AF37',
+              pointerEvents: 'none',
+            }}
+          >
+            {label}
+          </div>
+        </Html>
+      )}
+    </group>
+  )
+}
+
 // Professional Laboratory Model Component - "Laboratory in the Swamp"
 function ProfessionalLaboratory() {
   // Use Supabase CDN in production, local file in development
@@ -203,26 +317,28 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
 }
 
 function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: AlchemistLaboratorySpriteProps) {
-  // Map beakers to courses - positioned ON the lab table
-  const beakerMappings = [
+  // Map glowing hotspots to courses - positioned throughout the laboratory
+  const hotspotMappings = [
     {
-      imagePath: '/assets/beakers/individual/beaker-1-green.png',
-      position: [-8, -1, 1] as [number, number, number],
+      position: [-3, 0, -2] as [number, number, number], // Ancient book on table
       course: courses[0], // Block A - Beginner
+      color: '#4ade80', // Green
+      label: `📚 ${courses[0]?.title || 'Beginner Course'}`,
     },
     {
-      imagePath: '/assets/beakers/individual/beaker-2-blue.png',
-      position: [-2, -1.2, 0.5] as [number, number, number],
+      position: [2, 1.5, -3] as [number, number, number], // Glowing potion on shelf
       course: courses[1], // Block B - Intermediate
+      color: '#3b82f6', // Blue
+      label: `🧪 ${courses[1]?.title || 'Intermediate Course'}`,
     },
     {
-      imagePath: '/assets/beakers/individual/beaker-3-purple.png',
-      position: [3, -0.8, 0.8] as [number, number, number],
+      position: [4, 0.5, 1] as [number, number, number], // Crystal artifact on table
       course: courses[2], // Block C - Advanced
+      color: '#a855f7', // Purple
+      label: `💎 ${courses[2]?.title || 'Advanced Course'}`,
     },
     {
-      imagePath: '/assets/beakers/individual/beaker-4.png',
-      position: [9, -1.1, 0.3] as [number, number, number],
+      position: [-5, 2, -4] as [number, number, number], // Mystical scroll on high shelf
       course: courses[3] || { // Future course placeholder
         id: 'course-4',
         title: 'Coming Soon',
@@ -233,6 +349,8 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         instructor: 'TBD',
         modules: 0,
       },
+      color: '#f59e0b', // Amber
+      label: '📜 Coming Soon',
     },
   ]
 
@@ -300,16 +418,16 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         <ProfessionalLaboratory />
       </Suspense>
 
-      {/* Beaker sprites positioned on table with entrance animations */}
-      {beakerMappings.map((mapping, index) => (
-        <BeakerSprite
+      {/* Glowing interactive hotspots positioned throughout laboratory */}
+      {hotspotMappings.map((mapping, index) => (
+        <GlowingHotspot
           key={mapping.course.id}
-          imagePath={mapping.imagePath}
           position={mapping.position}
           course={mapping.course}
           onClick={() => onBeakerClick(mapping.course.id)}
           isSelected={selectedCourseId === mapping.course.id}
-          index={index}
+          color={mapping.color}
+          label={mapping.label}
         />
       ))}
 
@@ -376,7 +494,7 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
       {/* Overlay instructions */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none">
         <p className="text-[#D4AF37] text-sm font-light tracking-widest uppercase opacity-70">
-          Click beakers to explore courses • Drag to rotate • Scroll to zoom
+          Click glowing items to discover courses • Drag to rotate • Scroll to zoom
         </p>
       </div>
     </div>
