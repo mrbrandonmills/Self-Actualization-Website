@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, Suspense } from 'react'
 import { Canvas, useFrame, useLoader } from '@react-three/fiber'
 import { OrbitControls, Environment, Sparkles, useGLTF, Html } from '@react-three/drei'
-import { EffectComposer, Bloom, SSAO, DepthOfField } from '@react-three/postprocessing'
+import { EffectComposer, Bloom, DepthOfField, N8AO } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
@@ -447,12 +447,11 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
 
       {/* Award-Winning Post-Processing Pipeline */}
       <EffectComposer>
-        {/* SSAO for realistic ambient occlusion and depth */}
-        <SSAO
-          samples={31}
-          radius={0.1}
-          intensity={30}
-          luminanceInfluence={0.5}
+        {/* N8AO - Modern ambient occlusion (better than SSAO, no NormalPass needed) */}
+        <N8AO
+          aoRadius={0.5}
+          intensity={2}
+          quality="performance"
           color="black"
         />
 
