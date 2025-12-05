@@ -34,8 +34,17 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
   const [hasEntered, setHasEntered] = useState(false)
   const [opacity, setOpacity] = useState(0)
 
-  // Load the beaker image as texture
+  // Load the beaker image as texture with high-quality filtering
   const texture = useLoader(THREE.TextureLoader, imagePath)
+
+  // Enable anisotropic filtering for sharp rendering
+  useEffect(() => {
+    if (texture) {
+      texture.anisotropy = 16 // Maximum quality
+      texture.minFilter = THREE.LinearMipmapLinearFilter
+      texture.magFilter = THREE.LinearFilter
+    }
+  }, [texture])
 
   // Trigger entrance animation after staggered delay
   useEffect(() => {
@@ -55,9 +64,9 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
     // Entrance animation
     if (!hasEntered) {
       // Start from far away and high up
-      const startX = position[0] + (index % 2 === 0 ? -10 : 10)
-      const startY = position[1] + 8
-      const startZ = position[2] - 5
+      const startX = position[0] + (index % 2 === 0 ? -15 : 15)
+      const startY = position[1] + 12
+      const startZ = position[2] - 8
 
       meshRef.current.position.x = startX
       meshRef.current.position.y = startY
@@ -118,7 +127,7 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
         document.body.style.cursor = 'default'
       }}
     >
-      <planeGeometry args={[2, 2.5]} />
+      <planeGeometry args={[6, 7.5]} />
       <meshBasicMaterial
         map={texture}
         transparent
@@ -129,7 +138,7 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
       {/* Glow ring on hover/selected */}
       {(isHovered || isSelected) && (
         <mesh position={[0, 0, -0.1]}>
-          <ringGeometry args={[1.2, 1.4, 32]} />
+          <ringGeometry args={[3.6, 4.2, 32]} />
           <meshBasicMaterial
             color="#D4AF37"
             transparent
@@ -147,22 +156,22 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
   const beakerMappings = [
     {
       imagePath: '/assets/beakers/individual/beaker-1-green.png',
-      position: [-4, 0, 0] as [number, number, number],
+      position: [-10, 0, 0] as [number, number, number],
       course: courses[0], // Block A - Beginner
     },
     {
       imagePath: '/assets/beakers/individual/beaker-2-blue.png',
-      position: [-1.5, -0.3, 0.5] as [number, number, number],
+      position: [-3.5, -0.5, 1] as [number, number, number],
       course: courses[1], // Block B - Intermediate
     },
     {
       imagePath: '/assets/beakers/individual/beaker-3-purple.png',
-      position: [1.5, 0.2, 0] as [number, number, number],
+      position: [3.5, 0.3, 0.5] as [number, number, number],
       course: courses[2], // Block C - Advanced
     },
     {
       imagePath: '/assets/beakers/individual/beaker-4.png',
-      position: [4, -0.1, 0.5] as [number, number, number],
+      position: [10, -0.2, 1] as [number, number, number],
       course: courses[3] || { // Future course placeholder
         id: 'course-4',
         title: 'Coming Soon',
@@ -224,8 +233,8 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
       <OrbitControls
         enablePan={false}
         enableZoom={true}
-        minDistance={6}
-        maxDistance={15}
+        minDistance={12}
+        maxDistance={30}
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 2}
         enableDamping
@@ -251,7 +260,7 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
   return (
     <div className="w-full h-screen bg-gradient-to-b from-[#05201f] to-[#0a2a28]">
       <Canvas
-        camera={{ position: [0, 2, 10], fov: 50 }}
+        camera={{ position: [0, 4, 20], fov: 60 }}
         gl={{
           antialias: true,
           alpha: true,
