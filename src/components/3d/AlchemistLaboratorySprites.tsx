@@ -8,9 +8,13 @@ import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
 /**
- * Alchemist Laboratory with Sprite Beakers
- * Uses extracted 4K beaker images as 2D sprites positioned in 3D space
- * Floating animations + camera controls + clickable interaction
+ * Alchemist Laboratory - Full 3D Scene
+ * Complete immersive laboratory with:
+ * - Wooden lab table and shelving
+ * - Stone walls and floor
+ * - Ambient laboratory objects
+ * - Realistic lighting and shadows
+ * - High-quality beaker sprites positioned in 3D space
  */
 
 interface AlchemistLaboratorySpriteProps {
@@ -26,6 +30,191 @@ interface BeakerSpriteProps {
   onClick: () => void
   isSelected: boolean
   index: number
+}
+
+// Laboratory Table Component
+function LabTable() {
+  return (
+    <group position={[0, -3, 0]}>
+      {/* Main table top */}
+      <mesh position={[0, 0.5, 0]} receiveShadow castShadow>
+        <boxGeometry args={[28, 0.4, 8]} />
+        <meshStandardMaterial
+          color="#3d2817"
+          roughness={0.8}
+          metalness={0.1}
+        />
+      </mesh>
+
+      {/* Table legs */}
+      {[
+        [-13, -1.5, 3.5],
+        [13, -1.5, 3.5],
+        [-13, -1.5, -3.5],
+        [13, -1.5, -3.5],
+      ].map((pos, i) => (
+        <mesh key={i} position={pos as [number, number, number]} castShadow>
+          <cylinderGeometry args={[0.3, 0.3, 3, 8]} />
+          <meshStandardMaterial color="#2d1f12" roughness={0.9} />
+        </mesh>
+      ))}
+
+      {/* Support beam */}
+      <mesh position={[0, -2.5, 0]}>
+        <boxGeometry args={[26, 0.3, 0.3]} />
+        <meshStandardMaterial color="#2d1f12" roughness={0.9} />
+      </mesh>
+    </group>
+  )
+}
+
+// Stone Wall Component
+function StoneWall() {
+  return (
+    <group position={[0, 0, -8]}>
+      {/* Main wall */}
+      <mesh receiveShadow>
+        <boxGeometry args={[40, 20, 1]} />
+        <meshStandardMaterial
+          color="#4a4a4a"
+          roughness={0.95}
+          metalness={0}
+        />
+      </mesh>
+
+      {/* Stone texture detail blocks */}
+      {Array.from({ length: 20 }).map((_, i) => {
+        const x = (Math.random() - 0.5) * 35
+        const y = (Math.random() - 0.5) * 15
+        return (
+          <mesh key={i} position={[x, y, 0.6]}>
+            <boxGeometry args={[2 + Math.random(), 1.5 + Math.random(), 0.2]} />
+            <meshStandardMaterial
+              color={`#${Math.floor(Math.random() * 0x333333 + 0x333333).toString(16)}`}
+              roughness={0.95}
+            />
+          </mesh>
+        )
+      })}
+    </group>
+  )
+}
+
+// Wooden Shelving
+function Shelving() {
+  return (
+    <group position={[-16, 2, -6]}>
+      {/* Vertical supports */}
+      {[-2, 2].map((x, i) => (
+        <mesh key={i} position={[x, 0, 0]} castShadow>
+          <boxGeometry args={[0.3, 8, 0.3]} />
+          <meshStandardMaterial color="#3d2817" roughness={0.8} />
+        </mesh>
+      ))}
+
+      {/* Shelves */}
+      {[0, 2, 4].map((y, i) => (
+        <mesh key={i} position={[0, y, 0]} receiveShadow castShadow>
+          <boxGeometry args={[5, 0.2, 1.5]} />
+          <meshStandardMaterial color="#3d2817" roughness={0.8} />
+        </mesh>
+      ))}
+
+      {/* Books on shelves */}
+      {[0, 2, 4].map((shelfY, shelfIndex) => (
+        <group key={shelfIndex}>
+          {Array.from({ length: 3 }).map((_, bookIndex) => {
+            const x = -1.5 + bookIndex * 1.5
+            return (
+              <mesh
+                key={bookIndex}
+                position={[x, shelfY + 0.4, 0]}
+                rotation={[0, Math.random() * 0.3 - 0.15, 0]}
+              >
+                <boxGeometry args={[0.8, 1.2, 0.3]} />
+                <meshStandardMaterial
+                  color={['#8B4513', '#654321', '#A0522D', '#CD853F'][Math.floor(Math.random() * 4)]}
+                  roughness={0.7}
+                />
+              </mesh>
+            )
+          })}
+        </group>
+      ))}
+    </group>
+  )
+}
+
+// Floor Component
+function Floor() {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5.5, 0]} receiveShadow>
+      <planeGeometry args={[60, 40]} />
+      <meshStandardMaterial
+        color="#2a2520"
+        roughness={0.9}
+        metalness={0}
+      />
+    </mesh>
+  )
+}
+
+// Ambient Laboratory Objects
+function AmbientObjects() {
+  return (
+    <group>
+      {/* Glass bottles on table */}
+      {[
+        { pos: [-7, -1.5, 2], color: '#4ade80', height: 1.5 },
+        { pos: [7, -1.5, 2.5], color: '#3b82f6', height: 1.2 },
+        { pos: [-11, -1.5, -2], color: '#a855f7', height: 1.8 },
+      ].map((bottle, i) => (
+        <group key={i} position={bottle.pos as [number, number, number]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.3, 0.3, bottle.height, 16]} />
+            <meshPhysicalMaterial
+              color={bottle.color}
+              transparent
+              opacity={0.6}
+              roughness={0.1}
+              metalness={0.1}
+              transmission={0.9}
+            />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Candles */}
+      {[
+        { pos: [-14, -1.8, 3] },
+        { pos: [14, -1.8, -3] },
+      ].map((candle, i) => (
+        <group key={i} position={candle.pos as [number, number, number]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.2, 0.25, 1, 8]} />
+            <meshStandardMaterial color="#f5e6d3" roughness={0.6} />
+          </mesh>
+          {/* Flame glow */}
+          <pointLight
+            position={[0, 0.7, 0]}
+            intensity={0.5}
+            distance={3}
+            color="#ff6b35"
+          />
+          <mesh position={[0, 0.6, 0]}>
+            <sphereGeometry args={[0.1, 8, 8]} />
+            <meshBasicMaterial color="#ff6b35" />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Scroll/Paper on table */}
+      <mesh position={[11, -1.7, 1]} rotation={[-Math.PI / 2, 0, 0.3]} receiveShadow>
+        <planeGeometry args={[2, 3]} />
+        <meshStandardMaterial color="#f5e6d3" roughness={0.8} />
+      </mesh>
+    </group>
+  )
 }
 
 function BeakerSprite({ imagePath, position, course, onClick, isSelected, index }: BeakerSpriteProps) {
@@ -61,17 +250,16 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
 
     const time = state.clock.getElapsedTime()
 
-    // Entrance animation
+    // Entrance animation - descend from above onto table
     if (!hasEntered) {
-      // Start from far away and high up
-      const startX = position[0] + (index % 2 === 0 ? -15 : 15)
-      const startY = position[1] + 12
-      const startZ = position[2] - 8
+      const startX = position[0]
+      const startY = position[1] + 8 // Start from above the table
+      const startZ = position[2]
 
       meshRef.current.position.x = startX
       meshRef.current.position.y = startY
       meshRef.current.position.z = startZ
-      meshRef.current.scale.set(0.1, 0.1, 0.1)
+      meshRef.current.scale.set(0.3, 0.3, 0.3)
       setOpacity(0)
     } else {
       // Animate to final position
@@ -127,7 +315,7 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
         document.body.style.cursor = 'default'
       }}
     >
-      <planeGeometry args={[4, 5]} />
+      <planeGeometry args={[2.5, 3]} />
       <meshBasicMaterial
         map={texture}
         transparent
@@ -135,10 +323,20 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
         opacity={opacity}
       />
 
+      {/* Shadow plane below beaker */}
+      <mesh position={[0, -1.5, 0.1]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <circleGeometry args={[1.2, 32]} />
+        <meshBasicMaterial
+          color="#000000"
+          transparent
+          opacity={opacity * 0.2}
+        />
+      </mesh>
+
       {/* Glow ring on hover/selected */}
       {(isHovered || isSelected) && (
         <mesh position={[0, 0, -0.1]}>
-          <ringGeometry args={[2.4, 2.8, 32]} />
+          <ringGeometry args={[1.5, 1.8, 32]} />
           <meshBasicMaterial
             color="#D4AF37"
             transparent
@@ -152,26 +350,26 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
 }
 
 function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: AlchemistLaboratorySpriteProps) {
-  // Map beakers to courses (using proper extracted PNG files)
+  // Map beakers to courses - positioned ON the lab table
   const beakerMappings = [
     {
       imagePath: '/assets/beakers/individual/beaker-1-green.png',
-      position: [-10, 0, 0] as [number, number, number],
+      position: [-8, -1, 1] as [number, number, number],
       course: courses[0], // Block A - Beginner
     },
     {
       imagePath: '/assets/beakers/individual/beaker-2-blue.png',
-      position: [-3.5, -0.5, 1] as [number, number, number],
+      position: [-2, -1.2, 0.5] as [number, number, number],
       course: courses[1], // Block B - Intermediate
     },
     {
       imagePath: '/assets/beakers/individual/beaker-3-purple.png',
-      position: [3.5, 0.3, 0.5] as [number, number, number],
+      position: [3, -0.8, 0.8] as [number, number, number],
       course: courses[2], // Block C - Advanced
     },
     {
       imagePath: '/assets/beakers/individual/beaker-4.png',
-      position: [10, -0.2, 1] as [number, number, number],
+      position: [9, -1.1, 0.3] as [number, number, number],
       course: courses[3] || { // Future course placeholder
         id: 'course-4',
         title: 'Coming Soon',
@@ -187,36 +385,71 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
 
   return (
     <>
-      {/* Dramatic laboratory environment */}
-      <Environment preset="night" />
-      <ambientLight intensity={0.2} color="#0a2a28" />
+      {/* Laboratory Environment Setup */}
+      <Environment preset="warehouse" />
+      <fog attach="fog" args={['#05201f', 15, 40]} />
 
-      {/* Dramatic golden spotlight from above */}
-      <spotLight
-        position={[0, 12, 0]}
-        intensity={1.5}
-        angle={Math.PI / 3}
-        penumbra={0.5}
-        color="#D4AF37"
+      {/* Global ambient lighting */}
+      <ambientLight intensity={0.4} color="#f5e6d3" />
+
+      {/* Main directional light from above-front (sunlight through window) */}
+      <directionalLight
+        position={[5, 10, 8]}
+        intensity={1.2}
+        color="#fff8dc"
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-far={50}
+        shadow-camera-left={-20}
+        shadow-camera-right={20}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
+      />
+
+      {/* Warm fill light from left */}
+      <pointLight
+        position={[-10, 5, 5]}
+        intensity={0.6}
+        color="#ffa500"
+        distance={20}
         castShadow
       />
 
-      {/* Accent rim lights */}
-      <pointLight position={[-8, 4, -5]} intensity={0.8} color="#4ade80" distance={15} />
-      <pointLight position={[8, 4, -5]} intensity={0.8} color="#a855f7" distance={15} />
-      <pointLight position={[0, 4, 8]} intensity={0.8} color="#3b82f6" distance={15} />
+      {/* Cool rim light from right */}
+      <pointLight
+        position={[10, 5, 5]}
+        intensity={0.5}
+        color="#87ceeb"
+        distance={20}
+      />
 
-      {/* Floating golden particles atmosphere */}
+      {/* Back wall rim light */}
+      <pointLight
+        position={[0, 8, -6]}
+        intensity={0.4}
+        color="#D4AF37"
+        distance={15}
+      />
+
+      {/* Atmospheric golden particles */}
       <Sparkles
-        count={100}
-        scale={[20, 15, 20]}
-        size={2}
-        speed={0.3}
-        opacity={0.4}
+        count={80}
+        scale={[25, 12, 15]}
+        size={1.5}
+        speed={0.2}
+        opacity={0.3}
         color="#D4AF37"
       />
 
-      {/* Floating beaker sprites with entrance animations */}
+      {/* Laboratory Environment Components */}
+      <Floor />
+      <StoneWall />
+      <LabTable />
+      <Shelving />
+      <AmbientObjects />
+
+      {/* Beaker sprites positioned on table with entrance animations */}
       {beakerMappings.map((mapping, index) => (
         <BeakerSprite
           key={mapping.course.id}
@@ -229,27 +462,27 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         />
       ))}
 
-      {/* Smooth camera controls */}
+      {/* Camera controls with updated constraints */}
       <OrbitControls
-        enablePan={false}
+        enablePan={true}
         enableZoom={true}
-        minDistance={12}
-        maxDistance={30}
-        minPolarAngle={Math.PI / 4}
-        maxPolarAngle={Math.PI / 2}
+        minDistance={8}
+        maxDistance={25}
+        minPolarAngle={Math.PI / 6}
+        maxPolarAngle={Math.PI / 2.2}
         enableDamping
-        dampingFactor={0.05}
+        dampingFactor={0.08}
         autoRotate={false}
-        autoRotateSpeed={0.5}
+        target={[0, -1, 0]}
       />
 
-      {/* Premium bloom effect for glowing atmosphere */}
+      {/* Enhanced bloom for magical laboratory atmosphere */}
       <EffectComposer>
         <Bloom
-          luminanceThreshold={0.2}
+          luminanceThreshold={0.3}
           luminanceSmoothing={0.9}
-          intensity={1.5}
-          radius={0.8}
+          intensity={1.2}
+          radius={0.6}
         />
       </EffectComposer>
     </>
@@ -260,7 +493,8 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
   return (
     <div className="w-full h-screen bg-gradient-to-b from-[#05201f] to-[#0a2a28]">
       <Canvas
-        camera={{ position: [0, 4, 20], fov: 60 }}
+        camera={{ position: [0, 2, 18], fov: 55 }}
+        shadows
         gl={{
           antialias: true,
           alpha: true,
@@ -273,7 +507,7 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
       {/* Overlay instructions */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none">
         <p className="text-[#D4AF37] text-sm font-light tracking-widest uppercase opacity-70">
-          Click beakers to explore • Drag to rotate
+          Click beakers to explore courses • Drag to rotate • Scroll to zoom
         </p>
       </div>
     </div>
