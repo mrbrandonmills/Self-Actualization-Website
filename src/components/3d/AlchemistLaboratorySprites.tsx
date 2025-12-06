@@ -287,22 +287,30 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
   )
 }
 
-// Camera Teleport Controller
-function CameraTeleport({ hasEntered, controlsRef }: { hasEntered: boolean, controlsRef: React.RefObject<any> }) {
+// Camera Teleport Controller - Smooth pull into lab
+function CameraTeleport({ isEntering, controlsRef }: { isEntering: boolean, controlsRef: React.RefObject<any> }) {
   const { camera } = useThree()
+  const targetPosition = useRef(new THREE.Vector3(0, 0, -5))
+  const targetLookAt = useRef(new THREE.Vector3(0, -2, -15))
+  const [isDone, setIsDone] = useState(false)
 
-  useEffect(() => {
-    if (hasEntered) {
-      // Teleport camera deep inside the laboratory
-      camera.position.set(0, 0, -5)
-      camera.lookAt(0, -2, -15)
+  useFrame(() => {
+    if (isEntering && !isDone) {
+      // Smoothly lerp camera into the center of the room
+      camera.position.lerp(targetPosition.current, 0.05)
 
       if (controlsRef.current) {
-        controlsRef.current.target.set(0, -2, -15)
+        controlsRef.current.target.lerp(targetLookAt.current, 0.05)
         controlsRef.current.update()
       }
+
+      // Check if we're close enough to the target
+      const distance = camera.position.distanceTo(targetPosition.current)
+      if (distance < 0.1) {
+        setIsDone(true)
+      }
     }
-  }, [hasEntered, camera, controlsRef])
+  })
 
   return null
 }
@@ -349,7 +357,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId, hasEntered 
   return (
     <>
       {/* Camera Teleport System */}
-      <CameraTeleport hasEntered={hasEntered} controlsRef={controlsRef} />
+      <CameraTeleport isEntering={hasEntered} controlsRef={controlsRef} />
 
       {/* Laboratory Environment Setup */}
       <Environment preset="warehouse" />
@@ -472,10 +480,13 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId, hasEntered 
 }
 
 export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpriteProps) {
-  const [hasEntered, setHasEntered] = useState(false)
+  const [isEntering, setIsEntering] = useState(false)
+  const [hasCompleted, setHasCompleted] = useState(false)
 
-  const handleEnterLab = () => {
-    setHasEntered(true)
+  const handlePressStart = () => {
+    setIsEntering(true)
+    // Hide button after 2 seconds of entering
+    setTimeout(() => setHasCompleted(true), 2000)
   }
 
   return (
@@ -489,27 +500,32 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
           powerPreference: 'high-performance',
         }}
       >
-        <LaboratoryScene {...props} hasEntered={hasEntered} />
+        <LaboratoryScene {...props} hasEntered={isEntering} />
       </Canvas>
 
-      {/* Enter Laboratory Button */}
-      {!hasEntered && (
+      {/* Enter Laboratory Button - Press and Hold */}
+      {!hasCompleted && (
         <motion.div
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ delay: 1 }}
         >
           <motion.button
-            onClick={handleEnterLab}
-            className="pointer-events-auto px-8 py-4 bg-gradient-to-r from-[#C9A050] to-[#8B7030] text-white text-xl font-bold rounded-lg border-2 border-[#D4AF37] shadow-2xl"
-            whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(212, 175, 55, 0.6)' }}
-            whileTap={{ scale: 0.95 }}
+            onMouseDown={handlePressStart}
+            onTouchStart={handlePressStart}
+            className="pointer-events-auto px-10 py-5 bg-gradient-to-r from-[#C9A050] to-[#8B7030] text-white text-xl font-bold rounded-xl border-3 border-[#D4AF37] shadow-2xl"
+            whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(212, 175, 55, 0.7)' }}
+            whileTap={{ scale: 0.92, boxShadow: '0 0 80px rgba(212, 175, 55, 0.9)' }}
             initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            animate={{
+              scale: isEntering ? 0.9 : 1,
+              opacity: isEntering ? 0.7 : 1
+            }}
             transition={{ delay: 1.5, type: 'spring' }}
           >
-            🚪 Enter the Laboratory
+            {isEntering ? '✨ Entering Laboratory...' : '🚪 Press & Hold to Enter'}
           </motion.button>
         </motion.div>
       )}
@@ -517,7 +533,7 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
       {/* Overlay instructions */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none">
         <p className="text-[#D4AF37] text-sm font-light tracking-widest uppercase opacity-70">
-          {hasEntered ? 'Explore the laboratory • Find glowing bottles • Click to discover courses' : 'Click to enter and explore'}
+          {hasCompleted ? 'Explore the laboratory • Find glowing bottles • Click to discover courses' : 'Press and hold to be pulled into the laboratory'}
         </p>
       </div>
     </div>
