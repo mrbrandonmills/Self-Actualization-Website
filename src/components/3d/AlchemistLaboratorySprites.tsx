@@ -104,16 +104,18 @@ function GlowingHotspot({ position, course, onClick, isSelected, color, label }:
         />
       </mesh>
 
-      {/* Glow ring around hotspot */}
-      <mesh position={position} rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.4, 0.6, 32]} />
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={isHovered || isSelected ? 0.6 : 0.3}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+      {/* Glow ring around hotspot - only show on hover */}
+      {(isHovered || isSelected) && (
+        <mesh position={position} rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.4, 0.6, 32]} />
+          <meshBasicMaterial
+            color={color}
+            transparent
+            opacity={0.6}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      )}
 
       {/* Point light for extra glow */}
       <pointLight
@@ -361,13 +363,13 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
       <Environment preset="warehouse" />
       <fog attach="fog" args={['#05201f', 15, 40]} />
 
-      {/* Global ambient lighting */}
-      <ambientLight intensity={0.4} color="#f5e6d3" />
+      {/* Global ambient lighting - brightened for better visibility */}
+      <ambientLight intensity={0.8} color="#f5e6d3" />
 
       {/* Main directional light from above-front (sunlight through window) */}
       <directionalLight
         position={[5, 10, 8]}
-        intensity={1.2}
+        intensity={2.0}
         color="#fff8dc"
         castShadow
         shadow-mapSize-width={2048}
@@ -382,7 +384,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
       {/* Warm fill light from left */}
       <pointLight
         position={[-10, 5, 5]}
-        intensity={0.6}
+        intensity={1.2}
         color="#ffa500"
         distance={20}
         castShadow
@@ -391,7 +393,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
       {/* Cool rim light from right */}
       <pointLight
         position={[10, 5, 5]}
-        intensity={0.5}
+        intensity={1.0}
         color="#87ceeb"
         distance={20}
       />
@@ -399,7 +401,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
       {/* Back wall rim light */}
       <pointLight
         position={[0, 8, -6]}
-        intensity={0.4}
+        intensity={0.8}
         color="#D4AF37"
         distance={15}
       />
