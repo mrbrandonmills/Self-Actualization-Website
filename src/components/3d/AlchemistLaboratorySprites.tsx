@@ -292,11 +292,15 @@ function CameraTeleport({ hasEntered, controlsRef }: { hasEntered: boolean, cont
   const { camera } = useThree()
 
   useEffect(() => {
-    if (hasEntered && controlsRef.current) {
-      // Teleport camera inside the room
-      camera.position.set(0, 0, 5)
-      controlsRef.current.target.set(0, -2, -10)
-      controlsRef.current.update()
+    if (hasEntered) {
+      // Teleport camera deep inside the laboratory
+      camera.position.set(0, 0, -5)
+      camera.lookAt(0, -2, -15)
+
+      if (controlsRef.current) {
+        controlsRef.current.target.set(0, -2, -15)
+        controlsRef.current.update()
+      }
     }
   }, [hasEntered, camera, controlsRef])
 
