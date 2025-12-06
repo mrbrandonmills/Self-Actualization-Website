@@ -412,7 +412,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         enableDamping
         dampingFactor={0.08}
         autoRotate={false}
-        target={[0, -1, 0]}
+        target={[0, -2, 0]}
       />
 
       {/* Award-Winning Post-Processing Pipeline */}
@@ -449,7 +449,7 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
   return (
     <div className="w-full h-screen bg-gradient-to-b from-[#05201f] to-[#0a2a28]">
       <Canvas
-        camera={{ position: [0, 2, 18], fov: 55 }}
+        camera={{ position: [0, 0, 15], fov: 60 }}
         shadows
         gl={{
           antialias: true,

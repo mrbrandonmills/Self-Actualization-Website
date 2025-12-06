@@ -1,7 +1,7 @@
 /**
  * Courses Page - Alchemist's Laboratory
- * Award-winning 3D experience where each course is a glowing beaker
- * Dark luxury aesthetic with liquid glass theme
+ * Award-winning 3D exploration experience where users discover glowing bottles
+ * Dark luxury aesthetic with immersive scavenger hunt mechanic
  */
 
 'use client';
@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic';
 import { courses, Course } from '@/data/courses';
 import { CoursePreviewPanel } from '@/components/courses/CoursePreviewPanel';
 
-// Dynamic import with no SSR for 3D component (using sprite-based beakers)
+// Dynamic import with no SSR for 3D component (glowing bottles exploration)
 const AlchemistLaboratory = dynamic(
   () => import('@/components/3d/AlchemistLaboratorySprites'),
   {
@@ -27,7 +27,7 @@ function AlchemistLabLoader() {
     <div className="loading-screen">
       <div className="loading-content">
         <motion.div
-          className="beaker-icon"
+          className="bottle-icon"
           animate={{
             y: [0, -20, 0],
             rotate: [0, 5, -5, 0],
@@ -68,7 +68,7 @@ function AlchemistLabLoader() {
           text-align: center;
         }
 
-        .beaker-icon {
+        .bottle-icon {
           font-size: 4rem;
           margin-bottom: 1rem;
         }
@@ -179,9 +179,9 @@ export default function CoursesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          Each glowing beaker contains a transformational course from the Laboratory of Life.
+          Explore the laboratory to discover glowing bottles hidden throughout the shelves.
           <br />
-          Click any beaker to discover ancient wisdom blended with modern psychology.
+          Each bottle contains a transformational course from the Laboratory of Life.
         </motion.p>
 
         <motion.div
@@ -216,7 +216,7 @@ export default function CoursesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.8 }}
         >
-          <p>✨ Drag to explore | Click beakers to preview courses</p>
+          <p>✨ Drag to explore | Find glowing bottles | Click to preview courses</p>
         </motion.div>
       </motion.section>
 
