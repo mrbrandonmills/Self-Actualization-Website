@@ -319,8 +319,8 @@ export default function CoursesPage() {
 
         .canvas-container {
           width: 100%;
-          height: 70vh;
-          min-height: 600px;
+          height: 90vh;
+          min-height: 800px;
           border-radius: 16px;
           overflow: hidden;
           box-shadow:
