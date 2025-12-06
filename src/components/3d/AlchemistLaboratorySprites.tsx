@@ -8,13 +8,14 @@ import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
 /**
- * Alchemist Laboratory - Full 3D Scene
- * Complete immersive laboratory with:
- * - Wooden lab table and shelving
- * - Stone walls and floor
- * - Ambient laboratory objects
- * - Realistic lighting and shadows
- * - High-quality beaker sprites positioned in 3D space
+ * Alchemist Laboratory - Award-Winning 3D Scene
+ * Professional immersive laboratory featuring:
+ * - "Laboratory in the Swamp" 145MB professional GLB model (Vercel Blob CDN)
+ * - Interactive glowing hotspots for course discovery
+ * - N8AO ambient occlusion for depth
+ * - Cinematic depth of field and bloom effects
+ * - PBR materials with realistic lighting
+ * Production-ready with Vercel Blob Storage CDN
  */
 
 interface AlchemistLaboratorySpriteProps {
