@@ -5,6 +5,7 @@ import { BartoszNavigation } from '@/components/bartosz/BartoszNavigation'
 import SmoothScroll from '@/components/smooth-scroll'
 import BartoszFooter from '@/components/bartosz/BartoszFooter'
 import { MagneticCursor } from '@/components/cursor/MagneticCursor'
+import { CartProvider } from '@/contexts/CartContext'
 
 // Playfair Display - Luxury serif for headings
 const playfair = Playfair_Display({
@@ -57,12 +58,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased">
-        <MagneticCursor />
-        <SmoothScroll>
-          <BartoszNavigation />
-          {children}
-          <BartoszFooter />
-        </SmoothScroll>
+        <CartProvider>
+          <MagneticCursor />
+          <SmoothScroll>
+            <BartoszNavigation />
+            {children}
+            <BartoszFooter />
+          </SmoothScroll>
+        </CartProvider>
       </body>
     </html>
   )
