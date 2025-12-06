@@ -1,11 +1,12 @@
 'use client'
 
 import { useRef, useState, useEffect, Suspense } from 'react'
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber'
 import { OrbitControls, Environment, Sparkles, useGLTF, Html } from '@react-three/drei'
 import { EffectComposer, Bloom, DepthOfField, N8AO } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import { Course } from '@/data/courses'
+import { motion } from 'framer-motion'
 
 /**
  * Alchemist Laboratory - Award-Winning Exploration Experience
@@ -286,7 +287,24 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
   )
 }
 
-function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: AlchemistLaboratorySpriteProps) {
+// Camera Teleport Controller
+function CameraTeleport({ hasEntered, controlsRef }: { hasEntered: boolean, controlsRef: React.RefObject<any> }) {
+  const { camera } = useThree()
+
+  useEffect(() => {
+    if (hasEntered && controlsRef.current) {
+      // Teleport camera inside the room
+      camera.position.set(0, 0, 5)
+      controlsRef.current.target.set(0, -2, -10)
+      controlsRef.current.update()
+    }
+  }, [hasEntered, camera, controlsRef])
+
+  return null
+}
+
+function LaboratoryScene({ courses, onBeakerClick, selectedCourseId, hasEntered }: AlchemistLaboratorySpriteProps & { hasEntered: boolean }) {
+  const controlsRef = useRef<any>(null)
   // Map glowing bottles to courses - positioned at actual shelf bottle locations
   const bottleMappings = [
     {
@@ -326,6 +344,9 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
 
   return (
     <>
+      {/* Camera Teleport System */}
+      <CameraTeleport hasEntered={hasEntered} controlsRef={controlsRef} />
+
       {/* Laboratory Environment Setup */}
       <Environment preset="warehouse" />
       <fog attach="fog" args={['#05201f', 15, 40]} />
@@ -403,6 +424,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
 
       {/* Camera controls with updated constraints */}
       <OrbitControls
+        ref={controlsRef}
         enablePan={true}
         enableZoom={true}
         minDistance={0.1}
@@ -446,8 +468,14 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
 }
 
 export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpriteProps) {
+  const [hasEntered, setHasEntered] = useState(false)
+
+  const handleEnterLab = () => {
+    setHasEntered(true)
+  }
+
   return (
-    <div className="w-full h-screen bg-gradient-to-b from-[#05201f] to-[#0a2a28]">
+    <div className="w-full h-screen bg-gradient-to-b from-[#05201f] to-[#0a2a28] relative">
       <Canvas
         camera={{ position: [0, 0, 15], fov: 60 }}
         shadows
@@ -457,13 +485,35 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
           powerPreference: 'high-performance',
         }}
       >
-        <LaboratoryScene {...props} />
+        <LaboratoryScene {...props} hasEntered={hasEntered} />
       </Canvas>
+
+      {/* Enter Laboratory Button */}
+      {!hasEntered && (
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <motion.button
+            onClick={handleEnterLab}
+            className="pointer-events-auto px-8 py-4 bg-gradient-to-r from-[#C9A050] to-[#8B7030] text-white text-xl font-bold rounded-lg border-2 border-[#D4AF37] shadow-2xl"
+            whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(212, 175, 55, 0.6)' }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 1.5, type: 'spring' }}
+          >
+            🚪 Enter the Laboratory
+          </motion.button>
+        </motion.div>
+      )}
 
       {/* Overlay instructions */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none">
         <p className="text-[#D4AF37] text-sm font-light tracking-widest uppercase opacity-70">
-          Explore the laboratory • Find glowing bottles • Click to discover courses
+          {hasEntered ? 'Explore the laboratory • Find glowing bottles • Click to discover courses' : 'Click to enter and explore'}
         </p>
       </div>
     </div>
