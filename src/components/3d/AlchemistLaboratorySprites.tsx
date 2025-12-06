@@ -8,13 +8,14 @@ import * as THREE from 'three'
 import { Course } from '@/data/courses'
 
 /**
- * Alchemist Laboratory - Award-Winning 3D Scene
- * Professional immersive laboratory featuring:
+ * Alchemist Laboratory - Award-Winning Exploration Experience
+ * Immersive scavenger hunt laboratory featuring:
  * - "Laboratory in the Swamp" 145MB professional GLB model (Vercel Blob CDN)
- * - Interactive glowing hotspots for course discovery
+ * - Glowing bottles on shelves that users explore to discover courses
  * - N8AO ambient occlusion for depth
  * - Cinematic depth of field and bloom effects
  * - PBR materials with realistic lighting
+ * - Social media worthy exploration and discovery mechanic
  * Production-ready with Vercel Blob Storage CDN
  */
 
@@ -33,7 +34,7 @@ interface BeakerSpriteProps {
   index: number
 }
 
-interface GlowingHotspotProps {
+interface GlowingBottleProps {
   position: [number, number, number]
   course: Course
   onClick: () => void
@@ -42,42 +43,27 @@ interface GlowingHotspotProps {
   label: string
 }
 
-// Glowing Interactive Hotspot Component
-function GlowingHotspot({ position, course, onClick, isSelected, color, label }: GlowingHotspotProps) {
-  const meshRef = useRef<THREE.Mesh>(null)
+// Glowing Bottle on Shelf - Invisible clickable area with pulsing light
+function GlowingBottle({ position, course, onClick, isSelected, color, label }: GlowingBottleProps) {
+  const lightRef = useRef<THREE.PointLight>(null)
   const [isHovered, setIsHovered] = useState(false)
 
-  // Pulsing glow animation
+  // Pulsing light animation
   useFrame((state) => {
-    if (!meshRef.current) return
+    if (!lightRef.current) return
 
     const time = state.clock.getElapsedTime()
 
-    // Pulse scale
-    const pulseScale = 1 + Math.sin(time * 2) * 0.15
-    meshRef.current.scale.set(pulseScale, pulseScale, pulseScale)
-
-    // Pulse intensity on material
-    const material = meshRef.current.material as THREE.MeshStandardMaterial
-    if (material.emissive) {
-      const intensity = 0.8 + Math.sin(time * 2) * 0.2
-      material.emissiveIntensity = intensity
-    }
-
-    // Hover lift
-    if (isHovered || isSelected) {
-      meshRef.current.position.y = position[1] + Math.sin(time * 3) * 0.1
-    } else {
-      meshRef.current.position.y = position[1]
-    }
+    // Pulse intensity
+    const baseIntensity = isHovered || isSelected ? 4 : 2
+    const pulseIntensity = baseIntensity + Math.sin(time * 3) * 1
+    lightRef.current.intensity = pulseIntensity
   })
 
   return (
-    <group>
-      {/* Glowing orb */}
+    <group position={position}>
+      {/* Invisible clickable sphere around bottle */}
       <mesh
-        ref={meshRef}
-        position={position}
         onClick={(e) => {
           e.stopPropagation()
           onClick()
@@ -92,53 +78,34 @@ function GlowingHotspot({ position, course, onClick, isSelected, color, label }:
           document.body.style.cursor = 'default'
         }}
       >
-        <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.8}
-          transparent
-          opacity={isHovered || isSelected ? 0.9 : 0.7}
-          roughness={0.2}
-          metalness={0.8}
-        />
+        <sphereGeometry args={[0.5, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} />
       </mesh>
 
-      {/* Glow ring around hotspot - only show on hover */}
-      {(isHovered || isSelected) && (
-        <mesh position={position} rotation={[Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.4, 0.6, 32]} />
-          <meshBasicMaterial
-            color={color}
-            transparent
-            opacity={0.6}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      )}
-
-      {/* Point light for extra glow */}
+      {/* Pulsing point light at bottle position */}
       <pointLight
-        position={position}
+        ref={lightRef}
         color={color}
-        intensity={isHovered || isSelected ? 3 : 1.5}
-        distance={5}
+        intensity={2}
+        distance={8}
+        decay={2}
       />
 
       {/* Floating label on hover */}
       {isHovered && (
-        <Html position={[position[0], position[1] + 0.8, position[2]]} center>
+        <Html position={[0, 1, 0]} center>
           <div
             style={{
-              background: 'rgba(0, 0, 0, 0.8)',
+              background: 'rgba(0, 0, 0, 0.9)',
               color: '#D4AF37',
               padding: '8px 16px',
               borderRadius: '8px',
               fontSize: '14px',
               fontWeight: 'bold',
               whiteSpace: 'nowrap',
-              border: '1px solid #D4AF37',
+              border: '2px solid ' + color,
               pointerEvents: 'none',
+              boxShadow: `0 0 20px ${color}`,
             }}
           >
             {label}
@@ -320,28 +287,28 @@ function BeakerSprite({ imagePath, position, course, onClick, isSelected, index 
 }
 
 function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: AlchemistLaboratorySpriteProps) {
-  // Map glowing hotspots to courses - positioned throughout the laboratory
-  const hotspotMappings = [
+  // Map glowing bottles to courses - positioned at actual shelf bottle locations
+  const bottleMappings = [
     {
-      position: [-3, 0, -2] as [number, number, number], // Ancient book on table
+      position: [-2.8, -0.5, -2.5] as [number, number, number], // Green bottle on lower left shelf
       course: courses[0], // Block A - Beginner
       color: '#4ade80', // Green
-      label: `📚 ${courses[0]?.title || 'Beginner Course'}`,
+      label: `🧪 ${courses[0]?.title || 'Beginner Course'}`,
     },
     {
-      position: [2, 1.5, -3] as [number, number, number], // Glowing potion on shelf
+      position: [1.5, 0.8, -3] as [number, number, number], // Blue bottle on middle shelf
       course: courses[1], // Block B - Intermediate
       color: '#3b82f6', // Blue
       label: `🧪 ${courses[1]?.title || 'Intermediate Course'}`,
     },
     {
-      position: [4, 0.5, 1] as [number, number, number], // Crystal artifact on table
+      position: [3.2, 0.2, -2.8] as [number, number, number], // Purple bottle on right shelf
       course: courses[2], // Block C - Advanced
       color: '#a855f7', // Purple
-      label: `💎 ${courses[2]?.title || 'Advanced Course'}`,
+      label: `🧪 ${courses[2]?.title || 'Advanced Course'}`,
     },
     {
-      position: [-5, 2, -4] as [number, number, number], // Mystical scroll on high shelf
+      position: [-3.5, 1.5, -3.2] as [number, number, number], // Amber bottle on upper shelf
       course: courses[3] || { // Future course placeholder
         id: 'course-4',
         title: 'Coming Soon',
@@ -353,7 +320,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         modules: 0,
       },
       color: '#f59e0b', // Amber
-      label: '📜 Coming Soon',
+      label: '🧪 Coming Soon',
     },
   ]
 
@@ -421,9 +388,9 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
         <ProfessionalLaboratory />
       </Suspense>
 
-      {/* Glowing interactive hotspots positioned throughout laboratory */}
-      {hotspotMappings.map((mapping, index) => (
-        <GlowingHotspot
+      {/* Glowing bottles on shelves - explore to discover courses */}
+      {bottleMappings.map((mapping) => (
+        <GlowingBottle
           key={mapping.course.id}
           position={mapping.position}
           course={mapping.course}
@@ -496,7 +463,7 @@ export default function AlchemistLaboratorySprites(props: AlchemistLaboratorySpr
       {/* Overlay instructions */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center pointer-events-none">
         <p className="text-[#D4AF37] text-sm font-light tracking-widest uppercase opacity-70">
-          Click glowing items to discover courses • Drag to rotate • Scroll to zoom
+          Explore the laboratory • Find glowing bottles • Click to discover courses
         </p>
       </div>
     </div>
