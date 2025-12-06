@@ -405,7 +405,7 @@ function LaboratoryScene({ courses, onBeakerClick, selectedCourseId }: Alchemist
       <OrbitControls
         enablePan={true}
         enableZoom={true}
-        minDistance={8}
+        minDistance={2}
         maxDistance={25}
         minPolarAngle={Math.PI / 6}
         maxPolarAngle={Math.PI / 2.2}
