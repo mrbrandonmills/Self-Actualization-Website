@@ -118,10 +118,8 @@ function GlowingBottle({ position, course, onClick, isSelected, color, label }: 
 
 // Professional Laboratory Model Component - "Laboratory in the Swamp"
 function ProfessionalLaboratory() {
-  // Use Supabase CDN in production, local file in development
-  const assetPath = process.env.NEXT_PUBLIC_ASSETS_CDN
-    ? `${process.env.NEXT_PUBLIC_ASSETS_CDN}/laboratory-in-the-swamp/source/scene.glb`
-    : '/assets/laboratory-in-the-swamp/source/scene.glb'
+  // Use public folder path for now
+  const assetPath = '/assets/laboratory-in-the-swamp/source/scene.glb'
 
   const { scene } = useGLTF(assetPath)
 
