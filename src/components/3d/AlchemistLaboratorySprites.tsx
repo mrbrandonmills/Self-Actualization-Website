@@ -148,7 +148,7 @@ function ProfessionalLaboratory() {
     <primitive
       object={clonedScene}
       scale={[0.5, 0.5, 0.5]}
-      position={[0, -4, 0]}
+      position={[0, -4, -8]}
       rotation={[0, Math.PI, 0]}
     />
   )
