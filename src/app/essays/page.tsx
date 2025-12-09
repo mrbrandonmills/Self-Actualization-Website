@@ -2,55 +2,12 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { essays } from '@/data/essays'
 
 /**
- * Essays Page - Clean & Beautiful
- * Liquid glass theme with gorgeous typography
+ * Essays Page - Research & Thought Leadership
+ * Academic papers and essays by Brandon Mills & Jesse Doherty
  */
-
-interface Essay {
-  id: string
-  title: string
-  author: string
-  excerpt: string
-  pullQuote: string
-  readTime: string
-  date: string
-  slug: string
-}
-
-const essays: Essay[] = [
-  {
-    id: '1',
-    title: 'On the Nature of Time',
-    author: 'Jesse Doherty & Brandon Mills',
-    excerpt: 'Time, unlike space, refuses to be measured by the instruments we build. It bends, stretches, and sometimes disappears entirely when we need it most. In the Laboratory of Life, we learn to work with time rather than against it.',
-    pullQuote: 'We don\'t lose time—we misplace our attention.',
-    readTime: '8 min read',
-    date: 'November 2024',
-    slug: 'nature-of-time'
-  },
-  {
-    id: '2',
-    title: 'The Architecture of Memory',
-    author: 'Jesse Doherty & Brandon Mills',
-    excerpt: 'Our minds construct elaborate palaces to house the fragments of our past. But what happens when the foundation begins to crack? Self-actualization requires we rebuild our memories with intention.',
-    pullQuote: 'Memory is not a photograph; it\'s a painting that changes with every viewing.',
-    readTime: '12 min read',
-    date: 'October 2024',
-    slug: 'architecture-of-memory'
-  },
-  {
-    id: '3',
-    title: 'Engineering Your Patterns',
-    author: 'Jesse Doherty & Brandon Mills',
-    excerpt: 'Every one of us is trapped by problems we believe can\'t be solved. Some think they are stuck forever. Others keep trying random solutions, only to find themselves back where they started. The Laboratory teaches us to engineer new patterns.',
-    pullQuote: 'Your patterns were learned. They can be unlearned.',
-    readTime: '15 min read',
-    date: 'September 2024',
-    slug: 'engineering-patterns'
-  }
-]
 
 export default function EssaysPage() {
   return (
@@ -85,7 +42,7 @@ export default function EssaysPage() {
             className="lead max-w-2xl mx-auto mb-xl text-center"
             style={{ textAlign: 'center' }}
           >
-            Thoughtful explorations of ideas that matter. Insights from the Laboratory of Life series.
+            Academic research and thought leadership exploring consciousness, identity, relationships, and the science of transformation.
           </motion.p>
 
           <div className="divider" />
@@ -110,29 +67,52 @@ export default function EssaysPage() {
                   </span>
                   <div className="flex-1">
                     <h2 className="h3 mb-3">{essay.title}</h2>
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
+                    {essay.subtitle && (
+                      <p className="text-lg text-accent mb-3 italic">{essay.subtitle}</p>
+                    )}
+                    <div className="flex items-center gap-4 text-sm text-gray-400 flex-wrap">
                       <span>{essay.author}</span>
                       <span>•</span>
-                      <span>{essay.date}</span>
+                      <span>{essay.publishDate}</span>
                       <span>•</span>
-                      <span>{essay.readTime}</span>
+                      <span>{essay.readingTime}</span>
+                      {essay.institution && (
+                        <>
+                          <span>•</span>
+                          <span>{essay.institution}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                <div className="pull-quote">
-                  "{essay.pullQuote}"
+                {/* Category Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.3)] rounded-full text-sm text-gold mb-6">
+                  <span>🔬</span>
+                  <span>{essay.category}</span>
                 </div>
 
                 <p className="text-lg leading-relaxed mb-6">
-                  {essay.excerpt}
+                  {essay.abstract}
                 </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {essay.tags.slice(0, 4).map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 text-xs bg-[rgba(212,175,55,0.1)] text-accent rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
 
                 <Link
                   href={`/essays/${essay.slug}`}
                   className="inline-flex items-center gap-3 text-gold hover:text-yellow-400 transition-colors font-medium group"
                 >
-                  <span>Read Full Essay</span>
+                  <span>Read Research Paper</span>
                   <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
                 </Link>
               </motion.article>
@@ -171,25 +151,9 @@ export default function EssaysPage() {
           transform: translateX(8px);
         }
 
-        .pull-quote {
-          font-size: 28px;
-          font-style: italic;
-          color: var(--color-gold);
-          margin: 32px 0;
-          padding: 24px;
-          background: rgba(212, 175, 55, 0.1);
-          border-radius: 12px;
-          line-height: 1.6;
-        }
-
         @media (max-width: 768px) {
           .essay-card {
             padding: 32px 24px;
-          }
-
-          .pull-quote {
-            font-size: 22px;
-            padding: 20px;
           }
         }
       `}</style>
