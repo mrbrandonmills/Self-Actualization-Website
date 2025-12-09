@@ -148,7 +148,10 @@ export function FeaturedBooksSection() {
     if (!triggerRef.current || !sliderRef.current) return;
 
     const slider = sliderRef.current;
-    const cards = slider.children;
+    const cards = Array.from(slider.children);
+
+    // Set initial visibility for cards without GSAP
+    gsap.set(cards, { opacity: 1, scale: 1 });
 
     // Wait for layout to stabilize before creating ScrollTrigger
     const initAnimations = () => {
@@ -171,18 +174,25 @@ export function FeaturedBooksSection() {
         },
       });
 
-      const cardAnimation = gsap.from(cards, {
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
+      // Simplified card animation - just fade in on scroll
+      const cardAnimation = gsap.fromTo(cards,
+        {
+          opacity: 0,
+          scale: 0.95,
         },
-      });
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: triggerRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
 
       return { tween, cardAnimation };
     };
@@ -195,7 +205,7 @@ export function FeaturedBooksSection() {
       if (animations) {
         animationsRef.current = animations;
       }
-    }, 500);
+    }, 100); // Reduced delay
 
     return () => {
       clearTimeout(timeoutId);
