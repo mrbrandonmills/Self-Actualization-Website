@@ -55,7 +55,7 @@ export const books: Book[] = [
     title: 'Random Acts of Self-Actualization',
     subtitle: 'Building Block A - Engineering Your Patterns',
     description: 'Every one of us is trapped by problems we believe can\'t be solved. Some think they are stuck forever. Others keep trying random solutions, only to find themselves back where they started. Both are right. Until now.\n\nBlock A helps us engineer new patterns using what you already know. This foundational laboratory shows you how to break free from limiting patterns and create powerful, sustainable change in your life.',
-    coverImage: '/books/block-a/1.png',
+    coverImage: '/books/block-a/cover.png',
     category: 'Laboratory',
     slug: 'random-acts-block-a',
     author: 'Jesse Doherty & Brandon Mills',
@@ -66,11 +66,6 @@ export const books: Book[] = [
         type: 'Kindle',
         price: 799,
         amazonUrl: 'https://a.co/d/55Ji8n2'
-      },
-      {
-        type: 'Paperback',
-        price: 1499,
-        amazonUrl: 'https://a.co/d/55Ji8n2'
       }
     ]
   },
@@ -79,7 +74,7 @@ export const books: Book[] = [
     title: 'Random Acts of Self-Actualization',
     subtitle: 'Block B - The Laboratory of Judgment',
     description: 'Block B lays the foundation of how to make the right judgments in an increasingly turbulent world. Learn to structure your decision-making processes and navigate complexity with confidence.\n\nThis is the second building block in the Laboratory of Life series, focusing on developing the critical thinking and judgment skills necessary for self-actualization in modern times.',
-    coverImage: '/books/block-b/cover.jpg',
+    coverImage: '/books/block-b/cover.png',
     category: 'Laboratory',
     slug: 'random-acts-block-b',
     author: 'Jesse Doherty & Brandon Mills',
@@ -90,11 +85,6 @@ export const books: Book[] = [
         type: 'Kindle',
         price: 999,
         amazonUrl: 'https://a.co/d/iQ1Jo7x'
-      },
-      {
-        type: 'Paperback',
-        price: 1699,
-        amazonUrl: 'https://a.co/d/iQ1Jo7x'
       }
     ]
   },
@@ -103,7 +93,7 @@ export const books: Book[] = [
     title: 'Random Acts of Self-Actualization',
     subtitle: 'Block C - The Laboratory of Living',
     description: 'Block C introduces how to structure our social ecosystems in such a way that not only accelerates self-actualization but assures transformation feels momentum, not uphill struggle.\n\nThe final building block completes the Laboratory of Life trilogy, showing you how to engineer your environment and relationships for sustainable growth and transformation.',
-    coverImage: '/books/block-c/cover.jpg',
+    coverImage: '/books/block-c/cover.png',
     category: 'Laboratory',
     slug: 'block-c-laboratory-of-living',
     author: 'Jesse Doherty & Brandon Mills',
@@ -113,11 +103,6 @@ export const books: Book[] = [
       {
         type: 'Kindle',
         price: 999,
-        amazonUrl: 'https://a.co/d/dlrbP4e'
-      },
-      {
-        type: 'Paperback',
-        price: 1699,
         amazonUrl: 'https://a.co/d/dlrbP4e'
       }
     ]
@@ -135,18 +120,13 @@ export const books: Book[] = [
     publishDate: '2024',
     formats: [
       {
-        type: 'Kindle',
-        price: 2499,
-        amazonUrl: 'https://www.amazon.com/dp/TRILOGY_KINDLE_ASIN'
-      },
-      {
         type: 'Paperback',
-        price: 4999,
+        price: 2299,
         amazonUrl: 'https://www.amazon.com/dp/TRILOGY_PAPERBACK_ASIN'
       },
       {
         type: 'Hardcover',
-        price: 6999,
+        price: 3299,
         amazonUrl: 'https://www.amazon.com/dp/TRILOGY_HARDCOVER_ASIN'
       }
     ]

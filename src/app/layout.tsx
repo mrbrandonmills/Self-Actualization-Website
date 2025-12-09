@@ -4,7 +4,7 @@ import './globals.css'
 import { BartoszNavigation } from '@/components/bartosz/BartoszNavigation'
 import SmoothScroll from '@/components/smooth-scroll'
 import BartoszFooter from '@/components/bartosz/BartoszFooter'
-import { MagneticCursor } from '@/components/cursor/MagneticCursor'
+// import { MagneticCursor } from '@/components/cursor/MagneticCursor' // Disabled - using standard cursor
 import { CartProvider } from '@/contexts/CartContext'
 
 // Playfair Display - Luxury serif for headings
@@ -59,7 +59,7 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased">
         <CartProvider>
-          <MagneticCursor />
+          {/* <MagneticCursor /> */}
           <SmoothScroll>
             <BartoszNavigation />
             {children}

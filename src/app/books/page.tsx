@@ -13,12 +13,12 @@ export default function BooksPage() {
   return (
     <main className="min-h-screen bg-[var(--color-black-green)]">
       {/* Hero Section */}
-      <section className="pt-32 pb-16">
-        <div className="container-xl text-center">
+      <section className="hero-section pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="container-xl mx-auto text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="label text-accent mb-md"
+            className="label text-accent mb-md hero-label mx-auto text-center"
           >
             Premium Collection
           </motion.p>
@@ -27,8 +27,7 @@ export default function BooksPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="h1 mb-lg text-center"
-            style={{ textAlign: 'center' }}
+            className="h1 mb-lg text-center hero-title mx-auto"
           >
             Random Acts of
             <br />
@@ -39,19 +38,18 @@ export default function BooksPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="lead max-w-2xl mx-auto mb-xl text-center"
-            style={{ textAlign: 'center' }}
+            className="lead max-w-2xl mx-auto mb-xl text-center hero-description"
           >
             Transform your reality with the complete Laboratory of Life series by Jesse Doherty & Brandon Mills.
           </motion.p>
 
-          <div className="divider" />
+          <div className="divider mx-auto" />
         </div>
       </section>
 
       {/* Books Grid */}
-      <section className="section">
-        <div className="container-xl">
+      <section className="section px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto">
           <div className="books-grid">
             {books.map((book, index) => (
               <motion.div
@@ -109,26 +107,43 @@ export default function BooksPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="section gradient-dark text-center">
-        <div className="container-lg">
-          <h2 className="h2 mb-lg">
+      <section className="section gradient-dark text-center px-4 sm:px-6 lg:px-8">
+        <div className="container-lg mx-auto">
+          <h2 className="h2 mb-lg mx-auto text-center">
             Ready to Begin Your Journey?
           </h2>
-          <p className="lead mb-xl max-w-2xl mx-auto">
+          <p className="lead mb-xl max-w-2xl mx-auto text-center">
             Each book is a carefully curated pathway to transformation and self-discovery.
           </p>
-          <Link href="/" className="btn btn-primary">
+          <Link href="/" className="btn btn-primary mx-auto">
             Return Home
           </Link>
         </div>
       </section>
 
       <style jsx>{`
+        /* Hero Section */
+        .hero-section {
+          padding-top: 128px;
+          padding-bottom: 64px;
+        }
+
+        .hero-label,
+        .hero-title,
+        .hero-description {
+          text-align: center;
+        }
+
+        /* Books Grid */
         .books-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 48px;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 32px;
           margin-bottom: 64px;
+          margin-left: auto;
+          margin-right: auto;
+          width: 100%;
+          padding: 0 20px;
         }
 
         .book-card {
@@ -210,14 +225,153 @@ export default function BooksPage() {
           overflow: hidden;
         }
 
+        /* Tablet Breakpoint */
+        @media (max-width: 1024px) {
+          .books-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+          }
+        }
+
+        /* Mobile Breakpoint */
         @media (max-width: 768px) {
+          /* Hero Section Mobile */
+          .hero-section {
+            padding-top: 96px;
+            padding-bottom: 48px;
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+
+          .hero-label {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .hero-title {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+
+          .hero-description {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 16px;
+            padding-right: 16px;
+            max-width: 100%;
+          }
+
+          /* Books Grid Mobile */
           .books-grid {
             grid-template-columns: 1fr;
-            gap: 32px;
+            gap: 24px;
+            padding-left: 16px;
+            padding-right: 16px;
+            margin: 0 auto;
+          }
+
+          /* Book Card - Center Everything */
+          .book-card {
+            text-align: center;
+            margin: 0 auto;
+            max-width: 100%;
+          }
+
+          .book-card:hover {
+            transform: translateY(-4px);
+          }
+
+          /* Book Info - Better Mobile Padding */
+          .book-info {
+            padding: 24px 20px;
+          }
+
+          /* Center All Text Content */
+          .book-info h2 {
+            text-align: center;
+          }
+
+          .book-info p {
+            text-align: center;
+          }
+
+          /* Format Buttons - Center Alignment */
+          .format-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .format-btn {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+          }
+
+          /* CTA Section Mobile */
+          .gradient-dark .container-lg {
+            padding-left: 20px;
+            padding-right: 20px;
+          }
+
+          .gradient-dark h2 {
+            text-align: center;
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+
+          .gradient-dark p {
+            text-align: center;
+            padding-left: 16px;
+            padding-right: 16px;
+          }
+        }
+
+        /* Extra Small Mobile Breakpoint */
+        @media (max-width: 480px) {
+          /* Hero Section Extra Small */
+          .hero-section {
+            padding-top: 80px;
+            padding-bottom: 32px;
+          }
+
+          .hero-title {
+            font-size: 2rem;
+            line-height: 1.2;
+          }
+
+          /* Books Grid Extra Small */
+          .books-grid {
+            gap: 20px;
+            padding-left: 12px;
+            padding-right: 12px;
+          }
+
+          .book-card {
+            border-radius: 12px;
           }
 
           .book-info {
-            padding: 24px;
+            padding: 20px 16px;
+          }
+
+          .format-btn {
+            padding: 14px 20px;
+            font-size: 14px;
+          }
+
+          .format-type {
+            font-size: 14px;
+          }
+
+          .format-price {
+            font-size: 16px;
           }
         }
       `}</style>

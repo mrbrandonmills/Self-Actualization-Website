@@ -13,12 +13,12 @@ export default function EssaysPage() {
   return (
     <main className="min-h-screen bg-[var(--color-black-green)]">
       {/* Hero Section */}
-      <section className="pt-32 pb-16">
-        <div className="container-xl text-center">
+      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="container-xl text-center mx-auto">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="label text-accent mb-md"
+            className="label text-accent mb-md text-center mx-auto"
           >
             The Laboratory of Life
           </motion.p>
@@ -27,8 +27,7 @@ export default function EssaysPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="h1 mb-lg text-center"
-            style={{ textAlign: 'center' }}
+            className="h1 mb-lg text-center mx-auto"
           >
             Essays on
             <br />
@@ -40,18 +39,17 @@ export default function EssaysPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="lead max-w-2xl mx-auto mb-xl text-center"
-            style={{ textAlign: 'center' }}
           >
             Academic research and thought leadership exploring consciousness, identity, relationships, and the science of transformation.
           </motion.p>
 
-          <div className="divider" />
+          <div className="divider mx-auto" />
         </div>
       </section>
 
       {/* Essays Grid */}
-      <section className="section">
-        <div className="container-lg">
+      <section className="section px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1000px] mx-auto">
           <div className="space-y-16">
             {essays.map((essay, index) => (
               <motion.article
@@ -61,8 +59,8 @@ export default function EssaysPage() {
                 transition={{ delay: index * 0.1 }}
                 className="essay-card"
               >
-                <div className="flex items-baseline gap-6 mb-6">
-                  <span className="text-6xl font-light text-gold">
+                <div className="essay-header flex items-baseline gap-6 mb-6">
+                  <span className="essay-number text-6xl font-light text-gold">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <div className="flex-1">
@@ -70,7 +68,7 @@ export default function EssaysPage() {
                     {essay.subtitle && (
                       <p className="text-lg text-accent mb-3 italic">{essay.subtitle}</p>
                     )}
-                    <div className="flex items-center gap-4 text-sm text-gray-400 flex-wrap">
+                    <div className="essay-meta flex items-center gap-4 text-sm text-gray-400 flex-wrap">
                       <span>{essay.author}</span>
                       <span>•</span>
                       <span>{essay.publishDate}</span>
@@ -122,15 +120,15 @@ export default function EssaysPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="section gradient-dark text-center">
-        <div className="container-lg">
-          <h2 className="h2 mb-lg">
+      <section className="section gradient-dark text-center px-4 sm:px-6 lg:px-8">
+        <div className="container-lg mx-auto">
+          <h2 className="h2 mb-lg text-center mx-auto">
             Ready to Begin Your Journey?
           </h2>
-          <p className="lead mb-xl max-w-2xl mx-auto">
+          <p className="lead mb-xl max-w-2xl mx-auto text-center">
             Explore the complete Laboratory of Life series and start your transformation today.
           </p>
-          <Link href="/books" className="btn btn-primary">
+          <Link href="/books" className="btn btn-primary mx-auto">
             View Books
           </Link>
         </div>
@@ -138,22 +136,144 @@ export default function EssaysPage() {
 
       <style jsx>{`
         .essay-card {
-          background: rgba(212, 175, 55, 0.05);
+          background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.08) 0%,
+            rgba(212, 175, 55, 0.03) 50%,
+            rgba(212, 175, 55, 0.08) 100%
+          );
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(212, 175, 55, 0.2);
           border-left: 4px solid rgba(212, 175, 55, 0.5);
-          border-radius: 8px;
+          border-radius: 24px;
           padding: 48px;
-          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(212, 175, 55, 0.1) inset,
+            0 20px 60px rgba(212, 175, 55, 0.05);
+          transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+          position: relative;
+          overflow: hidden;
+          animation: float 8s ease-in-out infinite;
+        }
+
+        .essay-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            circle at 50% 50%,
+            rgba(212, 175, 55, 0.15) 0%,
+            transparent 70%
+          );
+          opacity: 0;
+          transition: opacity 0.6s ease;
+        }
+
+        .essay-card:nth-child(1) { animation-delay: 0s; }
+        .essay-card:nth-child(2) { animation-delay: -2s; }
+        .essay-card:nth-child(3) { animation-delay: -4s; }
+        .essay-card:nth-child(4) { animation-delay: -6s; }
+        .essay-card:nth-child(5) { animation-delay: -1s; }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-12px);
+          }
         }
 
         .essay-card:hover {
-          background: rgba(212, 175, 55, 0.08);
+          transform: translateY(-8px) scale(1.01);
+          border-color: rgba(212, 175, 55, 0.4);
           border-left-color: var(--color-gold);
-          transform: translateX(8px);
+          box-shadow:
+            0 16px 64px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(212, 175, 55, 0.2) inset,
+            0 32px 80px rgba(212, 175, 55, 0.15);
+          animation-play-state: paused;
+        }
+
+        .essay-card:hover::before {
+          opacity: 1;
         }
 
         @media (max-width: 768px) {
           .essay-card {
-            padding: 32px 24px;
+            padding: 24px 20px;
+            border-radius: 16px;
+            animation: none;
+            margin: 0 auto;
+            max-width: 100%;
+          }
+
+          .essay-card:hover {
+            transform: translateY(-4px) scale(1.005);
+          }
+
+          .essay-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+          }
+
+          .essay-number {
+            font-size: 3rem;
+            margin-bottom: 8px;
+          }
+
+          .essay-header > div {
+            text-align: center;
+            width: 100%;
+          }
+
+          .essay-header h2 {
+            text-align: center;
+          }
+
+          .essay-meta {
+            justify-content: center;
+            font-size: 0.75rem;
+          }
+
+          .essay-card p {
+            text-align: center;
+          }
+
+          .essay-card > div:not(.essay-header) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+
+          .essay-card a {
+            margin: 0 auto;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .essay-card {
+            padding: 20px 16px;
+          }
+
+          .essay-number {
+            font-size: 2.5rem;
+          }
+
+          .essay-meta {
+            font-size: 0.7rem;
+            gap: 8px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .essay-card {
+            animation: none;
           }
         }
       `}</style>

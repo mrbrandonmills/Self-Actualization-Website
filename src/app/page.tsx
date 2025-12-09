@@ -16,6 +16,7 @@ import {
 } from '@/components/sections';
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { useBookPreloader } from '@/hooks/useBookPreloader';
 
@@ -68,14 +69,37 @@ const narrativeOverlays = [
 export default function HomePage() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showContent, setShowContent] = useState(false);
+  const [isCanvasReady, setIsCanvasReady] = useState(false);
 
   // Preload all book assets
   const { progress, isLoaded } = useBookPreloader();
 
-  // ONLY initialize scroll AFTER loading is complete
+  // Calculate combined progress: assets (0-85%) + Canvas init (85-100%)
+  const [canvasInitProgress, setCanvasInitProgress] = useState(0);
+  const combinedProgress = isCanvasReady
+    ? 100
+    : (isLoaded ? 85 + (canvasInitProgress * 15) : Math.min(85, progress * 0.85));
+
+  // Simulate Canvas initialization progress (85% to 100%)
   useEffect(() => {
-    // Don't initialize anything until content is ready to show
-    if (!showContent) return;
+    if (isLoaded && !isCanvasReady) {
+      // Gradually increment from 0 to 1 while waiting for Canvas
+      const interval = setInterval(() => {
+        setCanvasInitProgress((prev) => {
+          if (isCanvasReady) return 1;
+          return Math.min(0.99, prev + 0.05); // Increment slowly, never quite reach 100% until Canvas is ready
+        });
+      }, 100);
+      return () => clearInterval(interval);
+    } else if (isCanvasReady) {
+      setCanvasInitProgress(1);
+    }
+  }, [isLoaded, isCanvasReady]);
+
+  // ONLY initialize scroll AFTER loading AND Canvas are both ready
+  useEffect(() => {
+    // Don't initialize anything until BOTH assets loaded AND Canvas ready
+    if (!isLoaded || !isCanvasReady) return undefined;
 
     // Initialize Lenis smooth scroll ONLY when ready
     const lenis = new Lenis({
@@ -84,6 +108,9 @@ export default function HomePage() {
       smoothWheel: true,
       syncTouch: true,
     });
+
+    // CRITICAL: Connect Lenis to ScrollTrigger for horizontal scroll animations
+    lenis.on('scroll', ScrollTrigger.update);
 
     function raf(time: number) {
       lenis.raf(time);
@@ -106,34 +133,46 @@ export default function HomePage() {
       window.removeEventListener('scroll', handleScroll);
       lenis.destroy();
     };
-  }, [showContent]); // Only run when showContent changes to true
+  }, [isLoaded, isCanvasReady]); // Run when both assets and Canvas are ready
 
-  // Show loading screen until all assets are loaded
-  if (!showContent) {
-    return (
-      <LoadingScreen
-        progress={progress}
-        onComplete={() => setShowContent(true)}
-      />
-    );
-  }
+  // Hide loading screen when BOTH assets are loaded AND Canvas is ready
+  useEffect(() => {
+    if (isLoaded && isCanvasReady) {
+      setShowContent(true);
+    }
+  }, [isLoaded, isCanvasReady]);
 
   return (
     <main className="min-h-screen">
-      {/* Fixed 3D Canvas - KASANÉ Action Movie Hero */}
-      <div className="fixed top-0 left-0 w-screen h-screen z-0">
-        <Canvas
-          camera={{ position: [0, 0, 50], fov: 75 }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: 'high-performance',
+      {/* Loading Screen - stays visible until BOTH assets AND Canvas are ready */}
+      {!showContent && (
+        <LoadingScreen
+          progress={Math.round(combinedProgress)}
+          onComplete={() => {
+            // This gets called when combined progress hits 100% (assets + Canvas ready)
           }}
-          dpr={[1, 2]}
-        >
-          <KasaneBookJourney scrollProgress={scrollProgress} />
-        </Canvas>
-      </div>
+        />
+      )}
+
+      {/* Fixed 3D Canvas - starts rendering once assets are loaded */}
+      {isLoaded && (
+        <div className="fixed top-0 left-0 w-screen h-screen z-0">
+          <Canvas
+            camera={{ position: [0, 0, 50], fov: 75 }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: 'high-performance',
+            }}
+            dpr={[1, 2]}
+          >
+            <KasaneBookJourney
+              scrollProgress={scrollProgress}
+              onSceneReady={() => setIsCanvasReady(true)}
+            />
+          </Canvas>
+        </div>
+      )}
 
       {/* Scrollable narrative overlays */}
       <div className="relative z-10">
@@ -141,23 +180,23 @@ export default function HomePage() {
         {narrativeOverlays.map((overlay, index) => (
           <section
             key={index}
-            className="min-h-screen flex items-center justify-center px-6 pointer-events-none"
+            className="min-h-screen flex items-center justify-center px-4 sm:px-6 pointer-events-none"
           >
             <div
-              className={`max-w-3xl transition-all duration-1000 ${
+              className={`w-full max-w-3xl transition-all duration-1000 ${
                 scrollProgress >= overlay.scrollStart && scrollProgress <= overlay.scrollEnd
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-10'
               }`}
             >
-              <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-12 border border-[var(--accent-warm)]/20 pointer-events-auto shadow-2xl">
-                <h2 className="text-6xl font-bold text-[var(--olive-dark)] mb-3">
+              <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 sm:p-8 md:p-12 border border-[var(--accent-warm)]/20 pointer-events-auto shadow-2xl">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--olive-dark)] mb-2 sm:mb-3">
                   {overlay.title}
                 </h2>
-                <h3 className="text-2xl text-[var(--accent-warm)] mb-6 italic font-light">
+                <h3 className="text-lg sm:text-xl md:text-2xl text-[var(--accent-warm)] mb-4 sm:mb-6 italic font-light">
                   {overlay.subtitle}
                 </h3>
-                <p className="text-xl text-[var(--olive-dark)]/80 leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl text-[var(--olive-dark)]/80 leading-relaxed">
                   {overlay.description}
                 </p>
               </div>
@@ -166,26 +205,26 @@ export default function HomePage() {
         ))}
 
         {/* Transition to regular content */}
-        <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f0] via-[#faf8f5] to-[var(--bg-primary)]">
-          <div className="max-w-3xl text-center px-6 pointer-events-auto">
-            <h2 className="text-5xl font-bold text-[var(--olive-dark)] mb-8">
+        <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f5f0] via-[#faf8f5] to-[var(--bg-primary)] px-4 sm:px-6">
+          <div className="w-full max-w-3xl text-center pointer-events-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--olive-dark)] mb-6 sm:mb-8">
               Welcome to The Laboratory of Life
             </h2>
-            <p className="text-2xl text-[var(--olive-dark)]/70 mb-12 leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-[var(--olive-dark)]/70 mb-8 sm:mb-12 leading-relaxed px-4">
               Where self-actualization meets scientific experimentation.
-              <br />
-              Your life is the lab. You are the scientist.
+              <br className="hidden sm:block" />
+              <span className="block sm:inline"> Your life is the lab. You are the scientist.</span>
             </p>
-            <div className="flex gap-4 justify-center flex-wrap">
+            <div className="flex gap-3 sm:gap-4 justify-center flex-wrap px-4">
               <a
                 href="#process"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-[var(--accent-warm)] via-[#d4a574] to-[var(--accent-warm)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg text-white font-semibold shadow-2xl hover:shadow-[0_0_40px_rgba(196,163,90,0.6)] transition-all duration-500"
+                className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[var(--accent-warm)] via-[#d4a574] to-[var(--accent-warm)] bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg text-white font-semibold shadow-2xl hover:shadow-[0_0_40px_rgba(196,163,90,0.6)] transition-all duration-500 text-sm sm:text-base min-h-[48px] flex items-center"
               >
                 Enter The Laboratory →
               </a>
               <a
                 href="/books"
-                className="inline-block px-8 py-4 bg-white border-2 border-[var(--accent-warm)] rounded-lg text-[var(--accent-warm)] font-semibold shadow-xl hover:bg-[var(--accent-warm)] hover:text-white transition-all duration-300"
+                className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-white border-2 border-[var(--accent-warm)] rounded-lg text-[var(--accent-warm)] font-semibold shadow-xl hover:bg-[var(--accent-warm)] hover:text-white transition-all duration-300 text-sm sm:text-base min-h-[48px] flex items-center"
               >
                 Shop Books 📚
               </a>
@@ -204,12 +243,12 @@ export default function HomePage() {
       <LatestEssaysSection />
 
       {/* Footer */}
-      <footer className="bg-[var(--olive-dark)] text-[var(--bg-primary)] py-[var(--space-2xl)]">
-        <div className="max-w-[var(--content-width-wide)] mx-auto px-[var(--space-md)] text-center">
-          <p className="text-lg mb-[var(--space-sm)]">
+      <footer className="bg-[var(--olive-dark)] text-[var(--bg-primary)] py-[var(--space-xl)] sm:py-[var(--space-2xl)]">
+        <div className="max-w-[var(--content-width-wide)] mx-auto px-4 sm:px-[var(--space-md)] text-center">
+          <p className="text-base sm:text-lg mb-[var(--space-sm)]">
             We Are All Made of Stardust
           </p>
-          <p className="small opacity-70">
+          <p className="text-sm sm:small opacity-70">
             © 2026 The Self Actualized Life. All rights reserved.
           </p>
         </div>

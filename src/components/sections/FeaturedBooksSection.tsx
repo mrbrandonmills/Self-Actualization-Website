@@ -7,8 +7,7 @@
 'use client';
 
 import React, { useRef, useLayoutEffect } from 'react';
-import { Section } from '../ui';
-import { gsap } from '@/lib/gsap';
+import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { getFeaturedBooks, createAffiliateLink } from '@/data/books';
 import Image from 'next/image';
 
@@ -69,9 +68,9 @@ const contentFeed: ContentCard[] = [
   {
     type: 'testimonial',
     data: {
-      text: "This book changed how I think about personal growth. The Laboratory method is genius.",
-      author: "Sarah K.",
-      role: "Reader",
+      text: "I've tried countless self-help books, but Block A showed me exactly how my patterns work and gave me tangible tools to redesign them. The Laboratory method isn't theory—it's a working blueprint for transformation.",
+      author: "Marcus J.",
+      role: "Engineer & Entrepreneur",
       rating: 5
     }
   },
@@ -143,43 +142,70 @@ export function FeaturedBooksSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const animationsRef = useRef<any>(null); // Separate ref for animations
 
   useLayoutEffect(() => {
     if (!triggerRef.current || !sliderRef.current) return;
 
     const slider = sliderRef.current;
     const cards = slider.children;
-    const totalWidth = slider.scrollWidth - window.innerWidth;
 
-    const tween = gsap.to(slider, {
-      x: -totalWidth,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: triggerRef.current,
-        start: 'top top',
-        end: () => `+=${totalWidth * 1.5}`,
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+    // Wait for layout to stabilize before creating ScrollTrigger
+    const initAnimations = () => {
+      const totalWidth = slider.scrollWidth - window.innerWidth;
 
-    gsap.from(cards, {
-      opacity: 0,
-      scale: 0.9,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: triggerRef.current,
-        start: 'top 80%',
-        toggleActions: 'play none none reverse',
-      },
-    });
+      // Ensure ScrollTrigger has latest layout info
+      ScrollTrigger.refresh();
+
+      const tween = gsap.to(slider, {
+        x: -totalWidth,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: triggerRef.current,
+          start: 'top top',
+          end: () => `+=${totalWidth * 3}`, // Extended for longer pan
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      const cardAnimation = gsap.from(cards, {
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: triggerRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
+      return { tween, cardAnimation };
+    };
+
+    // Delay initialization to ensure page layout is complete
+    const timeoutId = setTimeout(() => {
+      const animations = initAnimations();
+
+      // Store for cleanup in separate ref
+      if (animations) {
+        animationsRef.current = animations;
+      }
+    }, 500);
 
     return () => {
-      tween.scrollTrigger?.kill();
+      clearTimeout(timeoutId);
+      const animations = animationsRef.current;
+      if (animations?.tween?.scrollTrigger) {
+        animations.tween.scrollTrigger.kill();
+      }
+      if (animations?.cardAnimation?.scrollTrigger) {
+        animations.cardAnimation.scrollTrigger.kill();
+      }
     };
   }, []);
 
@@ -231,8 +257,18 @@ export function FeaturedBooksSection() {
         );
 
       case 'social':
+        const socialUrl = item.data.platform === 'instagram'
+          ? `https://www.instagram.com/${item.data.handle.replace('@', '')}/`
+          : `https://twitter.com/${item.data.handle.replace('@', '')}`;
+
         return (
-          <div key={`social-${index}`} className="content-card social-card">
+          <a
+            key={`social-${index}`}
+            href={socialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-card social-card clickable-card"
+          >
             <div className="social-header">
               <div className="social-platform">
                 {item.data.platform === 'instagram' ? '📷' : '🐦'}
@@ -244,7 +280,8 @@ export function FeaturedBooksSection() {
               <span>❤️ {item.data.likes}</span>
               <span>💬 {item.data.comments}</span>
             </div>
-          </div>
+            <div className="card-overlay">Click to Visit →</div>
+          </a>
         );
 
       case 'testimonial':
@@ -261,7 +298,13 @@ export function FeaturedBooksSection() {
 
       case 'author':
         return (
-          <div key={`author-${index}`} className="content-card author-card">
+          <a
+            key={`author-${index}`}
+            href={item.data.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="content-card author-card clickable-card"
+          >
             <div className="author-header">
               <div className="author-avatar">{item.data.name.charAt(0)}</div>
               <div>
@@ -271,26 +314,17 @@ export function FeaturedBooksSection() {
             </div>
             <p className="author-bio">{item.data.bio}</p>
             <div className="author-links">
-              <a
-                href={item.data.instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="author-link"
-              >
+              <div className="author-link-display">
                 <span>📷</span>
                 <span>{item.data.instagram}</span>
-              </a>
-              <a
-                href={`https://${item.data.website}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="author-link"
-              >
+              </div>
+              <div className="author-link-display">
                 <span>🌐</span>
                 <span>{item.data.website}</span>
-              </a>
+              </div>
             </div>
-          </div>
+            <div className="card-overlay">Visit Profile →</div>
+          </a>
         );
 
       default:
@@ -299,11 +333,11 @@ export function FeaturedBooksSection() {
   };
 
   return (
-    <Section spacing="none" background="tertiary">
+    <section className="bg-[var(--bg-tertiary)]">
       <div ref={sectionRef}>
-        <div className="max-w-[var(--content-width-wide)] mx-auto px-[var(--space-md)] py-[var(--space-2xl)]">
-          <h2 className="h2 mb-[var(--space-md)] text-center">Your Journey Starts Here</h2>
-          <p className="lead text-center">
+        <div className="max-w-[var(--content-width-wide)] mx-auto px-4 sm:px-6 lg:px-8 py-[var(--space-xl)] sm:py-[var(--space-2xl)]">
+          <h2 className="h2 mb-[var(--space-md)] text-center mx-auto">Your Journey Starts Here</h2>
+          <p className="lead text-center mx-auto">
             Books, wisdom, and transformation — scroll to explore
           </p>
         </div>
@@ -318,8 +352,8 @@ export function FeaturedBooksSection() {
           </div>
         </div>
 
-        <div className="text-center py-[var(--space-xl)] px-[var(--space-md)]">
-          <p className="text-muted">
+        <div className="text-center py-[var(--space-lg)] sm:py-[var(--space-xl)] px-4 sm:px-6 lg:px-8 mx-auto">
+          <p className="text-muted text-sm sm:text-base mx-auto text-center">
             Scroll down to continue your journey →
           </p>
         </div>
@@ -330,20 +364,126 @@ export function FeaturedBooksSection() {
           flex-shrink: 0;
           width: 380px;
           min-height: 400px;
-          border-radius: 16px;
+          border-radius: 24px;
           overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-          background: rgba(212, 175, 55, 0.05);
-          border: 1px solid rgba(212, 175, 55, 0.2);
+          transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+          background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.1) 0%,
+            rgba(212, 175, 55, 0.03) 50%,
+            rgba(212, 175, 55, 0.1) 100%
+          );
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(212, 175, 55, 0.1) inset,
+            0 20px 60px rgba(212, 175, 55, 0.08);
           padding: 32px;
           display: flex;
           flex-direction: column;
+          position: relative;
+          transform-style: preserve-3d;
+          perspective: 1000px;
+          animation: float-card 6s ease-in-out infinite;
+          cursor: default;
         }
 
+        .content-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            circle at 50% 50%,
+            rgba(212, 175, 55, 0.2) 0%,
+            transparent 70%
+          );
+          opacity: 0;
+          transition: opacity 0.6s ease;
+          border-radius: 24px;
+        }
+
+        .content-card::after {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.5) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(212, 175, 55, 0.5) 100%
+          );
+          border-radius: 24px;
+          opacity: 0;
+          transition: opacity 0.6s ease;
+          z-index: -1;
+        }
+
+        .clickable-card {
+          cursor: pointer;
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .card-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(212, 175, 55, 0.95) 100%
+          );
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          padding: 32px;
+          font-size: 20px;
+          font-weight: 700;
+          color: #05201f;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          border-radius: 24px;
+          pointer-events: none;
+        }
+
+        @keyframes float-card {
+          0%, 100% {
+            transform: translateY(0px) rotateX(0deg);
+          }
+          50% {
+            transform: translateY(-15px) rotateX(2deg);
+          }
+        }
+
+        .content-card:nth-child(1) { animation-delay: 0s; }
+        .content-card:nth-child(2) { animation-delay: -1s; }
+        .content-card:nth-child(3) { animation-delay: -2s; }
+        .content-card:nth-child(4) { animation-delay: -3s; }
+        .content-card:nth-child(5) { animation-delay: -4s; }
+        .content-card:nth-child(6) { animation-delay: -5s; }
+
         .content-card:hover {
-          transform: translateY(-8px) scale(1.02);
-          border-color: rgba(212, 175, 55, 0.5);
-          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
+          transform: translateY(-20px) scale(1.05) rotateY(5deg) rotateX(-5deg);
+          border-color: rgba(212, 175, 55, 0.8);
+          box-shadow:
+            0 32px 80px rgba(0, 0, 0, 0.6),
+            0 0 0 1px rgba(212, 175, 55, 0.3) inset,
+            0 40px 100px rgba(212, 175, 55, 0.25);
+          animation-play-state: paused;
+        }
+
+        .content-card:hover::before {
+          opacity: 1;
+        }
+
+        .content-card:hover::after {
+          opacity: 1;
+        }
+
+        .clickable-card:hover .card-overlay {
+          opacity: 1;
         }
 
         /* Book Cards */
@@ -592,7 +732,7 @@ export function FeaturedBooksSection() {
           gap: 12px;
         }
 
-        .author-link {
+        .author-link-display {
           display: flex;
           align-items: center;
           gap: 12px;
@@ -601,38 +741,97 @@ export function FeaturedBooksSection() {
           border: 1px solid rgba(212, 175, 55, 0.3);
           border-radius: 8px;
           color: var(--color-gold);
-          text-decoration: none;
           font-size: 14px;
           font-weight: 500;
           transition: all 0.3s ease;
         }
 
-        .author-link:hover {
-          background: rgba(212, 175, 55, 0.2);
-          border-color: var(--color-gold);
-          transform: translateX(4px);
-        }
-
-        .author-link span:first-child {
+        .author-link-display span:first-child {
           font-size: 20px;
         }
 
         @media (max-width: 768px) {
           .content-card {
-            width: 300px;
+            width: 280px;
             min-height: 350px;
-            padding: 24px;
+            padding: 20px;
+            border-radius: 16px;
+          }
+
+          .content-card:hover {
+            transform: translateY(-10px) scale(1.02);
           }
 
           .quote-text {
-            font-size: 20px;
+            font-size: 18px;
+            line-height: 1.4;
+          }
+
+          .quote-mark {
+            font-size: 60px;
+            margin-bottom: 12px;
           }
 
           .stat-number {
-            font-size: 56px;
+            font-size: 48px;
+          }
+
+          .stat-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+          }
+
+          .stat-label {
+            font-size: 16px;
+          }
+
+          .book-title {
+            font-size: 18px;
+          }
+
+          .social-text {
+            font-size: 16px;
+          }
+
+          .testimonial-text {
+            font-size: 16px;
+          }
+
+          .author-avatar {
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+          }
+
+          .author-card-name {
+            font-size: 18px;
+          }
+
+          .author-bio {
+            font-size: 14px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .content-card {
+            width: 260px;
+            min-height: 320px;
+            padding: 16px;
+          }
+
+          .quote-text {
+            font-size: 16px;
+          }
+
+          .stat-number {
+            font-size: 42px;
+          }
+
+          .book-cover-small {
+            margin-bottom: 16px;
           }
         }
       `}</style>
-    </Section>
+    </section>
   );
 }

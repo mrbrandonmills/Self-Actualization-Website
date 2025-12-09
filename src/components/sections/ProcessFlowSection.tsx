@@ -130,17 +130,17 @@ export function ProcessFlowSection() {
       <Container width="wide">
         <div ref={sectionRef}>
           {/* Section Header */}
-          <div ref={headerRef} className="text-center mb-[var(--space-3xl)]">
-            <h2 className="h2 mb-[var(--space-md)]">
+          <div ref={headerRef} className="text-center mb-[var(--space-2xl)] sm:mb-[var(--space-3xl)] px-4 sm:px-6 lg:px-8 mx-auto">
+            <h2 className="h2 mb-[var(--space-md)] mx-auto text-center">
               From Manuscript to Masterpiece
             </h2>
-            <p className="lead mx-auto">
+            <p className="lead mx-auto text-center">
               A proven process that transforms ideas into published works
             </p>
           </div>
 
           {/* Process Steps */}
-          <div className="process-steps-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--space-2xl)] relative">
+          <div className="process-steps-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--space-xl)] sm:gap-[var(--space-2xl)] relative px-4 sm:px-6 lg:px-8 mx-auto max-w-full">
             {/* Connection Line - Desktop only */}
             <div
               ref={lineRef}
@@ -189,13 +189,13 @@ export function ProcessFlowSection() {
           </div>
 
           {/* CTA */}
-          <div className="text-center mt-[var(--space-3xl)]">
+          <div className="text-center mt-[var(--space-2xl)] sm:mt-[var(--space-3xl)] px-4 sm:px-6 lg:px-8 mx-auto">
             <a
               href="/writing-lab"
-              className="inline-flex items-center gap-[var(--space-sm)] text-[var(--olive-dark)] hover:text-[var(--accent-warm)] transition-colors font-medium"
+              className="inline-flex items-center gap-[var(--space-sm)] text-[var(--olive-dark)] hover:text-[var(--accent-warm)] transition-colors font-medium text-sm sm:text-base mx-auto"
             >
               <span>Learn More About Our Process</span>
-              <span className="text-2xl">→</span>
+              <span className="text-xl sm:text-2xl">→</span>
             </a>
           </div>
         </div>

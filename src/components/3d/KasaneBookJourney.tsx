@@ -102,11 +102,13 @@ function BookPage({ pageNumber, scrollProgress, totalPages }: BookPageProps) {
 
 interface KasaneBookJourneyProps {
   scrollProgress: number;
+  onSceneReady?: () => void;
 }
 
-export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
+export function KasaneBookJourney({ scrollProgress, onSceneReady }: KasaneBookJourneyProps) {
   const bookRef = useRef<THREE.Group>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const hasNotifiedReady = useRef(false);
 
   const totalPages = 87;
   const pages = useMemo(() => Array.from({ length: totalPages }, (_, i) => i + 1), [totalPages]);
@@ -140,6 +142,12 @@ export function KasaneBookJourney({ scrollProgress }: KasaneBookJourneyProps) {
   // BOOK MOVEMENT
   useFrame(({ clock }) => {
     if (!bookRef.current) return;
+
+    // Notify that scene is ready after first successful render
+    if (!hasNotifiedReady.current && onSceneReady) {
+      hasNotifiedReady.current = true;
+      onSceneReady();
+    }
 
     const time = clock.getElapsedTime();
 

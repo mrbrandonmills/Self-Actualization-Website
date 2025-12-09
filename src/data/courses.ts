@@ -17,6 +17,9 @@ export interface Course {
   featured?: boolean
   enrolled?: boolean
   progress?: number
+  icon?: string
+  category?: string
+  themeColor?: 'green' | 'blue' | 'purple' | 'gold' | 'cyan' | 'rose'
 }
 
 export const courses: Course[] = [
@@ -33,6 +36,9 @@ export const courses: Course[] = [
     modules: 8,
     slug: 'block-a-engineering-patterns',
     featured: true,
+    icon: '🧠',
+    category: 'Pattern Engineering',
+    themeColor: 'green',
   },
   {
     id: 'block-a-2',
@@ -46,6 +52,9 @@ export const courses: Course[] = [
     modules: 7,
     slug: 'block-a-ancient-wisdom',
     featured: true,
+    icon: '🏛️',
+    category: 'Ancient Wisdom',
+    themeColor: 'gold',
   },
 
   // BLOCK B: Laboratory of Judgment - Navigating Turbulence
@@ -61,6 +70,9 @@ export const courses: Course[] = [
     modules: 10,
     slug: 'block-b-right-judgment',
     featured: true,
+    icon: '⚖️',
+    category: 'Decision Making',
+    themeColor: 'blue',
   },
   {
     id: 'block-b-2',
@@ -73,6 +85,9 @@ export const courses: Course[] = [
     thumbnail: '',
     modules: 9,
     slug: 'block-b-decisions-chaos',
+    icon: '🌪️',
+    category: 'Chaos Navigation',
+    themeColor: 'cyan',
   },
 
   // BLOCK C: Laboratory of Living - Social Ecosystems
@@ -88,6 +103,9 @@ export const courses: Course[] = [
     modules: 12,
     slug: 'block-c-social-ecosystem',
     featured: true,
+    icon: '🌐',
+    category: 'Social Architecture',
+    themeColor: 'purple',
   },
   {
     id: 'block-c-2',
@@ -100,6 +118,9 @@ export const courses: Course[] = [
     thumbnail: '',
     modules: 15,
     slug: 'block-c-momentum',
+    icon: '🚀',
+    category: 'Transformation Mastery',
+    themeColor: 'rose',
   },
 ]
 
