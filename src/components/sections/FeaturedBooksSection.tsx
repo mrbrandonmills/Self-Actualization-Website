@@ -48,7 +48,8 @@ const contentFeed: ContentCard[] = [
       handle: "@lab.of.living",
       text: "Every one of us is trapped by problems we believe can't be solved. Until now. 🧪",
       likes: "487",
-      comments: "23"
+      comments: "23",
+      profilePhoto: "https://instagram.com/lab.of.living" // Will fetch from Instagram
     }
   },
   // Book 2
@@ -106,17 +107,6 @@ const contentFeed: ContentCard[] = [
       instagram: "@MRBRANDONMILLS",
       instagramUrl: "https://www.instagram.com/MRBRANDONMILLS/",
       website: "brandonmills.com"
-    }
-  },
-  // Social Post
-  {
-    type: 'social',
-    data: {
-      platform: "twitter",
-      handle: "@selfactualize",
-      text: "Transformation feels like momentum, not uphill struggle. That's the difference. 🚀",
-      likes: "1.2K",
-      comments: "89"
     }
   },
   // Author Card - Jesse Doherty
@@ -264,16 +254,17 @@ export function FeaturedBooksSection() {
             rel="noopener noreferrer"
             className="content-card social-card clickable-card"
           >
-            <div className="social-header">
-              <div className="social-platform">
-                {item.data.platform === 'instagram' ? '📷' : '🐦'}
+            {/* Instagram gradient background with centered icon */}
+            <div className="social-bg-gradient" />
+            <div className="social-profile-icon">📷</div>
+
+            <div className="social-content">
+              <div className="social-handle-large">{item.data.handle}</div>
+              <p className="social-text">{item.data.text}</p>
+              <div className="social-stats">
+                <span>❤️ {item.data.likes}</span>
+                <span>💬 {item.data.comments}</span>
               </div>
-              <div className="social-handle">{item.data.handle}</div>
-            </div>
-            <p className="social-text">{item.data.text}</p>
-            <div className="social-stats">
-              <span>❤️ {item.data.likes}</span>
-              <span>💬 {item.data.comments}</span>
             </div>
             <div className="card-overlay">Click to Visit →</div>
           </a>
@@ -599,41 +590,62 @@ export function FeaturedBooksSection() {
           letter-spacing: 0.1em;
         }
 
-        /* Social Cards */
+        /* Social Cards - Instagram Profile Style */
         .social-card {
-          background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0.5) 100%);
+          background: #000;
+          position: relative;
+          overflow: hidden;
+          justify-content: flex-end;
         }
 
-        .social-header {
+        .social-bg-gradient {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+          opacity: 0.8;
+          z-index: 0;
+        }
+
+        .social-profile-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 120px;
+          opacity: 0.3;
+          z-index: 1;
+          filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.5));
+        }
+
+        .social-content {
+          position: relative;
+          z-index: 2;
           display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 20px;
+          flex-direction: column;
+          gap: 16px;
         }
 
-        .social-platform {
+        .social-handle-large {
           font-size: 24px;
-        }
-
-        .social-handle {
-          font-size: 14px;
-          color: var(--color-gold);
-          font-weight: 600;
+          font-weight: 700;
+          color: #fff;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .social-text {
-          font-size: 18px;
+          font-size: 16px;
           color: #fff;
           line-height: 1.6;
-          margin-bottom: 24px;
-          flex: 1;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .social-stats {
           display: flex;
           gap: 20px;
           font-size: 14px;
-          color: rgba(255,255,255,0.6);
+          color: rgba(255,255,255,0.9);
+          font-weight: 600;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         /* Testimonial Cards */
@@ -784,8 +796,16 @@ export function FeaturedBooksSection() {
             font-size: 18px;
           }
 
+          .social-profile-icon {
+            font-size: 80px;
+          }
+
+          .social-handle-large {
+            font-size: 20px;
+          }
+
           .social-text {
-            font-size: 16px;
+            font-size: 14px;
           }
 
           .testimonial-text {
