@@ -325,7 +325,7 @@ export function Book3DHero() {
             antialias: true,
             alpha: true,
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.2,
+            toneMappingExposure: 0.85,
           }}
         >
           {/* Premium Lighting Setup */}
@@ -335,7 +335,7 @@ export function Book3DHero() {
           {/* Key light - main directional */}
           <directionalLight
             position={[5, 5, 5]}
-            intensity={1.5}
+            intensity={1.0}
             castShadow
             shadow-mapSize={[2048, 2048]}
             shadow-camera-near={0.5}
@@ -350,14 +350,14 @@ export function Book3DHero() {
           {/* Fill light - soften shadows */}
           <directionalLight
             position={[-3, 2, -3]}
-            intensity={0.6}
+            intensity={0.4}
             color="#E8DCC4"
           />
 
           {/* Rim light - edge highlight */}
           <spotLight
             position={[0, 5, -8]}
-            intensity={0.8}
+            intensity={0.5}
             angle={0.4}
             penumbra={1}
             color="#C4A35A"
