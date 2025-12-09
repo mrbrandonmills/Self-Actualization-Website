@@ -49,7 +49,7 @@ const contentFeed: ContentCard[] = [
       text: "Every one of us is trapped by problems we believe can't be solved. Until now. 🧪",
       likes: "487",
       comments: "23",
-      profilePhoto: "https://instagram.com/lab.of.living" // Will fetch from Instagram
+      profilePhoto: "https://www.instagram.com/lab.of.living/" // Will fetch from Instagram
     }
   },
   // Book 2
@@ -63,6 +63,18 @@ const contentFeed: ContentCard[] = [
     data: {
       text: "Memory is not a photograph; it's a painting that changes with every viewing.",
       source: "Block B: The Laboratory of Judgment"
+    }
+  },
+  // Medium Article
+  {
+    type: 'social',
+    data: {
+      platform: "medium",
+      handle: "@MrBrandonMills",
+      text: "Exploring the intersection of AI, consciousness, and human potential through the written word.",
+      url: "https://medium.com/@MrBrandonMills",
+      followers: "1.2K",
+      articles: "24"
     }
   },
   // Testimonial
@@ -246,7 +258,11 @@ export function FeaturedBooksSection() {
       case 'social':
         const socialUrl = item.data.platform === 'instagram'
           ? `https://www.instagram.com/${item.data.handle.replace('@', '')}/`
+          : item.data.platform === 'medium'
+          ? item.data.url
           : `https://twitter.com/${item.data.handle.replace('@', '')}`;
+
+        const isMedium = item.data.platform === 'medium';
 
         return (
           <a
@@ -254,18 +270,36 @@ export function FeaturedBooksSection() {
             href={socialUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="content-card social-card clickable-card"
+            className={`content-card social-card clickable-card ${isMedium ? 'medium-card' : ''}`}
           >
-            {/* Instagram gradient background with centered icon */}
-            <div className="social-bg-gradient" />
-            <div className="social-profile-icon">📷</div>
+            {/* Platform-specific background */}
+            {isMedium ? (
+              <>
+                <div className="medium-bg" />
+                <div className="medium-logo">M</div>
+              </>
+            ) : (
+              <>
+                <div className="social-bg-gradient" />
+                <div className="social-profile-icon">📷</div>
+              </>
+            )}
 
             <div className="social-content">
               <div className="social-handle-large">{item.data.handle}</div>
               <p className="social-text">{item.data.text}</p>
               <div className="social-stats">
-                <span>❤️ {item.data.likes}</span>
-                <span>💬 {item.data.comments}</span>
+                {isMedium ? (
+                  <>
+                    <span>👥 {item.data.followers}</span>
+                    <span>📝 {item.data.articles} articles</span>
+                  </>
+                ) : (
+                  <>
+                    <span>❤️ {item.data.likes}</span>
+                    <span>💬 {item.data.comments}</span>
+                  </>
+                )}
               </div>
             </div>
             <div className="card-overlay">Click to Visit →</div>
@@ -658,6 +692,31 @@ export function FeaturedBooksSection() {
           color: rgba(255,255,255,0.9);
           font-weight: 600;
           text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Medium Card */
+        .medium-card {
+          background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .medium-bg {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(0, 168, 0, 0.15) 0%, rgba(0, 0, 0, 0.8) 100%);
+          z-index: 0;
+        }
+
+        .medium-logo {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 180px;
+          font-weight: 400;
+          font-family: 'Georgia', 'Cambria', 'Times New Roman', serif;
+          color: rgba(255, 255, 255, 0.08);
+          z-index: 1;
+          letter-spacing: -10px;
         }
 
         /* Testimonial Cards */
