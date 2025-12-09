@@ -1,62 +1,111 @@
 'use client'
 
-import { Museum3DGallery } from '@/components/gallery/Museum3DGallery'
-import { books } from '@/data/books'
-import { CustomCursor } from '@/components/bartosz/CustomCursor'
-import { VideoNoise } from '@/components/bartosz/VideoNoise'
-import { MuseumEntrance } from '@/components/museum/MuseumEntrance'
+import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID } from '@/data/books'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 /**
- * Books Catalog Page - Bartosz Dark + House of Corto Gallery
- *
- * Features:
- * - Bartosz dark aesthetic (#05201f background)
- * - House of Corto 2-column gallery
- * - Scale-from-zero reveals
- * - Category filtering with sage green
- * - Text swap hover animations
+ * Books Catalog Page - Clean & Simple
+ * All books link directly to Amazon
  */
 export default function BooksPage() {
   return (
     <main className="min-h-screen bg-[var(--color-black-green)]">
-      {/* Custom Cursor */}
-      <CustomCursor />
-
-      {/* Video Noise Overlay */}
-      <VideoNoise />
-
       {/* Hero Section */}
-      <section className="museum-section pt-32 pb-16">
+      <section className="pt-32 pb-16">
         <div className="container-xl text-center">
-          <p className="label text-accent mb-md animate-fade-in">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="label text-accent mb-md"
+          >
             Premium Collection
-          </p>
+          </motion.p>
 
-          <h1 className="h1 mb-lg animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            Transform Your
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="h1 mb-lg text-center"
+            style={{ textAlign: 'center' }}
+          >
+            Random Acts of
             <br />
-            <span className="text-gold">Reality</span>
-          </h1>
+            <span className="text-gold">Self-Actualization</span>
+          </motion.h1>
 
-          <p className="lead max-w-2xl mx-auto mb-xl animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            Curated books for self-actualization, personal growth, and transformational living.
-          </p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lead max-w-2xl mx-auto mb-xl text-center"
+            style={{ textAlign: 'center' }}
+          >
+            Transform your reality with the complete Laboratory of Life series by Jesse Doherty & Brandon Mills.
+          </motion.p>
 
-          {/* Divider */}
-          <div className="divider animate-fade-in" style={{ animationDelay: '0.3s' }} />
+          <div className="divider" />
         </div>
       </section>
 
-      {/* Museum Entrance Portal */}
-      <MuseumEntrance />
-
-      {/* Gallery Section */}
+      {/* Books Grid */}
       <section className="section">
-        <Museum3DGallery
-          books={books}
-          title="The Museum of Becoming"
-          subtitle="Curated Collection"
-        />
+        <div className="container-xl">
+          <div className="books-grid">
+            {books.map((book, index) => (
+              <motion.div
+                key={book.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="book-card"
+              >
+                {/* Book Cover */}
+                <div className="book-cover">
+                  <Image
+                    src={book.coverImage}
+                    alt={`${book.title} - ${book.subtitle}`}
+                    width={400}
+                    height={600}
+                    className="w-full h-auto"
+                  />
+                </div>
+
+                {/* Book Info */}
+                <div className="book-info">
+                  <h2 className="h3 mb-sm">{book.title}</h2>
+                  <p className="text-accent mb-md">{book.subtitle}</p>
+                  <p className="text-sm mb-lg line-clamp-3">{book.description.split('\n\n')[0]}</p>
+
+                  {/* Format Options */}
+                  <div className="format-buttons">
+                    {book.formats.map((format) => {
+                      const amazonLink = createAffiliateLink(format.amazonUrl)
+                      return (
+                        <motion.a
+                          key={format.type}
+                          href={amazonLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="format-btn"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span className="format-type">{format.type}</span>
+                          <span className="format-price">{formatBookPrice(format.price)}</span>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17" />
+                          </svg>
+                        </motion.a>
+                      )
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* CTA Section */}
@@ -68,43 +117,108 @@ export default function BooksPage() {
           <p className="lead mb-xl max-w-2xl mx-auto">
             Each book is a carefully curated pathway to transformation and self-discovery.
           </p>
-          <div className="flex gap-md justify-center flex-wrap">
-            <button className="btn btn-primary">
-              Explore All Books
-            </button>
-            <button className="btn btn-outline">
-              View Featured
-            </button>
-          </div>
+          <Link href="/" className="btn btn-primary">
+            Return Home
+          </Link>
         </div>
       </section>
 
-      <style jsx global>{`
-        /* Page-specific animations */
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+      <style jsx>{`
+        .books-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          gap: 48px;
+          margin-bottom: 64px;
         }
 
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
+        .book-card {
+          background: rgba(212, 175, 55, 0.05);
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          border-radius: 16px;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .book-card:hover {
+          transform: translateY(-8px);
+          border-color: rgba(212, 175, 55, 0.4);
+          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
+        }
+
+        .book-cover {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 2/3;
+          overflow: hidden;
+          background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(212,175,55,0.1) 100%);
+        }
+
+        .book-cover :global(img) {
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .book-card:hover .book-cover :global(img) {
+          transform: scale(1.05);
+        }
+
+        .book-info {
+          padding: 32px;
+        }
+
+        .format-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .format-btn {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 24px;
+          background: rgba(212, 175, 55, 0.1);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          border-radius: 12px;
+          color: var(--color-gold);
+          text-decoration: none;
+          transition: all 0.3s ease;
+          font-weight: 500;
+        }
+
+        .format-btn:hover {
+          background: rgba(212, 175, 55, 0.2);
+          border-color: var(--color-gold);
+          transform: translateX(4px);
+        }
+
+        .format-type {
+          font-size: 16px;
+          color: var(--color-text);
+        }
+
+        .format-price {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--color-gold);
+        }
+
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+          .books-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+
+          .book-info {
+            padding: 24px;
           }
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-slide-up {
-          animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          opacity: 0;
         }
       `}</style>
     </main>

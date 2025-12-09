@@ -1,7 +1,13 @@
 /**
  * Books Data - The Self Actualized Life
- * Supports both Stripe Integration (direct sales) and Amazon Affiliate links
+ * All books link to Amazon for purchase
  */
+
+export interface BookFormat {
+  type: 'Kindle' | 'Paperback' | 'Hardcover'
+  price: number // Price in cents
+  amazonUrl: string
+}
 
 export interface Book {
   id: string
@@ -9,19 +15,12 @@ export interface Book {
   subtitle: string
   description: string
   coverImage: string
-  price: number // Price in cents (e.g., 999 = $9.99)
   category: 'Philosophy' | 'Psychology' | 'Practice' | 'Laboratory'
   slug: string
   author?: string
   featured?: boolean
-  format?: string
   publishDate?: string
-  // Stripe product/price IDs (optional - can use dynamic prices)
-  stripeProductId?: string
-  stripePriceId?: string
-  // Amazon affiliate link (if this book is sold via Amazon instead of Stripe)
-  amazonUrl?: string
-  isAmazonOnly?: boolean // If true, bypass Stripe and link directly to Amazon
+  formats: BookFormat[] // Multiple purchase options
 }
 
 // Amazon Associates ID for affiliate tracking
@@ -57,58 +56,100 @@ export const books: Book[] = [
     subtitle: 'Building Block A - Engineering Your Patterns',
     description: 'Every one of us is trapped by problems we believe can\'t be solved. Some think they are stuck forever. Others keep trying random solutions, only to find themselves back where they started. Both are right. Until now.\n\nBlock A helps us engineer new patterns using what you already know. This foundational laboratory shows you how to break free from limiting patterns and create powerful, sustainable change in your life.',
     coverImage: '/books/block-a/1.png',
-    price: 799, // $7.99 in cents
     category: 'Laboratory',
     slug: 'random-acts-block-a',
-    author: 'Rock Q Cool Box',
+    author: 'Jesse Doherty & Brandon Mills',
     featured: true,
-    format: 'Digital PDF + ePub',
     publishDate: '2024',
+    formats: [
+      {
+        type: 'Kindle',
+        price: 799,
+        amazonUrl: 'https://a.co/d/55Ji8n2'
+      },
+      {
+        type: 'Paperback',
+        price: 1499,
+        amazonUrl: 'https://a.co/d/55Ji8n2'
+      }
+    ]
   },
   {
     id: 'random-acts-block-b',
     title: 'Random Acts of Self-Actualization',
     subtitle: 'Block B - The Laboratory of Judgment',
     description: 'Block B lays the foundation of how to make the right judgments in an increasingly turbulent world. Learn to structure your decision-making processes and navigate complexity with confidence.\n\nThis is the second building block in the Laboratory of Life series, focusing on developing the critical thinking and judgment skills necessary for self-actualization in modern times.',
-    coverImage: '/books/block-b/cover.png',
-    price: 999, // $9.99 in cents
+    coverImage: '/books/block-b/cover.jpg',
     category: 'Laboratory',
     slug: 'random-acts-block-b',
-    author: 'Rock Q Cool Box',
+    author: 'Jesse Doherty & Brandon Mills',
     featured: true,
-    format: 'Digital PDF + ePub',
     publishDate: '2024',
+    formats: [
+      {
+        type: 'Kindle',
+        price: 999,
+        amazonUrl: 'https://a.co/d/iQ1Jo7x'
+      },
+      {
+        type: 'Paperback',
+        price: 1699,
+        amazonUrl: 'https://a.co/d/iQ1Jo7x'
+      }
+    ]
   },
   {
     id: 'block-c-laboratory-of-living',
     title: 'Random Acts of Self-Actualization',
     subtitle: 'Block C - The Laboratory of Living',
     description: 'Block C introduces how to structure our social ecosystems in such a way that not only accelerates self-actualization but assures transformation feels momentum, not uphill struggle.\n\nThe final building block completes the Laboratory of Life trilogy, showing you how to engineer your environment and relationships for sustainable growth and transformation.',
-    coverImage: '/books/block-c/cover.png',
-    price: 999, // $9.99 in cents
+    coverImage: '/books/block-c/cover.jpg',
     category: 'Laboratory',
     slug: 'block-c-laboratory-of-living',
-    author: 'Rock Q Cool Box',
+    author: 'Jesse Doherty & Brandon Mills',
     featured: true,
-    format: 'Digital PDF + ePub',
     publishDate: '2024',
+    formats: [
+      {
+        type: 'Kindle',
+        price: 999,
+        amazonUrl: 'https://a.co/d/dlrbP4e'
+      },
+      {
+        type: 'Paperback',
+        price: 1699,
+        amazonUrl: 'https://a.co/d/dlrbP4e'
+      }
+    ]
   },
   {
     id: 'trilogy-complete-collection',
     title: 'Random Acts of Self-Actualization',
     subtitle: 'The Complete Trilogy - All Three Building Blocks',
     description: 'The complete Laboratory of Life trilogy in one stunning collection. Transform your reality with all three building blocks: Engineering Your Patterns (Block A), The Laboratory of Judgment (Block B), and The Laboratory of Living (Block C).\n\nThis comprehensive collection provides the complete roadmap for sustainable, powerful self-actualization. Get all three books together and save.',
-    coverImage: '/books/trilogy/cover.png', // You'll provide this soon
-    price: 2499, // $24.99 (save $2.98 vs buying individually)
+    coverImage: '/books/trilogy/cover.png',
     category: 'Laboratory',
     slug: 'trilogy-complete-collection',
-    author: 'Rock Q Cool Box',
+    author: 'Jesse Doherty & Brandon Mills',
     featured: true,
-    format: 'Paperback + Kindle',
     publishDate: '2024',
-    // Amazon affiliate link - will open in new tab instead of cart
-    amazonUrl: 'https://www.amazon.com/dp/YOUR_TRILOGY_ASIN', // Replace with actual Amazon link
-    isAmazonOnly: true,
+    formats: [
+      {
+        type: 'Kindle',
+        price: 2499,
+        amazonUrl: 'https://www.amazon.com/dp/TRILOGY_KINDLE_ASIN'
+      },
+      {
+        type: 'Paperback',
+        price: 4999,
+        amazonUrl: 'https://www.amazon.com/dp/TRILOGY_PAPERBACK_ASIN'
+      },
+      {
+        type: 'Hardcover',
+        price: 6999,
+        amazonUrl: 'https://www.amazon.com/dp/TRILOGY_HARDCOVER_ASIN'
+      }
+    ]
   },
 ]
 

@@ -191,7 +191,7 @@ export function ProcessFlowSection() {
           {/* CTA */}
           <div className="text-center mt-[var(--space-3xl)]">
             <a
-              href="#"
+              href="/writing-lab"
               className="inline-flex items-center gap-[var(--space-sm)] text-[var(--olive-dark)] hover:text-[var(--accent-warm)] transition-colors font-medium"
             >
               <span>Learn More About Our Process</span>

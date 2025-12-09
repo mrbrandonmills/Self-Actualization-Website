@@ -155,7 +155,7 @@ export function LatestEssaysSection() {
 
               {/* Read More Link */}
               <a
-                href="#"
+                href="/essays"
                 className="inline-flex items-center gap-[var(--space-sm)] text-[var(--olive-dark)] hover:text-[var(--accent-warm)] transition-colors font-medium group"
               >
                 <span>Read Full Essay</span>
@@ -168,7 +168,7 @@ export function LatestEssaysSection() {
           {/* View All Link */}
           <div className="essays-cta text-center mt-[var(--space-3xl)] pt-[var(--space-2xl)] border-t-2 border-[var(--ui-border)]">
             <a
-              href="#"
+              href="/essays"
               className="inline-flex items-center gap-[var(--space-md)] px-8 py-4 bg-[var(--olive-dark)] text-[var(--bg-primary)] rounded-md hover:bg-[var(--accent-warm)] transition-all font-medium text-lg"
             >
               <span>View All Essays</span>

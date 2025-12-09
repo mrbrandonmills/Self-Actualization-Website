@@ -19,16 +19,18 @@
 @import './components.css';
 
 /* ========================================
-   CUSTOM CURSOR - GLOBAL
+   CUSTOM CURSOR - DISABLED
    ======================================== */
 
-/* Hide default cursor on desktop */
+/* Custom cursor disabled - using normal pointer for better UX */
+/* Uncomment below to re-enable custom cursor */
+
+/*
 @media (pointer: fine) {
   * {
     cursor: none !important;
   }
 
-  /* Keep cursor on interactive elements for accessibility */
   button:hover,
   a:hover,
   input:focus,
@@ -36,19 +38,18 @@
     cursor: none !important;
   }
 
-  /* Override: Show cursor on test/debug pages */
   .show-cursor,
   .show-cursor * {
     cursor: auto !important;
   }
 }
 
-/* Keep default cursor on touch devices */
 @media (pointer: coarse) {
   * {
     cursor: auto !important;
   }
 }
+*/
 
 /* ========================================
    SMOOTH SCROLLING

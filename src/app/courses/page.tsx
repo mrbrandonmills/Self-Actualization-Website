@@ -1,421 +1,277 @@
+'use client'
+
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { courses } from '@/data/courses'
+
 /**
- * Courses Page - Alchemist's Laboratory
- * Award-winning 3D exploration experience where users discover glowing bottles
- * Dark luxury aesthetic with immersive scavenger hunt mechanic
+ * Courses Page - Liquid Glass Theme
+ * Beautiful, clean design without 3D complexity
  */
 
-'use client';
-
-import { useState, Suspense } from 'react';
-import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
-import { courses, Course } from '@/data/courses';
-import { CoursePreviewPanel } from '@/components/courses/CoursePreviewPanel';
-
-// Dynamic import with no SSR for 3D component (glowing bottles exploration)
-const AlchemistLaboratory = dynamic(
-  () => import('@/components/3d/AlchemistLaboratorySprites'),
-  {
-    ssr: false,
-    loading: () => <AlchemistLabLoader />
-  }
-);
-
-// Loading screen - Clean and minimal
-function AlchemistLabLoader() {
+export default function CoursesPage() {
   return (
-    <div className="loading-screen">
-      <div className="loading-content">
-        <motion.div
-          className="bottle-icon"
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
-        >
-          🧪
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="loading-dots"
-        >
-          <span>•</span>
-          <span>•</span>
-          <span>•</span>
-        </motion.div>
-      </div>
+    <main className="min-h-screen bg-[var(--color-black-green)]">
+      {/* Hero Section */}
+      <section className="pt-32 pb-16">
+        <div className="container-xl text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="label text-accent mb-md"
+          >
+            The Laboratory of Life
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="h1 mb-lg text-center"
+            style={{ textAlign: 'center' }}
+          >
+            Transform Through
+            <br />
+            <span className="text-gold">Structured Learning</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lead max-w-2xl mx-auto mb-xl text-center"
+            style={{ textAlign: 'center' }}
+          >
+            Discover transformational courses that bridge the gap between theory and practice in self-actualization.
+          </motion.p>
+
+          <div className="divider" />
+        </div>
+      </section>
+
+      {/* Courses Grid */}
+      <section className="section">
+        <div className="container-xl">
+          <div className="courses-grid">
+            {courses.map((course, index) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="course-card"
+              >
+                {/* Level Badge */}
+                <div className={`level-badge level-${course.level.toLowerCase()}`}>
+                  {course.level}
+                </div>
+
+                {/* Course Icon */}
+                <div className="course-icon">{course.icon || '⚗️'}</div>
+
+                {/* Course Info */}
+                <h2 className="h3 mb-md">{course.title}</h2>
+                <p className="text-sm text-accent mb-md">{course.category}</p>
+                <p className="text-base mb-lg">{course.description}</p>
+
+                {/* Course Meta */}
+                <div className="course-meta">
+                  <div className="meta-item">
+                    <span className="meta-label">Duration</span>
+                    <span className="meta-value">{course.duration}</span>
+                  </div>
+                  <div className="meta-item">
+                    <span className="meta-label">Level</span>
+                    <span className="meta-value">{course.level}</span>
+                  </div>
+                </div>
+
+                {/* CTA Button */}
+                <Link
+                  href={`/courses/${course.slug}`}
+                  className="course-btn"
+                >
+                  <span>Explore Course</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" />
+                  </svg>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Coming Soon Section */}
+      <section className="section gradient-dark text-center">
+        <div className="container-lg">
+          <div className="coming-soon-box">
+            <div className="text-8xl mb-6">🔬</div>
+            <h2 className="h2 mb-lg">
+              New Courses <span className="text-gold">In Development</span>
+            </h2>
+            <p className="lead mb-xl max-w-2xl mx-auto">
+              We're crafting immersive learning experiences that combine the science of self-actualization with practical transformation tools. Stay tuned!
+            </p>
+            <div className="flex gap-md justify-center flex-wrap">
+              <Link href="/books" className="btn btn-primary">
+                Start with the Books
+              </Link>
+              <Link href="/essays" className="btn btn-outline">
+                Read Essays
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <style jsx>{`
-        .loading-screen {
-          width: 100%;
-          height: 70vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #05201f;
+        .courses-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          gap: 32px;
+          margin-bottom: 64px;
+        }
+
+        .course-card {
+          background: rgba(212, 175, 55, 0.05);
+          border: 1px solid rgba(212, 175, 55, 0.2);
           border-radius: 16px;
-          border: 1px solid rgba(201, 160, 80, 0.2);
-        }
-
-        .loading-content {
-          text-align: center;
-        }
-
-        .bottle-icon {
-          font-size: 4rem;
-          margin-bottom: 1rem;
-        }
-
-        .loading-dots {
-          display: flex;
-          gap: 0.5rem;
-          justify-content: center;
-        }
-
-        .loading-dots span {
-          color: #C9A050;
-          font-size: 1.5rem;
-          animation: pulse 1.5s infinite;
-        }
-
-        .loading-dots span:nth-child(1) {
-          animation-delay: 0s;
-        }
-
-        .loading-dots span:nth-child(2) {
-          animation-delay: 0.2s;
-        }
-
-        .loading-dots span:nth-child(3) {
-          animation-delay: 0.4s;
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-// Map course level to beaker liquid color
-function getLiquidColor(level: Course['level']): string {
-  switch (level) {
-    case 'Beginner':
-      return '#22c55e'; // Green
-    case 'Intermediate':
-      return '#3b82f6'; // Blue
-    case 'Advanced':
-      return '#a855f7'; // Purple
-    default:
-      return '#C9A050'; // Gold fallback
-  }
-}
-
-/**
- * Main Courses Page
- */
-export default function CoursesPage() {
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-  const handleBeakerClick = (courseId: string) => {
-    const course = courses.find(c => c.id === courseId);
-    if (course) {
-      setSelectedCourse(course);
-      setIsPanelOpen(true);
-    }
-  };
-
-  const handleClosePanel = () => {
-    setIsPanelOpen(false);
-    // Delay clearing selected course for exit animation
-    setTimeout(() => setSelectedCourse(null), 300);
-  };
-
-  return (
-    <main className="courses-page">
-      {/* Header */}
-      <motion.section
-        className="page-header"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <motion.p
-          className="label"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          Laboratory of Life
-        </motion.p>
-
-        <motion.h1
-          className="title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-        >
-          The Alchemist's{' '}
-          <span className="gradient-text">Laboratory</span>
-        </motion.h1>
-
-        <motion.p
-          className="subtitle"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-        >
-          Explore the laboratory to discover glowing bottles hidden throughout the shelves.
-          <br />
-          Each bottle contains a transformational course from the Laboratory of Life.
-        </motion.p>
-
-        <motion.div
-          className="divider"
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        />
-      </motion.section>
-
-      {/* 3D Laboratory Scene */}
-      <motion.section
-        className="laboratory-section"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 1 }}
-      >
-        <Suspense fallback={<AlchemistLabLoader />}>
-          <div className="canvas-container">
-            <AlchemistLaboratory
-              courses={courses}
-              onBeakerClick={handleBeakerClick}
-              selectedCourseId={selectedCourse?.id}
-            />
-          </div>
-        </Suspense>
-
-        {/* Interaction Hint */}
-        <motion.div
-          className="hint"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-        >
-          <p>✨ Drag to explore | Find glowing bottles | Click to preview courses</p>
-        </motion.div>
-      </motion.section>
-
-      {/* Level Legend */}
-      <motion.section
-        className="level-legend"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-      >
-        <div className="legend-item">
-          <div className="color-dot" style={{ background: '#22c55e' }} />
-          <span>Block A: Beginner</span>
-        </div>
-        <div className="legend-item">
-          <div className="color-dot" style={{ background: '#3b82f6' }} />
-          <span>Block B: Intermediate</span>
-        </div>
-        <div className="legend-item">
-          <div className="color-dot" style={{ background: '#a855f7' }} />
-          <span>Block C: Advanced</span>
-        </div>
-      </motion.section>
-
-      {/* Course Details Panel */}
-      <CoursePreviewPanel
-        course={selectedCourse}
-        isOpen={isPanelOpen}
-        onClose={handleClosePanel}
-        liquidColor={selectedCourse ? getLiquidColor(selectedCourse.level) : '#C9A050'}
-      />
-
-      {/* Film Grain Overlay */}
-      <div className="film-grain" />
-
-      <style jsx global>{`
-        /* Page Container */
-        .courses-page {
-          min-height: 100vh;
-          background: #05201f;
-          padding: 12rem 1.5rem 4rem;
+          padding: 40px;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
           position: relative;
-          overflow-x: hidden;
+          overflow: hidden;
         }
 
-        /* Header */
-        .page-header {
-          max-width: 1200px;
-          margin: 0 auto 4rem;
-          text-align: center;
+        .course-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, transparent 50%);
+          opacity: 0;
+          transition: opacity 0.4s ease;
         }
 
-        .label {
-          color: #C9A050;
-          font-size: 0.875rem;
+        .course-card:hover {
+          transform: translateY(-8px);
+          border-color: rgba(212, 175, 55, 0.5);
+          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
+        }
+
+        .course-card:hover::before {
+          opacity: 1;
+        }
+
+        .level-badge {
+          display: inline-block;
+          padding: 6px 16px;
+          border-radius: 20px;
+          font-size: 12px;
           font-weight: 600;
           text-transform: uppercase;
-          letter-spacing: 0.15em;
-          margin-bottom: 1rem;
+          letter-spacing: 0.05em;
+          margin-bottom: 20px;
         }
 
-        .title {
-          font-family: var(--font-serif, 'Playfair Display', serif);
-          font-size: clamp(2.5rem, 6vw, 4.5rem);
-          font-weight: 300;
-          color: #f5f3ef;
-          letter-spacing: -0.02em;
-          line-height: 1.2;
-          margin-bottom: 1.5rem;
+        .level-beginner {
+          background: rgba(34, 197, 94, 0.1);
+          color: rgb(34, 197, 94);
+          border: 1px solid rgba(34, 197, 94, 0.3);
         }
 
-        .gradient-text {
-          background: linear-gradient(135deg, #C9A050, #d4af37, #f0d090);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+        .level-intermediate {
+          background: rgba(59, 130, 246, 0.1);
+          color: rgb(59, 130, 246);
+          border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
-        .subtitle {
-          font-size: clamp(1rem, 2vw, 1.125rem);
-          color: rgba(245, 243, 239, 0.7);
-          line-height: 1.8;
-          max-width: 700px;
-          margin: 0 auto 2rem;
+        .level-advanced {
+          background: rgba(168, 85, 247, 0.1);
+          color: rgb(168, 85, 247);
+          border: 1px solid rgba(168, 85, 247, 0.3);
         }
 
-        .divider {
-          width: 80px;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, #C9A050, transparent);
-          margin: 0 auto;
+        .course-icon {
+          font-size: 64px;
+          margin-bottom: 24px;
+          filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
         }
 
-        /* Laboratory Section */
-        .laboratory-section {
-          max-width: 1400px;
-          margin: 0 auto 3rem;
-          position: relative;
+        .course-meta {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 24px;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 12px;
         }
 
-        .canvas-container {
-          width: 100%;
-          height: 90vh;
-          min-height: 800px;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow:
-            0 20px 60px rgba(201, 160, 80, 0.15),
-            0 0 100px rgba(201, 160, 80, 0.1) inset;
-          border: 1px solid rgba(201, 160, 80, 0.2);
-          background: #05201f;
-        }
-
-        .hint {
-          text-align: center;
-          margin-top: 2rem;
-          opacity: 0.6;
-        }
-
-        .hint p {
-          color: #C9A050;
-          font-size: 0.875rem;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-        }
-
-        /* Level Legend */
-        .level-legend {
-          max-width: 1200px;
-          margin: 0 auto;
+        .meta-item {
           display: flex;
-          justify-content: center;
-          gap: 3rem;
-          flex-wrap: wrap;
+          flex-direction: column;
+          gap: 4px;
         }
 
-        .legend-item {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          color: #f5f3ef;
-          font-size: 0.875rem;
+        .meta-label {
+          font-size: 12px;
+          color: rgba(212, 175, 55, 0.7);
           text-transform: uppercase;
           letter-spacing: 0.05em;
         }
 
-        .color-dot {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          box-shadow: 0 0 20px currentColor;
+        .meta-value {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--color-gold);
         }
 
-        /* Film Grain */
-        .film-grain {
-          position: fixed;
-          inset: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          opacity: 0.03;
-          pointer-events: none;
-          z-index: 100;
-          mix-blend-mode: overlay;
+        .course-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          padding: 16px 24px;
+          background: rgba(212, 175, 55, 0.1);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          border-radius: 12px;
+          color: var(--color-gold);
+          text-decoration: none;
+          font-weight: 600;
+          transition: all 0.3s ease;
         }
 
-        /* Responsive */
+        .course-btn:hover {
+          background: rgba(212, 175, 55, 0.2);
+          border-color: var(--color-gold);
+          transform: translateY(-2px);
+        }
+
+        .coming-soon-box {
+          background: rgba(212, 175, 55, 0.05);
+          border: 2px solid rgba(212, 175, 55, 0.3);
+          border-radius: 24px;
+          padding: 80px 48px;
+          box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5),
+                      0 0 40px rgba(212, 175, 55, 0.1);
+        }
+
         @media (max-width: 768px) {
-          .courses-page {
-            padding: 8rem 1rem 3rem;
+          .courses-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
           }
 
-          .canvas-container {
-            height: 50vh;
-            min-height: 400px;
+          .course-card {
+            padding: 32px 24px;
           }
 
-          .level-legend {
-            gap: 1.5rem;
-          }
-
-          .subtitle br {
-            display: none;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .level-legend {
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-          }
-        }
-
-        /* Accessibility */
-        @media (prefers-reduced-motion: reduce) {
-          .film-grain {
-            display: none;
+          .coming-soon-box {
+            padding: 48px 24px;
           }
         }
       `}</style>
     </main>
-  );
+  )
 }
