@@ -106,7 +106,8 @@ const contentFeed: ContentCard[] = [
       bio: "Renaissance Man — Modern Era. Model, Author, AI Architect & Visual Artist.",
       instagram: "@MRBRANDONMILLS",
       instagramUrl: "https://www.instagram.com/MRBRANDONMILLS/",
-      website: "brandonmills.com"
+      website: "brandonmills.com",
+      profilePhoto: "/authors/brandon-mills.jpg"
     }
   },
   // Author Card - Jesse Doherty
@@ -118,7 +119,8 @@ const contentFeed: ContentCard[] = [
       bio: "Architect of the Laboratory method. Blending ancient wisdom with modern transformation.",
       instagram: "@JESSEADOHERTY",
       instagramUrl: "https://www.instagram.com/JESSEADOHERTY/",
-      website: "selfactualize.life"
+      website: "selfactualize.life",
+      profilePhoto: "/authors/jesse-doherty.jpg"
     }
   },
   // Book 4 (Trilogy)
@@ -290,23 +292,33 @@ export function FeaturedBooksSection() {
             target="_blank"
             rel="noopener noreferrer"
             className="content-card author-card clickable-card"
+            style={{
+              backgroundImage: item.data.profilePhoto
+                ? `url(${item.data.profilePhoto})`
+                : 'none'
+            }}
           >
-            <div className="author-header">
-              <div className="author-avatar">{item.data.name.charAt(0)}</div>
-              <div>
-                <h3 className="author-card-name">{item.data.name}</h3>
-                <p className="author-card-role">{item.data.role}</p>
+            {/* Dark overlay for text readability */}
+            <div className="author-photo-overlay" />
+
+            <div className="author-content">
+              <div className="author-header">
+                <div className="author-avatar">{item.data.name.charAt(0)}</div>
+                <div>
+                  <h3 className="author-card-name">{item.data.name}</h3>
+                  <p className="author-card-role">{item.data.role}</p>
+                </div>
               </div>
-            </div>
-            <p className="author-bio">{item.data.bio}</p>
-            <div className="author-links">
-              <div className="author-link-display">
-                <span>📷</span>
-                <span>{item.data.instagram}</span>
-              </div>
-              <div className="author-link-display">
-                <span>🌐</span>
-                <span>{item.data.website}</span>
+              <p className="author-bio">{item.data.bio}</p>
+              <div className="author-links">
+                <div className="author-link-display">
+                  <span>📷</span>
+                  <span>{item.data.instagram}</span>
+                </div>
+                <div className="author-link-display">
+                  <span>🌐</span>
+                  <span>{item.data.website}</span>
+                </div>
               </div>
             </div>
             <div className="card-overlay">Visit Profile →</div>
@@ -684,9 +696,33 @@ export function FeaturedBooksSection() {
           color: rgba(255,255,255,0.6);
         }
 
-        /* Author Cards */
+        /* Author Cards - With Background Photos */
         .author-card {
-          background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.7) 100%);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .author-photo-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.5) 50%,
+          rgba(0, 0, 0, 0.8) 100%
+          );
+          z-index: 1;
+        }
+
+        .author-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
         }
 
         .author-header {
@@ -707,30 +743,33 @@ export function FeaturedBooksSection() {
           font-size: 32px;
           font-weight: 700;
           color: #05201f;
-          box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+          box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
         .author-card-name {
           font-size: 20px;
           font-weight: 700;
-          color: var(--color-gold);
+          color: #fff;
           margin: 0;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
         }
 
         .author-card-role {
           font-size: 13px;
-          color: rgba(255,255,255,0.7);
+          color: rgba(255,255,255,0.9);
           margin: 4px 0 0 0;
           text-transform: uppercase;
           letter-spacing: 0.05em;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
         }
 
         .author-bio {
           font-size: 16px;
-          color: rgba(255,255,255,0.85);
+          color: rgba(255,255,255,0.95);
           line-height: 1.6;
           margin-bottom: 24px;
           flex: 1;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
         }
 
         .author-links {
@@ -744,13 +783,19 @@ export function FeaturedBooksSection() {
           align-items: center;
           gap: 12px;
           padding: 12px 16px;
-          background: rgba(212, 175, 55, 0.1);
-          border: 1px solid rgba(212, 175, 55, 0.3);
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           border-radius: 8px;
-          color: var(--color-gold);
+          color: #fff;
           font-size: 14px;
           font-weight: 500;
           transition: all 0.3s ease;
+        }
+
+        .author-link-display:hover {
+          background: rgba(212, 175, 55, 0.3);
+          border-color: rgba(212, 175, 55, 0.5);
         }
 
         .author-link-display span:first-child {
