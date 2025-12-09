@@ -77,6 +77,30 @@ const contentFeed: ContentCard[] = [
       articles: "24"
     }
   },
+  // Pinterest
+  {
+    type: 'social',
+    data: {
+      platform: "pinterest",
+      handle: "@mrbrandonmills",
+      text: "Visual inspiration for transformation, design, and the art of living intentionally.",
+      url: "https://www.pinterest.com/mrbrandonmills/",
+      followers: "850",
+      pins: "1.5K"
+    }
+  },
+  // Twitter/X
+  {
+    type: 'social',
+    data: {
+      platform: "twitter",
+      handle: "@CryptoBMilly",
+      text: "Building at the intersection of AI, blockchain, and human consciousness. NFTs, crypto, and the future of digital identity.",
+      url: "https://x.com/CryptoBMilly",
+      followers: "2.3K",
+      tweets: "1.8K"
+    }
+  },
   // Testimonial
   {
     type: 'testimonial',
@@ -256,13 +280,13 @@ export function FeaturedBooksSection() {
         );
 
       case 'social':
-        const socialUrl = item.data.platform === 'instagram'
+        const socialUrl = item.data.url || (item.data.platform === 'instagram'
           ? `https://www.instagram.com/${item.data.handle.replace('@', '')}/`
-          : item.data.platform === 'medium'
-          ? item.data.url
-          : `https://twitter.com/${item.data.handle.replace('@', '')}`;
+          : `https://twitter.com/${item.data.handle.replace('@', '')}`);
 
         const isMedium = item.data.platform === 'medium';
+        const isPinterest = item.data.platform === 'pinterest';
+        const isTwitter = item.data.platform === 'twitter';
 
         return (
           <a
@@ -270,13 +294,23 @@ export function FeaturedBooksSection() {
             href={socialUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={`content-card social-card clickable-card ${isMedium ? 'medium-card' : ''}`}
+            className={`content-card social-card clickable-card ${isMedium ? 'medium-card' : ''} ${isPinterest ? 'pinterest-card' : ''} ${isTwitter ? 'twitter-card' : ''}`}
           >
             {/* Platform-specific background */}
             {isMedium ? (
               <>
                 <div className="medium-bg" />
                 <div className="medium-logo">M</div>
+              </>
+            ) : isPinterest ? (
+              <>
+                <div className="pinterest-bg" />
+                <div className="pinterest-logo">P</div>
+              </>
+            ) : isTwitter ? (
+              <>
+                <div className="twitter-bg" />
+                <div className="twitter-logo">𝕏</div>
               </>
             ) : (
               <>
@@ -293,6 +327,16 @@ export function FeaturedBooksSection() {
                   <>
                     <span>👥 {item.data.followers}</span>
                     <span>📝 {item.data.articles} articles</span>
+                  </>
+                ) : isPinterest ? (
+                  <>
+                    <span>👥 {item.data.followers}</span>
+                    <span>📌 {item.data.pins} pins</span>
+                  </>
+                ) : isTwitter ? (
+                  <>
+                    <span>👥 {item.data.followers}</span>
+                    <span>💬 {item.data.tweets} posts</span>
                   </>
                 ) : (
                   <>
@@ -717,6 +761,53 @@ export function FeaturedBooksSection() {
           color: rgba(255, 255, 255, 0.08);
           z-index: 1;
           letter-spacing: -10px;
+        }
+
+        /* Pinterest Card */
+        .pinterest-card {
+          background: linear-gradient(135deg, #E60023 0%, #BD081C 100%);
+        }
+
+        .pinterest-bg {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.3) 100%);
+          z-index: 0;
+        }
+
+        .pinterest-logo {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 220px;
+          font-weight: 700;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          color: rgba(255, 255, 255, 0.12);
+          z-index: 1;
+        }
+
+        /* Twitter/X Card */
+        .twitter-card {
+          background: linear-gradient(135deg, #000000 0%, #14171A 100%);
+        }
+
+        .twitter-bg {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 30% 80%, rgba(29, 155, 240, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%);
+          z-index: 0;
+        }
+
+        .twitter-logo {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 140px;
+          font-weight: 700;
+          color: rgba(29, 155, 240, 0.15);
+          z-index: 1;
         }
 
         /* Testimonial Cards */
