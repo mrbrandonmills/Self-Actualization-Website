@@ -1,7 +1,6 @@
 /**
  * Books Data - The Self Actualized Life
- * Amazon Affiliate Integration
- * Associates ID: selfactualize.life-20
+ * Supports both Stripe Integration (direct sales) and Amazon Affiliate links
  */
 
 export interface Book {
@@ -10,14 +9,19 @@ export interface Book {
   subtitle: string
   description: string
   coverImage: string
-  price: string
+  price: number // Price in cents (e.g., 999 = $9.99)
   category: 'Philosophy' | 'Psychology' | 'Practice' | 'Laboratory'
   slug: string
   author?: string
   featured?: boolean
-  amazonUrl: string
   format?: string
   publishDate?: string
+  // Stripe product/price IDs (optional - can use dynamic prices)
+  stripeProductId?: string
+  stripePriceId?: string
+  // Amazon affiliate link (if this book is sold via Amazon instead of Stripe)
+  amazonUrl?: string
+  isAmazonOnly?: boolean // If true, bypass Stripe and link directly to Amazon
 }
 
 // Amazon Associates ID for affiliate tracking
@@ -37,20 +41,26 @@ export function createAffiliateLink(amazonUrl: string): string {
   }
 }
 
+/**
+ * Format price for display
+ */
+export function formatBookPrice(priceInCents: number): string {
+  return `$${(priceInCents / 100).toFixed(2)}`
+}
+
 export const books: Book[] = [
   {
-    id: 'random-acts-building-blocks-a-b',
+    id: 'random-acts-block-a',
     title: 'Random Acts of Self-Actualization',
-    subtitle: 'Building Block A & Building Block B - Foundations of Self-Actualization',
-    description: 'Every one of us is trapped by problems we believe can\'t be solved. Some think they are stuck forever. Others keep trying random solutions, only to find themselves back where they started. Both are right. Until now.\n\nThis laboratory of life welcomes all the lost wisdom of the Ancients blended with the psychology and philosophy of the modern world. That includes everything from, how they built up cities, and how we ended beyond them. Most importantly, we can discover what continues to stick with us no matter how we wish it wouldn\'t.\n\nBuilding Blocks A and B are the foundational laboratories every person needs for a powerful, sustainable, and addictive self-actualization. Block A helps us engineer new patterns using what you already know. Block B lays the foundation of how to make the right judgments in an increasingly turbulent world.',
+    subtitle: 'Building Block A - Engineering Your Patterns',
+    description: 'Every one of us is trapped by problems we believe can\'t be solved. Some think they are stuck forever. Others keep trying random solutions, only to find themselves back where they started. Both are right. Until now.\n\nBlock A helps us engineer new patterns using what you already know. This foundational laboratory shows you how to break free from limiting patterns and create powerful, sustainable change in your life.',
     coverImage: '/books/block-a/1.png',
-    price: '$9.99',
+    price: 799, // $7.99 in cents
     category: 'Laboratory',
-    slug: 'random-acts-building-blocks-a-b',
+    slug: 'random-acts-block-a',
     author: 'Rock Q Cool Box',
     featured: true,
-    amazonUrl: 'https://www.amazon.com/Random-Acts-Self-Actualization-Building-Addictive-ebook/dp/B0DRDXCJZQ/ref=sr_1_1',
-    format: 'Kindle',
+    format: 'Digital PDF + ePub',
     publishDate: '2024',
   },
   {
@@ -58,30 +68,45 @@ export const books: Book[] = [
     title: 'Random Acts of Self-Actualization',
     subtitle: 'Block B - The Laboratory of Judgment',
     description: 'Block B lays the foundation of how to make the right judgments in an increasingly turbulent world. Learn to structure your decision-making processes and navigate complexity with confidence.\n\nThis is the second building block in the Laboratory of Life series, focusing on developing the critical thinking and judgment skills necessary for self-actualization in modern times.',
-    coverImage: '/books/block-a/1.png',
-    price: '$9.99',
+    coverImage: '/books/block-b/cover.png',
+    price: 999, // $9.99 in cents
     category: 'Laboratory',
     slug: 'random-acts-block-b',
     author: 'Rock Q Cool Box',
     featured: true,
-    amazonUrl: 'https://www.amazon.com/Random-Acts-Self-Actualization-Block-B-ebook/dp/B0DSY6Z4YP/ref=sr_1_2',
-    format: 'Kindle',
+    format: 'Digital PDF + ePub',
     publishDate: '2024',
   },
   {
     id: 'block-c-laboratory-of-living',
-    title: 'BLOCK C: THE LABORATORY OF LIVING',
-    subtitle: 'Random Acts of Self-Actualization',
+    title: 'Random Acts of Self-Actualization',
+    subtitle: 'Block C - The Laboratory of Living',
     description: 'Block C introduces how to structure our social ecosystems in such a way that not only accelerates self-actualization but assures transformation feels momentum, not uphill struggle.\n\nThe final building block completes the Laboratory of Life trilogy, showing you how to engineer your environment and relationships for sustainable growth and transformation.',
-    coverImage: '/books/block-a/1.png',
-    price: '$9.99',
+    coverImage: '/books/block-c/cover.png',
+    price: 999, // $9.99 in cents
     category: 'Laboratory',
     slug: 'block-c-laboratory-of-living',
     author: 'Rock Q Cool Box',
     featured: true,
-    amazonUrl: 'https://www.amazon.com/BLOCK-LABORATORY-LIVING-Random-Self-Actualization-ebook/dp/B0G3VGJM1F/ref=sr_1_3',
-    format: 'Kindle',
+    format: 'Digital PDF + ePub',
     publishDate: '2024',
+  },
+  {
+    id: 'trilogy-complete-collection',
+    title: 'Random Acts of Self-Actualization',
+    subtitle: 'The Complete Trilogy - All Three Building Blocks',
+    description: 'The complete Laboratory of Life trilogy in one stunning collection. Transform your reality with all three building blocks: Engineering Your Patterns (Block A), The Laboratory of Judgment (Block B), and The Laboratory of Living (Block C).\n\nThis comprehensive collection provides the complete roadmap for sustainable, powerful self-actualization. Get all three books together and save.',
+    coverImage: '/books/trilogy/cover.png', // You'll provide this soon
+    price: 2499, // $24.99 (save $2.98 vs buying individually)
+    category: 'Laboratory',
+    slug: 'trilogy-complete-collection',
+    author: 'Rock Q Cool Box',
+    featured: true,
+    format: 'Paperback + Kindle',
+    publishDate: '2024',
+    // Amazon affiliate link - will open in new tab instead of cart
+    amazonUrl: 'https://www.amazon.com/dp/YOUR_TRILOGY_ASIN', // Replace with actual Amazon link
+    isAmazonOnly: true,
   },
 ]
 

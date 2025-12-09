@@ -12,19 +12,7 @@ import { Environment, PerspectiveCamera, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { AnimatePresence } from 'framer-motion';
 import { FlipBook } from '@/components/books/FlipBook';
-import { createAffiliateLink } from '@/data/books';
-
-interface Book {
-  id: string;
-  title: string;
-  subtitle: string;
-  category: string;
-  coverImage: string;
-  price: string;
-  slug: string;
-  amazonUrl: string;
-  description?: string;
-}
+import { Book, createAffiliateLink, formatBookPrice } from '@/data/books';
 
 interface Museum3DGalleryProps {
   books: Book[];
@@ -318,7 +306,7 @@ export function Museum3DGallery({ books, title, subtitle }: Museum3DGalleryProps
                 <p className="category-badge">{book.category}</p>
                 <h3 className="book-title">{book.title}</h3>
                 <p className="book-subtitle">{book.subtitle}</p>
-                <p className="book-price">{book.price}</p>
+                <p className="book-price">{formatBookPrice(book.price)}</p>
               </div>
             </div>
           ))}

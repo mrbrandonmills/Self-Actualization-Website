@@ -9,13 +9,58 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCart } from '@/contexts/CartContext'
 import { formatPrice } from '@/data/products'
+import { getStripe } from '@/lib/stripe-client'
 
 export function CartWidget() {
   const { items, getItemCount, getTotal, removeFromCart, updateQuantity } = useCart()
   const [isOpen, setIsOpen] = useState(false)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
 
   const itemCount = getItemCount()
   const total = getTotal()
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return
+
+    setIsCheckingOut(true)
+
+    try {
+      // Create checkout session
+      const response = await fetch('/api/checkout/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session')
+      }
+
+      // Redirect to Stripe Checkout
+      const stripe = await getStripe()
+      if (!stripe) {
+        throw new Error('Stripe failed to load')
+      }
+
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      })
+
+      if (error) {
+        console.error('Stripe checkout error:', error)
+        alert(error.message)
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert(error instanceof Error ? error.message : 'Failed to start checkout. Please try again.')
+    } finally {
+      setIsCheckingOut(false)
+    }
+  }
 
   return (
     <>
@@ -137,8 +182,17 @@ export function CartWidget() {
                     className="checkout-button"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={handleCheckout}
+                    disabled={isCheckingOut}
                   >
-                    ⚡ Proceed to Checkout
+                    {isCheckingOut ? (
+                      <>
+                        <span className="spinner">⚗️</span>
+                        <span>Processing...</span>
+                      </>
+                    ) : (
+                      <>⚡ Proceed to Checkout</>
+                    )}
                   </motion.button>
                 </div>
               )}
@@ -397,9 +451,24 @@ export function CartWidget() {
           transition: all 0.3s;
         }
 
-        .checkout-button:hover {
+        .checkout-button:hover:not(:disabled) {
           box-shadow: 0 6px 24px rgba(201, 160, 80, 0.6);
           transform: translateY(-2px);
+        }
+
+        .checkout-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .checkout-button .spinner {
+          display: inline-block;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {

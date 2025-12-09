@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
-import { Book } from '@/data/books'
+import { Book, formatBookPrice } from '@/data/books'
 import { useState, useRef } from 'react'
 import { getBookColor, getCardGradient } from '@/lib/rainbow-colors'
 
@@ -183,7 +183,7 @@ export function BookCard({ book, index }: BookCardProps) {
                     className="text-2xl font-light"
                     style={{ color: bookColor.base }}
                   >
-                    ${book.price}
+                    {formatBookPrice(book.price)}
                   </span>
                   <span className="text-sm text-gray-400">USD</span>
                 </div>
