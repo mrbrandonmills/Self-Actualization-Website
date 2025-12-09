@@ -83,6 +83,22 @@ export const essays: Essay[] = [
     featured: false,
     tags: ['Psychology', 'Religion', 'Cognitive Science', 'Mixed Methods', 'Fundamentalism', 'Research Design'],
     pageCount: 5
+  },
+  {
+    id: 'environmental-racism-rhetorical-analysis',
+    title: 'Environmental Racism',
+    subtitle: 'A Rhetorical Analysis of John Oliver\'s "Last Week Tonight" Episode',
+    author: 'Brandon Mills',
+    publishDate: 'October 2, 2023',
+    category: 'Communication',
+    abstract: 'A critical rhetorical analysis examining how John Oliver\'s "Last Week Tonight" exposes environmental racism through political satire. This essay analyzes Oliver\'s claims, evidence, and persuasive techniques in demonstrating how Black communities face disproportionate exposure to pollution, toxic waste, and hazardous facilities. From Cancer Alley in Louisiana to Shingle Mountain in Texas, the analysis reveals how redlining, zoning laws, and systemic racism create "sacrifice zones" where communities of color are trapped in environmental death traps—with life expectancies 15 years shorter than their white counterparts.',
+    readingTime: '10 min read',
+    slug: 'environmental-racism-rhetorical-analysis',
+    featured: false,
+    institution: 'San Diego City College',
+    course: 'English 101',
+    tags: ['Environmental Racism', 'Rhetorical Analysis', 'Political Satire', 'Social Justice', 'Systemic Racism', 'Media Studies'],
+    pageCount: 8
   }
 ]
 
