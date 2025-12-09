@@ -128,9 +128,12 @@ export default function CoursesPage() {
       <style jsx>{`
         .courses-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          grid-template-columns: repeat(3, 1fr);
           gap: 32px;
           margin-bottom: 64px;
+          max-width: 1400px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .course-card {
@@ -255,6 +258,12 @@ export default function CoursesPage() {
           padding: 80px 48px;
           box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5),
                       0 0 40px rgba(212, 175, 55, 0.1);
+        }
+
+        @media (max-width: 1200px) {
+          .courses-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
 
         @media (max-width: 768px) {
