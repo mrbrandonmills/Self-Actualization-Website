@@ -31,15 +31,6 @@ const contentFeed: ContentCard[] = [
       source: "Block A: Engineering Your Patterns"
     }
   },
-  // Stat
-  {
-    type: 'stat',
-    data: {
-      number: "2,500+",
-      label: "Readers Transformed",
-      icon: "🌟"
-    }
-  },
   // Social Post
   {
     type: 'social',
@@ -109,15 +100,6 @@ const contentFeed: ContentCard[] = [
       author: "Marcus J.",
       role: "Engineer & Entrepreneur",
       rating: 5
-    }
-  },
-  // Stat
-  {
-    type: 'stat',
-    data: {
-      number: "3",
-      label: "Building Blocks to Freedom",
-      icon: "⚗️"
     }
   },
   // Book 3
