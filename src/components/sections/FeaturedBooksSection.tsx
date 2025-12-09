@@ -148,73 +148,58 @@ export function FeaturedBooksSection() {
     if (!triggerRef.current || !sliderRef.current) return;
 
     const slider = sliderRef.current;
-    const cards = Array.from(slider.children);
+    const cards = Array.from(slider.children) as HTMLElement[];
 
-    // Set initial visibility for cards without GSAP
-    gsap.set(cards, { opacity: 1, scale: 1 });
+    // Ensure cards are visible immediately (fallback if GSAP doesn't load)
+    cards.forEach((card) => {
+      card.style.opacity = '1';
+      card.style.transform = 'scale(1)';
+    });
 
-    // Wait for layout to stabilize before creating ScrollTrigger
+    // Try to initialize GSAP animations
     const initAnimations = () => {
-      const totalWidth = slider.scrollWidth - window.innerWidth;
+      try {
+        const totalWidth = slider.scrollWidth - window.innerWidth;
 
-      // Ensure ScrollTrigger has latest layout info
-      ScrollTrigger.refresh();
+        // Ensure ScrollTrigger has latest layout info
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.refresh();
+        }
 
-      const tween = gsap.to(slider, {
-        x: -totalWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: 'top top',
-          end: () => `+=${totalWidth * 3}`, // Extended for longer pan
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // Simplified card animation - just fade in on scroll
-      const cardAnimation = gsap.fromTo(cards,
-        {
-          opacity: 0,
-          scale: 0.95,
-        },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power2.out',
+        const tween = gsap.to(slider, {
+          x: -totalWidth,
+          ease: 'none',
           scrollTrigger: {
             trigger: triggerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
+            start: 'top top',
+            end: () => `+=${totalWidth * 3}`,
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
-        }
-      );
+        });
 
-      return { tween, cardAnimation };
+        return { tween };
+      } catch (error) {
+        console.warn('GSAP animations could not be initialized:', error);
+        return null;
+      }
     };
 
-    // Delay initialization to ensure page layout is complete
+    // Try to initialize animations with fallback
     const timeoutId = setTimeout(() => {
       const animations = initAnimations();
-
-      // Store for cleanup in separate ref
       if (animations) {
         animationsRef.current = animations;
       }
-    }, 100); // Reduced delay
+    }, 100);
 
     return () => {
       clearTimeout(timeoutId);
       const animations = animationsRef.current;
       if (animations?.tween?.scrollTrigger) {
         animations.tween.scrollTrigger.kill();
-      }
-      if (animations?.cardAnimation?.scrollTrigger) {
-        animations.cardAnimation.scrollTrigger.kill();
       }
     };
   }, []);
