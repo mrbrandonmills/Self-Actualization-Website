@@ -5,12 +5,12 @@
  * Beautiful confirmation page after successful Stripe checkout
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-export default function StoreSuccessPage() {
+function SuccessPageContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [isLoading, setIsLoading] = useState(true)
@@ -186,5 +186,17 @@ export default function StoreSuccessPage() {
         }
       `}</style>
     </main>
+  )
+}
+
+export default function StoreSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[var(--color-black-green)] flex items-center justify-center">
+        <div className="text-gold text-xl">Loading...</div>
+      </div>
+    }>
+      <SuccessPageContent />
+    </Suspense>
   )
 }

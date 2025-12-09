@@ -30,7 +30,9 @@ export const AMAZON_ASSOCIATES_ID = 'selfactualize.life-20'
 /**
  * Helper function to create Amazon affiliate link
  */
-export function createAffiliateLink(amazonUrl: string): string {
+export function createAffiliateLink(amazonUrl?: string): string {
+  if (!amazonUrl) return ''
+
   try {
     const url = new URL(amazonUrl)
     url.searchParams.set('tag', AMAZON_ASSOCIATES_ID)
