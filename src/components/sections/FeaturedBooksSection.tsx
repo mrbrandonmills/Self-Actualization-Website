@@ -246,9 +246,13 @@ export function FeaturedBooksSection() {
       case 'quote':
         return (
           <div key={`quote-${index}`} className="content-card quote-card">
-            <div className="quote-mark">"</div>
-            <p className="quote-text">{item.data.text}</p>
-            <p className="quote-source">— {item.data.source}</p>
+            {/* Colored overlay for visual pop */}
+            <div className="quote-overlay" />
+            <div className="quote-content">
+              <div className="quote-mark">"</div>
+              <p className="quote-text">{item.data.text}</p>
+              <p className="quote-source">— {item.data.source}</p>
+            </div>
           </div>
         );
 
@@ -606,16 +610,38 @@ export function FeaturedBooksSection() {
 
         /* Quote Cards */
         .quote-card {
-          background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(0,0,0,0.5) 100%);
+          background: linear-gradient(135deg, var(--color-gold) 0%, #b8941e 100%);
+          position: relative;
+          overflow: hidden;
           justify-content: center;
+        }
+
+        .quote-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.2) 0%,
+            rgba(0, 0, 0, 0.4) 100%
+          );
+          z-index: 0;
+        }
+
+        .quote-content {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
         }
 
         .quote-mark {
           font-size: 80px;
-          color: var(--color-gold);
+          color: rgba(255, 255, 255, 0.4);
           line-height: 0.5;
-          opacity: 0.3;
           margin-bottom: 16px;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .quote-text {
@@ -624,12 +650,15 @@ export function FeaturedBooksSection() {
           color: #fff;
           line-height: 1.5;
           margin-bottom: 24px;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .quote-source {
           font-size: 14px;
-          color: var(--color-gold);
+          color: #fff;
           text-align: right;
+          font-weight: 600;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         /* Stat Cards */
