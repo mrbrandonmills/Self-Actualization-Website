@@ -146,6 +146,22 @@ export default function BooksPage() {
           text-align: center;
         }
 
+        .hero-label {
+          color: #d4af37;
+        }
+
+        .hero-title {
+          color: #e8e4dc;
+        }
+
+        .hero-title :global(.text-gold) {
+          color: #d4af37;
+        }
+
+        .hero-description {
+          color: #c5d2b7;
+        }
+
         /* Books Grid */
         .books-grid {
           display: grid;
