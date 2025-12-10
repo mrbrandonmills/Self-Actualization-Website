@@ -147,19 +147,24 @@ export default function BooksPage() {
         }
 
         .hero-label {
-          color: #d4af37;
+          color: #d4af37 !important;
         }
 
-        .hero-title {
-          color: #e8e4dc;
+        .hero-title,
+        .hero-title.h1,
+        h1.hero-title {
+          color: #e8e4dc !important;
         }
 
-        .hero-title :global(.text-gold) {
-          color: #d4af37;
+        .hero-title :global(.text-gold),
+        .hero-title :global(span.text-gold) {
+          color: #d4af37 !important;
         }
 
-        .hero-description {
-          color: #c5d2b7;
+        .hero-description,
+        .hero-description.lead,
+        p.hero-description {
+          color: #c5d2b7 !important;
         }
 
         /* Books Grid */
