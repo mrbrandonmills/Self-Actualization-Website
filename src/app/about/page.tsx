@@ -93,7 +93,7 @@ export default function AboutPage() {
                   🧪
                 </div>
                 <div className="flex-1">
-                  <h3 className="h3 mb-3">Brandon Mills</h3>
+                  <h3 className="h3 mb-3" style={{ color: '#e8e4dc' }}>Brandon Mills</h3>
                   <p className="text-accent text-lg mb-4">Lead Researcher & Author</p>
                   <div className="flex flex-wrap gap-3">
                     <a
@@ -144,7 +144,7 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <p className="text-lg leading-relaxed mb-6">
+              <p className="text-lg leading-relaxed mb-6" style={{ color: '#c5d2b7' }}>
                 Brandon Mills is a researcher, writer, and transformation specialist whose work bridges neuroscience, psychology, and quantum mechanics. His research spans consciousness studies, identity formation, and the neurological basis of self-actualization. A student at San Diego City College, Brandon's academic papers have explored topics from quantum-coherent brain states to the psychology of fundamentalism, from archetypal identity models to the neuroscience of codependency.
               </p>
 
@@ -172,7 +172,7 @@ export default function AboutPage() {
                   🔬
                 </div>
                 <div className="flex-1">
-                  <h3 className="h3 mb-3">Jesse Doherty</h3>
+                  <h3 className="h3 mb-3" style={{ color: '#e8e4dc' }}>Jesse Doherty</h3>
                   <p className="text-accent text-lg mb-4">Collaborator & Co-Creator</p>
                   <div className="flex flex-wrap gap-3">
                     <a
@@ -190,7 +190,7 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <p className="text-lg leading-relaxed mb-6">
+              <p className="text-lg leading-relaxed mb-6" style={{ color: '#c5d2b7' }}>
                 Jesse Doherty brings a unique perspective to the Laboratory of Life, combining practical wisdom with transformational insight. As a key collaborator, Jesse helps translate complex research into accessible, actionable guidance that empowers individuals on their self-actualization journey.
               </p>
 
@@ -218,7 +218,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="liquid-glass-card mx-auto"
           >
-            <h2 className="h2 mb-lg text-center mx-auto">
+            <h2 className="h2 mb-lg text-center mx-auto" style={{ color: '#e8e4dc' }}>
               Our <span className="text-gold">Approach</span>
             </h2>
 
@@ -226,7 +226,7 @@ export default function AboutPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">📚</div>
                 <h3 className="h4 mb-4 text-gold">Research-Backed</h3>
-                <p className="text-base leading-relaxed">
+                <p className="text-base leading-relaxed" style={{ color: '#c5d2b7' }}>
                   Every concept is grounded in peer-reviewed research, academic rigor, and cutting-edge science from neuroscience to quantum mechanics.
                 </p>
               </div>
@@ -234,7 +234,7 @@ export default function AboutPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">🧬</div>
                 <h3 className="h4 mb-4 text-gold">Experientially Tested</h3>
-                <p className="text-base leading-relaxed">
+                <p className="text-base leading-relaxed" style={{ color: '#c5d2b7' }}>
                   We don't just study transformation—we live it. Every teaching is battle-tested through years of personal experimentation and real-world application.
                 </p>
               </div>
@@ -242,7 +242,7 @@ export default function AboutPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">⚡</div>
                 <h3 className="h4 mb-4 text-gold">Practically Applied</h3>
-                <p className="text-base leading-relaxed">
+                <p className="text-base leading-relaxed" style={{ color: '#c5d2b7' }}>
                   Theory without practice is philosophy. We bridge the gap between insight and action, research and results, understanding and embodiment.
                 </p>
               </div>
@@ -250,7 +250,7 @@ export default function AboutPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">📊</div>
                 <h3 className="h4 mb-4 text-gold">Measurably Effective</h3>
-                <p className="text-base leading-relaxed">
+                <p className="text-base leading-relaxed" style={{ color: '#c5d2b7' }}>
                   Real transformation is quantifiable. We track outcomes through data-driven metrics, demonstrating how scientific self-actualization creates measurable, lasting change in your life.
                 </p>
               </div>
@@ -262,10 +262,10 @@ export default function AboutPage() {
       {/* CTA Section */}
       <section className="section text-center px-4 sm:px-6 lg:px-8">
         <div className="container-lg mx-auto">
-          <h2 className="h2 mb-lg mx-auto text-center">
+          <h2 className="h2 mb-lg mx-auto text-center" style={{ color: '#e8e4dc' }}>
             Ready to Join the <span className="text-gold">Laboratory?</span>
           </h2>
-          <p className="lead mb-xl max-w-2xl mx-auto text-center">
+          <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
             Explore our research, books, and courses. Transform your life through the scientific art of self-actualization.
           </p>
           <div className="flex gap-4 justify-center flex-wrap mx-auto">

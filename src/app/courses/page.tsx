@@ -151,10 +151,10 @@ export default function CoursesPage() {
         <div className="container-lg mx-auto">
           <div className="coming-soon-box mx-auto">
             <div className="text-8xl mb-6 text-center">🔬</div>
-            <h2 className="h2 mb-lg mx-auto text-center">
+            <h2 className="h2 mb-lg mx-auto text-center" style={{ color: '#e8e4dc' }}>
               New Courses <span className="text-gold">In Development</span>
             </h2>
-            <p className="lead mb-xl max-w-2xl mx-auto text-center">
+            <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
               We're crafting immersive learning experiences that combine the science of self-actualization with practical transformation tools. Stay tuned!
             </p>
             <div className="flex gap-md justify-center flex-wrap mx-auto">
@@ -370,7 +370,8 @@ export default function CoursesPage() {
         }
 
         .course-title {
-          text-align: left;
+          text-align: center;
+          color: #e8e4dc;
         }
 
         .course-description {
@@ -378,6 +379,7 @@ export default function CoursesPage() {
           line-height: 1.7;
           color: rgba(255, 255, 255, 0.85);
           margin-bottom: 24px;
+          text-align: center;
         }
 
         .course-meta {

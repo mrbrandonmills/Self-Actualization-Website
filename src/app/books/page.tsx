@@ -87,9 +87,9 @@ export default function BooksPage() {
 
                 {/* Book Info */}
                 <div className="book-info">
-                  <h2 className="h3 mb-sm">{book.title}</h2>
+                  <h2 className="h3 mb-sm" style={{ color: '#e8e4dc' }}>{book.title}</h2>
                   <p className="text-accent mb-md">{book.subtitle}</p>
-                  <p className="text-sm mb-lg line-clamp-3">{book.description.split('\n\n')[0]}</p>
+                  <p className="text-sm mb-lg line-clamp-3" style={{ color: '#c5d2b7' }}>{book.description.split('\n\n')[0]}</p>
 
                   {/* Format Options */}
                   <div className="format-buttons">
@@ -124,10 +124,10 @@ export default function BooksPage() {
       {/* CTA Section */}
       <section className="section gradient-dark text-center px-4 sm:px-6 lg:px-8">
         <div className="container-lg mx-auto">
-          <h2 className="h2 mb-lg mx-auto text-center">
+          <h2 className="h2 mb-lg mx-auto text-center" style={{ color: '#e8e4dc' }}>
             Ready to Begin Your Journey?
           </h2>
-          <p className="lead mb-xl max-w-2xl mx-auto text-center">
+          <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
             Each book is a carefully curated pathway to transformation and self-discovery.
           </p>
           <Link href="/" className="btn btn-primary mx-auto">
@@ -183,22 +183,18 @@ export default function BooksPage() {
         }
 
         .book-card {
-          background: linear-gradient(
-            135deg,
-            rgba(212, 175, 55, 0.08) 0%,
-            rgba(212, 175, 55, 0.03) 50%,
-            rgba(212, 175, 55, 0.08) 100%
-          );
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(10, 47, 46, 0.6);
+          backdrop-filter: blur(40px) saturate(180%);
+          -webkit-backdrop-filter: blur(40px) saturate(180%);
+          border: 1.5px solid rgba(212, 175, 55, 0.3);
           border-radius: 24px;
           overflow: hidden;
-          transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
           box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(212, 175, 55, 0.1) inset,
-            0 20px 60px rgba(212, 175, 55, 0.08);
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(212, 175, 55, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(212, 175, 55, 0.3);
           position: relative;
         }
 
@@ -218,12 +214,14 @@ export default function BooksPage() {
         }
 
         .book-card:hover {
-          transform: translateY(-12px) scale(1.02);
+          transform: translateY(-12px);
           border-color: rgba(212, 175, 55, 0.5);
           box-shadow:
-            0 24px 80px rgba(0, 0, 0, 0.4),
-            0 0 0 1px rgba(212, 175, 55, 0.2) inset,
-            0 40px 100px rgba(212, 175, 55, 0.2);
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(212, 175, 55, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(212, 175, 55, 0.5),
+            0 0 150px rgba(212, 175, 55, 0.3);
         }
 
         .book-card:hover::before {
