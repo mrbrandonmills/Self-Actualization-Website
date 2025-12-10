@@ -70,6 +70,14 @@ export default function HomePage() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showContent, setShowContent] = useState(false);
   const [isCanvasReady, setIsCanvasReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile/touch devices - skip heavy 3D on mobile
+  useEffect(() => {
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmall = window.innerWidth < 768;
+    setIsMobile(hasTouch || isSmall);
+  }, []);
 
   // Preload all book assets
   const { progress, isLoaded } = useBookPreloader();
@@ -136,26 +144,27 @@ export default function HomePage() {
   }, [isLoaded, isCanvasReady]); // Run when both assets and Canvas are ready
 
   // Hide loading screen when BOTH assets are loaded AND Canvas is ready
+  // Mobile: Show content immediately (no Canvas to wait for)
   useEffect(() => {
-    if (isLoaded && isCanvasReady) {
+    if (isMobile) {
+      setShowContent(true);
+    } else if (isLoaded && isCanvasReady) {
       setShowContent(true);
     }
-  }, [isLoaded, isCanvasReady]);
+  }, [isLoaded, isCanvasReady, isMobile]);
 
   return (
     <main className="min-h-screen">
-      {/* Loading Screen - stays visible until BOTH assets AND Canvas are ready */}
-      {!showContent && (
+      {/* Loading Screen - DESKTOP ONLY */}
+      {!isMobile && !showContent && (
         <LoadingScreen
           progress={Math.round(combinedProgress)}
-          onComplete={() => {
-            // This gets called when combined progress hits 100% (assets + Canvas ready)
-          }}
+          onComplete={() => {}}
         />
       )}
 
-      {/* Fixed 3D Canvas - starts rendering once assets are loaded */}
-      {isLoaded && (
+      {/* Fixed 3D Canvas - DESKTOP ONLY (mobile skips to prevent crash) */}
+      {!isMobile && isLoaded && (
         <div className="fixed top-0 left-0 w-screen h-screen z-0">
           <Canvas
             camera={{ position: [0, 0, 50], fov: 75 }}
@@ -174,8 +183,24 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Scrollable narrative overlays */}
-      <div className="relative z-10">
+      {/* Mobile Hero - Simple static content */}
+      {isMobile && (
+        <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#f5f3ef] via-[#e8e6e1] to-[#f0eee9] px-6 py-16">
+          <h1 className="text-4xl font-bold text-[var(--olive-dark)] text-center mb-4">
+            The Laboratory<span className="block text-[var(--accent-warm)]">of Life</span>
+          </h1>
+          <p className="text-lg text-[var(--olive-dark)]/70 text-center max-w-md mb-8">
+            Where self-actualization meets scientific experimentation.
+          </p>
+          <div className="flex flex-col gap-4 w-full max-w-xs">
+            <a href="#process" className="px-6 py-4 bg-[var(--accent-warm)] rounded-lg text-white font-semibold text-center">Enter The Laboratory</a>
+            <a href="/books" className="px-6 py-4 bg-white border-2 border-[var(--accent-warm)] rounded-lg text-[var(--accent-warm)] font-semibold text-center">Shop Books</a>
+          </div>
+        </section>
+      )}
+
+      {/* Scrollable narrative overlays - DESKTOP ONLY */}
+      {!isMobile && <div className="relative z-10">
         {/* Spacer sections for scroll journey */}
         {narrativeOverlays.map((overlay, index) => (
           <section
@@ -231,7 +256,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-      </div>
+      </div>}
 
       {/* Regular sections below journey */}
       <div id="process" className="bg-[var(--bg-primary)]">
