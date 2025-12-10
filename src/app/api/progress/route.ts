@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     // Check if already completed
     const existing = await prisma.lessonProgress.findUnique({
       where: {
-        userId_lessonId: { userId, lessonId },
+        idx_progress_unique: { userId, lessonId },
       },
     });
 
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     // Upsert progress
     const progressData = await prisma.lessonProgress.upsert({
       where: {
-        userId_lessonId: { userId, lessonId },
+        idx_progress_unique: { userId, lessonId },
       },
       create: {
         userId,
@@ -218,7 +218,7 @@ export async function PATCH(request: NextRequest) {
 
     const data = await prisma.lessonProgress.update({
       where: {
-        userId_lessonId: { userId, lessonId },
+        idx_progress_unique: { userId, lessonId },
       },
       data: updateData,
     });

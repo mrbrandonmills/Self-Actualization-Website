@@ -468,10 +468,20 @@ export default function LessonPage() {
             {!isCompleted ? (
               <button
                 onClick={handleComplete}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-gold-600 to-gold-500 text-black font-semibold text-lg hover:from-gold-500 hover:to-gold-400 transition-all flex items-center justify-center gap-2"
+                disabled={isCompletingLesson}
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-gold-600 to-gold-500 text-black font-semibold text-lg hover:from-gold-500 hover:to-gold-400 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <CheckCircle2 className="w-5 h-5" />
-                Mark as Complete
+                {isCompletingLesson ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-5 h-5" />
+                    Mark as Complete
+                  </>
+                )}
               </button>
             ) : (
               <div className="w-full py-4 rounded-xl bg-green-500/20 border border-green-500/30 text-green-400 font-medium text-lg flex items-center justify-center gap-2">
@@ -480,6 +490,23 @@ export default function LessonPage() {
               </div>
             )}
           </motion.div>
+
+          {/* XP Award Toast */}
+          <AnimatePresence>
+            {xpAwarded !== null && (
+              <motion.div
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50"
+              >
+                <div className="px-6 py-3 rounded-full bg-gradient-to-r from-gold-500 to-gold-400 text-black font-bold text-lg shadow-lg shadow-gold-500/25 flex items-center gap-2">
+                  <Award className="w-6 h-6" />
+                  +{xpAwarded} XP!
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
