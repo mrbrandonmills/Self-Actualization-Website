@@ -1,12 +1,22 @@
 /**
  * Stripe Webhook Handler
  * Handles payment events from Stripe and creates enrollments in the database
+ * Creates user accounts for guest checkouts (paying customers only)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe-server';
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+
+/**
+ * Generate a secure temporary password
+ */
+function generateTempPassword(): string {
+  return crypto.randomBytes(12).toString('base64').slice(0, 16);
+}
 
 // All course slugs for bundle enrollment
 const ALL_COURSE_SLUGS = [
@@ -77,12 +87,64 @@ export async function POST(request: NextRequest) {
         amountTotal: session.amount_total,
       });
 
-      // Create enrollment(s) in Supabase
-      const userId = session.metadata?.userId;
+      // Get user info
+      let finalUserId = session.metadata?.userId;
       const courseSlug = session.metadata?.courseSlug;
       const isBundle = session.metadata?.isBundle === 'true';
+      const customerEmail = session.customer_details?.email;
+      const customerName = session.customer_details?.name || 'Student';
 
-      if (userId) {
+      // If no userId but we have an email, create account for this paying customer
+      if (!finalUserId && customerEmail) {
+        try {
+          // Check if user already exists with this email
+          const existingUser = await prisma.user.findUnique({
+            where: { email: customerEmail },
+          });
+
+          if (existingUser) {
+            // Use existing account
+            finalUserId = existingUser.id;
+            console.log(`Found existing user for ${customerEmail}: ${finalUserId}`);
+          } else {
+            // Create new account for paying customer
+            const tempPassword = generateTempPassword();
+            const hashedPassword = await bcrypt.hash(tempPassword, 12);
+
+            const newUser = await prisma.user.create({
+              data: {
+                email: customerEmail,
+                name: customerName,
+                password: hashedPassword,
+                membershipTier: isBundle ? 'PREMIUM' : 'BASIC',
+              },
+            });
+
+            // Create UserXP record
+            await prisma.userXP.create({
+              data: {
+                userId: newUser.id,
+                totalXp: 0,
+                currentLevel: 1,
+                streakDays: 0,
+                longestStreak: 0,
+              },
+            });
+
+            finalUserId = newUser.id;
+            console.log(`Created new account for paying customer: ${customerEmail} (${finalUserId})`);
+
+            // TODO: Send welcome email with temp password
+            // For now, log it (in production, integrate with email service)
+            console.log(`WELCOME EMAIL NEEDED: ${customerEmail} - Temp password: ${tempPassword}`);
+          }
+        } catch (error) {
+          console.error('Error creating user account:', error);
+        }
+      }
+
+      // Create enrollments if we have a user
+      if (finalUserId) {
         try {
           if (isBundle) {
             // Enroll in all courses
@@ -94,10 +156,10 @@ export async function POST(request: NextRequest) {
             for (const course of courses) {
               await prisma.enrollment.upsert({
                 where: {
-                  userId_courseId: { userId, courseId: course.id },
+                  idx_enrollments_unique: { userId: finalUserId, courseId: course.id },
                 },
                 create: {
-                  userId,
+                  userId: finalUserId,
                   courseId: course.id,
                   stripeSessionId: session.id,
                   status: 'ACTIVE',
@@ -107,7 +169,7 @@ export async function POST(request: NextRequest) {
                   status: 'ACTIVE',
                 },
               });
-              console.log(`Enrolled user ${userId} in course: ${course.slug}`);
+              console.log(`Enrolled user ${finalUserId} in course: ${course.slug}`);
             }
           } else if (courseSlug) {
             // Enroll in single course
@@ -119,10 +181,10 @@ export async function POST(request: NextRequest) {
             if (course) {
               await prisma.enrollment.upsert({
                 where: {
-                  userId_courseId: { userId, courseId: course.id },
+                  idx_enrollments_unique: { userId: finalUserId, courseId: course.id },
                 },
                 create: {
-                  userId,
+                  userId: finalUserId,
                   courseId: course.id,
                   stripeSessionId: session.id,
                   status: 'ACTIVE',
@@ -132,7 +194,7 @@ export async function POST(request: NextRequest) {
                   status: 'ACTIVE',
                 },
               });
-              console.log(`Enrolled user ${userId} in course: ${courseSlug}`);
+              console.log(`Enrolled user ${finalUserId} in course: ${courseSlug}`);
             }
           }
         } catch (error) {
@@ -140,7 +202,7 @@ export async function POST(request: NextRequest) {
           // Don't fail the webhook - Stripe payment already succeeded
         }
       } else {
-        console.warn('No userId in checkout session metadata - enrollment not created');
+        console.error('No userId and no customer email - cannot create enrollment');
       }
 
       break;
