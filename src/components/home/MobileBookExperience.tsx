@@ -102,7 +102,7 @@ export function MobileBookExperience() {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 5rem 1.5rem 2rem; /* 5rem top for fixed nav bar */
+            padding: 1.25rem 1.5rem 1rem; /* Minimal top padding - nav is small */
             background: linear-gradient(180deg, #f5f3ef 0%, #e8e6e1 50%, #f0eee9 100%);
           }
 
