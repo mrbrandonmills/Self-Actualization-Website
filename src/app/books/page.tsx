@@ -177,7 +177,7 @@ export default function BooksPage() {
           width: 100%;
           aspect-ratio: 2/3;
           overflow: hidden;
-          background: #1a1a1a;
+          background: #ffffff;
         }
 
         .book-cover :global(img) {

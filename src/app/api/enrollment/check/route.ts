@@ -1,6 +1,7 @@
 /**
  * Enrollment Check API
  * Checks if current user is enrolled in a course
+ * Admin users bypass enrollment checks and have access to all courses
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -12,7 +13,17 @@ export async function GET(request: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json({ enrolled: false });
+      return NextResponse.json({ enrolled: false, isAdmin: false });
+    }
+
+    // Check if user is admin - admins have access to all courses
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { role: true },
+    });
+
+    if (user?.role === 'ADMIN') {
+      return NextResponse.json({ enrolled: true, isAdmin: true });
     }
 
     const searchParams = request.nextUrl.searchParams;
@@ -32,7 +43,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!course) {
-      return NextResponse.json({ enrolled: false });
+      return NextResponse.json({ enrolled: false, isAdmin: false });
     }
 
     // Check for active enrollment
@@ -44,7 +55,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ enrolled: !!enrollment });
+    return NextResponse.json({ enrolled: !!enrollment, isAdmin: false });
   } catch (error) {
     console.error('Enrollment check error:', error);
     return NextResponse.json(
