@@ -371,6 +371,8 @@ export function BartoszNavigation() {
         /* Mobile Navigation - Liquid Glass Effect */
         @media (max-width: 767px) {
           .bartosz-nav {
+            /* Reduced padding for mobile - much smaller header */
+            padding: 0.5rem 1rem !important;
             /* Liquid Glass / Frosted Glass Effect */
             background: rgba(255, 255, 255, 0.75) !important;
             backdrop-filter: blur(20px) saturate(180%);
@@ -379,6 +381,10 @@ export function BartoszNavigation() {
             box-shadow:
               0 4px 30px rgba(0, 0, 0, 0.1),
               inset 0 1px 0 rgba(255, 255, 255, 0.4);
+          }
+
+          .nav-logo {
+            font-size: 0.85rem !important;
           }
 
           .nav-logo {
