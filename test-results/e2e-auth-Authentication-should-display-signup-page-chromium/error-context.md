@@ -1,0 +1,147 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "The Self Actualized Life" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: The Self
+        - generic [ref=e6]: Actualized
+        - generic [ref=e7]: Life
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Books" [ref=e10] [cursor=pointer]:
+          - /url: /books
+        - link "Courses" [ref=e11] [cursor=pointer]:
+          - /url: /courses
+        - link "Writing Lab" [ref=e12] [cursor=pointer]:
+          - /url: /writing-lab
+        - link "Blog" [ref=e13] [cursor=pointer]:
+          - /url: /blog
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e16]:
+        - link "Sign in" [ref=e17] [cursor=pointer]:
+          - /url: /login
+        - link "Get Started" [ref=e18] [cursor=pointer]:
+          - /url: /signup
+  - main [ref=e19]:
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - link "The Self Actualized Life" [ref=e24] [cursor=pointer]:
+            - /url: /
+            - heading "The Self Actualized Life" [level=1] [ref=e25]
+          - heading "Begin your journey" [level=2] [ref=e26]
+          - paragraph [ref=e27]: Create an account to access transformational courses
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Full Name
+            - textbox "Full Name" [ref=e31]:
+              - /placeholder: Your name
+          - generic [ref=e32]:
+            - generic [ref=e33]: Email
+            - textbox "Email" [ref=e34]:
+              - /placeholder: you@example.com
+          - generic [ref=e35]:
+            - generic [ref=e36]: Password
+            - textbox "Password" [ref=e37]:
+              - /placeholder: At least 8 characters
+          - generic [ref=e38]:
+            - generic [ref=e39]: Confirm Password
+            - textbox "Confirm Password" [ref=e40]:
+              - /placeholder: Confirm your password
+          - generic [ref=e41]:
+            - checkbox "I agree to the Terms of Service and Privacy Policy" [ref=e42]
+            - generic [ref=e43]:
+              - text: I agree to the
+              - link "Terms of Service" [ref=e44] [cursor=pointer]:
+                - /url: /terms
+              - text: and
+              - link "Privacy Policy" [ref=e45] [cursor=pointer]:
+                - /url: /privacy
+          - button "Create account" [ref=e46] [cursor=pointer]
+        - paragraph [ref=e47]:
+          - text: Already have an account?
+          - link "Sign in" [ref=e48] [cursor=pointer]:
+            - /url: /login
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: "6"
+          - text: Courses
+        - generic [ref=e52]:
+          - generic [ref=e53]: AI
+          - text: Tutor
+        - generic [ref=e54]:
+          - generic [ref=e55]: XP
+          - text: System
+  - contentinfo [ref=e56]:
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - link "The Self Actualized Life" [ref=e61] [cursor=pointer]:
+            - /url: /
+            - heading "The Self Actualized Life" [level=3] [ref=e62]
+          - paragraph [ref=e63]: Transform your reality through self-actualization. Unlock your full potential with luxury guidance and premium resources.
+          - generic [ref=e64]:
+            - link "Instagram" [ref=e65] [cursor=pointer]:
+              - /url: https://instagram.com
+              - img [ref=e66]
+            - link "Twitter" [ref=e69] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img [ref=e70]
+            - link "LinkedIn" [ref=e72] [cursor=pointer]:
+              - /url: https://linkedin.com
+              - img [ref=e73]
+        - generic [ref=e77]:
+          - heading "Products" [level=4] [ref=e78]
+          - list [ref=e79]:
+            - listitem [ref=e80]:
+              - link "Books" [ref=e81] [cursor=pointer]:
+                - /url: /books
+            - listitem [ref=e82]:
+              - link "Courses" [ref=e83] [cursor=pointer]:
+                - /url: /courses
+            - listitem [ref=e84]:
+              - link "Writing Lab" [ref=e85] [cursor=pointer]:
+                - /url: /writing-lab
+            - listitem [ref=e86]:
+              - link "Blog" [ref=e87] [cursor=pointer]:
+                - /url: /blog
+        - generic [ref=e88]:
+          - heading "Company" [level=4] [ref=e89]
+          - list [ref=e90]:
+            - listitem [ref=e91]:
+              - link "About" [ref=e92] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e93]:
+              - link "Contact" [ref=e94] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e95]:
+              - link "Coaching" [ref=e96] [cursor=pointer]:
+                - /url: /coaching
+        - generic [ref=e97]:
+          - heading "Join the Journey" [level=4] [ref=e98]
+          - paragraph [ref=e99]: Get weekly insights on self-actualization, mindset mastery, and transformational growth.
+          - generic [ref=e100]:
+            - textbox "Email address" [ref=e102]:
+              - /placeholder: Enter your email
+            - button "Subscribe" [ref=e103] [cursor=pointer]:
+              - generic [ref=e104]: Subscribe
+      - generic [ref=e108]:
+        - paragraph [ref=e109]: © 2025 The Self Actualized Life. All rights reserved.
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - link "Privacy Policy" [ref=e112] [cursor=pointer]:
+              - /url: /privacy
+            - generic [ref=e113]: •
+          - link "Terms of Service" [ref=e115] [cursor=pointer]:
+            - /url: /terms
+        - paragraph [ref=e116]:
+          - text: Built with
+          - generic [ref=e117]: ♥
+          - text: for transformation
+  - alert [ref=e118]
+```

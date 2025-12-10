@@ -58,8 +58,8 @@ test.describe('Courses', () => {
     await page.goto('/courses/engineering-your-patterns');
 
     // Should show key course information
-    await expect(page.locator('text=/week/i')).toBeVisible();
-    await expect(page.locator('text=/lesson/i')).toBeVisible();
+    await expect(page.locator('text=/\\d+ weeks/i').first()).toBeVisible();
+    await expect(page.locator('text=/lesson/i').first()).toBeVisible();
   });
 });
 

@@ -193,6 +193,18 @@ export default function BooksPage() {
           padding: 32px;
         }
 
+        .book-info h2 {
+          color: #c5d2b7;
+        }
+
+        .book-info .text-accent {
+          color: #d4af37;
+        }
+
+        .book-info .text-sm {
+          color: #a3b18a;
+        }
+
         .format-buttons {
           display: flex;
           flex-direction: column;
@@ -207,7 +219,7 @@ export default function BooksPage() {
           background: rgba(212, 175, 55, 0.1);
           border: 1px solid rgba(212, 175, 55, 0.3);
           border-radius: 12px;
-          color: var(--color-gold);
+          color: #d4af37;
           text-decoration: none;
           transition: all 0.3s ease;
           font-weight: 500;
@@ -215,19 +227,19 @@ export default function BooksPage() {
 
         .format-btn:hover {
           background: rgba(212, 175, 55, 0.2);
-          border-color: var(--color-gold);
+          border-color: #d4af37;
           transform: translateX(4px);
         }
 
         .format-type {
           font-size: 16px;
-          color: var(--color-text);
+          color: #c5d2b7;
         }
 
         .format-price {
           font-size: 18px;
           font-weight: 600;
-          color: var(--color-gold);
+          color: #d4af37;
         }
 
         .line-clamp-3 {

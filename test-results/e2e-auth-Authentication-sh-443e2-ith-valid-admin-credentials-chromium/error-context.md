@@ -1,0 +1,209 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "The Self Actualized Life" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: The Self
+        - generic [ref=e6]: Actualized
+        - generic [ref=e7]: Life
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Books" [ref=e10] [cursor=pointer]:
+          - /url: /books
+        - link "Courses" [ref=e11] [cursor=pointer]:
+          - /url: /courses
+        - link "Writing Lab" [ref=e12] [cursor=pointer]:
+          - /url: /writing-lab
+        - link "Blog" [ref=e13] [cursor=pointer]:
+          - /url: /blog
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - button "BM" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: BM
+        - img [ref=e19]
+  - generic [ref=e21]:
+    - banner [ref=e22]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - heading "Welcome back, Student" [level=1] [ref=e26]
+          - paragraph [ref=e27]: Continue your self-actualization journey
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - img [ref=e30]
+            - generic [ref=e36]:
+              - paragraph [ref=e37]: 350 XP
+              - paragraph [ref=e38]: Level 1
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e42]:
+              - paragraph [ref=e43]: 3 day streak
+              - paragraph [ref=e44]: "Best: 7"
+    - main [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - heading "Continue Learning" [level=2] [ref=e48]:
+            - img [ref=e49]
+            - text: Continue Learning
+          - link "Engineering Your Patterns Week 2 The Projection Problem What triggers you in others is often what you refuse to see in yourself. Every annoyance is a mirror. 15 min +50 XP" [ref=e51] [cursor=pointer]:
+            - /url: /courses/engineering-your-patterns/lesson/ep-2-3
+            - generic [ref=e54]:
+              - generic [ref=e55]:
+                - generic [ref=e56]:
+                  - generic [ref=e57]: Engineering Your Patterns
+                  - generic [ref=e58]: Week 2
+                - heading "The Projection Problem" [level=3] [ref=e59]
+                - paragraph [ref=e60]: What triggers you in others is often what you refuse to see in yourself. Every annoyance is a mirror.
+                - generic [ref=e61]:
+                  - generic [ref=e62]:
+                    - img [ref=e63]
+                    - text: 15 min
+                  - generic [ref=e66]:
+                    - img [ref=e67]
+                    - text: +50 XP
+              - img [ref=e71]
+        - generic [ref=e73]:
+          - heading "Your Progress" [level=2] [ref=e74]:
+            - img [ref=e75]
+            - text: Your Progress
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - generic [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e86]: Level Progress
+              - paragraph [ref=e89]: 350 / 1000 XP to Level 2
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Current Streak
+              - paragraph [ref=e95]: "3"
+              - paragraph [ref=e96]: days in a row
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e101]: Enrolled Courses
+              - paragraph [ref=e102]: "1"
+              - paragraph [ref=e103]: of 6 courses
+            - generic [ref=e104]:
+              - generic [ref=e105]:
+                - img [ref=e106]
+                - generic [ref=e110]: Lessons Complete
+              - paragraph [ref=e111]: "7"
+              - paragraph [ref=e112]: total lessons
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - heading "My Courses" [level=2] [ref=e115]:
+              - img [ref=e116]
+              - text: My Courses
+            - link "Browse all courses" [ref=e118] [cursor=pointer]:
+              - /url: /courses
+              - text: Browse all courses
+              - img [ref=e119]
+          - generic [ref=e121]:
+            - link "Block A 6 weeks Engineering Your Patterns Progress 23% 7 / 30 lessons" [ref=e122] [cursor=pointer]:
+              - /url: /courses/engineering-your-patterns
+              - generic [ref=e123]:
+                - generic [ref=e124]: Block A
+                - generic [ref=e125]: 6 weeks
+              - heading "Engineering Your Patterns" [level=3] [ref=e126]
+              - generic [ref=e128]:
+                - generic [ref=e129]: Progress
+                - generic [ref=e130]: 23%
+              - generic [ref=e133]:
+                - generic [ref=e134]: 7 / 30 lessons
+                - img [ref=e135]
+            - link "Add more courses" [ref=e137] [cursor=pointer]:
+              - /url: /courses
+              - img [ref=e139]
+              - generic [ref=e142]: Add more courses
+        - generic [ref=e143]:
+          - heading "This Week" [level=2] [ref=e144]:
+            - img [ref=e145]
+            - text: This Week
+          - generic [ref=e147]:
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - paragraph [ref=e150]: Mon
+                - img [ref=e152]
+              - generic [ref=e154]:
+                - paragraph [ref=e155]: Tue
+                - img [ref=e157]
+              - generic [ref=e159]:
+                - paragraph [ref=e160]: Wed
+                - img [ref=e162]
+              - paragraph [ref=e165]: Thu
+              - paragraph [ref=e169]: Fri
+              - paragraph [ref=e173]: Sat
+              - paragraph [ref=e177]: Sun
+            - paragraph [ref=e180]: Complete a lesson today to keep your streak going!
+  - contentinfo [ref=e181]:
+    - generic [ref=e183]:
+      - generic [ref=e184]:
+        - generic [ref=e185]:
+          - link "The Self Actualized Life" [ref=e186] [cursor=pointer]:
+            - /url: /
+            - heading "The Self Actualized Life" [level=3] [ref=e187]
+          - paragraph [ref=e188]: Transform your reality through self-actualization. Unlock your full potential with luxury guidance and premium resources.
+          - generic [ref=e189]:
+            - link "Instagram" [ref=e190] [cursor=pointer]:
+              - /url: https://instagram.com
+              - img [ref=e191]
+            - link "Twitter" [ref=e194] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img [ref=e195]
+            - link "LinkedIn" [ref=e197] [cursor=pointer]:
+              - /url: https://linkedin.com
+              - img [ref=e198]
+        - generic [ref=e202]:
+          - heading "Products" [level=4] [ref=e203]
+          - list [ref=e204]:
+            - listitem [ref=e205]:
+              - link "Books" [ref=e206] [cursor=pointer]:
+                - /url: /books
+            - listitem [ref=e207]:
+              - link "Courses" [ref=e208] [cursor=pointer]:
+                - /url: /courses
+            - listitem [ref=e209]:
+              - link "Writing Lab" [ref=e210] [cursor=pointer]:
+                - /url: /writing-lab
+            - listitem [ref=e211]:
+              - link "Blog" [ref=e212] [cursor=pointer]:
+                - /url: /blog
+        - generic [ref=e213]:
+          - heading "Company" [level=4] [ref=e214]
+          - list [ref=e215]:
+            - listitem [ref=e216]:
+              - link "About" [ref=e217] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e218]:
+              - link "Contact" [ref=e219] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e220]:
+              - link "Coaching" [ref=e221] [cursor=pointer]:
+                - /url: /coaching
+        - generic [ref=e222]:
+          - heading "Join the Journey" [level=4] [ref=e223]
+          - paragraph [ref=e224]: Get weekly insights on self-actualization, mindset mastery, and transformational growth.
+          - generic [ref=e225]:
+            - textbox "Email address" [ref=e227]:
+              - /placeholder: Enter your email
+            - button "Subscribe" [ref=e228] [cursor=pointer]:
+              - generic [ref=e229]: Subscribe
+      - generic [ref=e233]:
+        - paragraph [ref=e234]: © 2025 The Self Actualized Life. All rights reserved.
+        - generic [ref=e235]:
+          - generic [ref=e236]:
+            - link "Privacy Policy" [ref=e237] [cursor=pointer]:
+              - /url: /privacy
+            - generic [ref=e238]: •
+          - link "Terms of Service" [ref=e240] [cursor=pointer]:
+            - /url: /terms
+        - paragraph [ref=e241]:
+          - text: Built with
+          - generic [ref=e242]: ♥
+          - text: for transformation
+  - alert [ref=e243]
+```
