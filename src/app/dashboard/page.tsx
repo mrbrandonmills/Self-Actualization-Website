@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
@@ -14,49 +16,121 @@ import {
   Trophy,
   BarChart3,
   Calendar,
-  Play
+  Play,
+  Loader2
 } from 'lucide-react';
-import { courses, getCourseBySlug } from '@/data/courses';
-import { getLessonsByCourse, getLessonById } from '@/data/lessons';
 
-// Simulated user data (replace with Supabase auth)
-const mockUser = {
-  id: 'user-123',
-  name: 'Student',
-  email: 'student@example.com',
-  enrolledCourses: ['engineering-your-patterns'], // Simulated enrollments
-  currentLesson: 'ep-2-3', // Last lesson in progress
+interface DashboardData {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
   xp: {
-    total: 350,
-    level: 1,
-    streakDays: 3,
-    longestStreak: 7,
-  },
-  courseProgress: {
-    'engineering-your-patterns': {
-      completedLessons: 7,
-      totalLessons: 30,
-    }
-  }
-};
+    total: number;
+    level: number;
+    streakDays: number;
+    longestStreak: number;
+  };
+  enrolledCourses: Array<{
+    courseId: string;
+    courseSlug: string;
+    courseTitle: string;
+    bookSource: string;
+    weeks: number;
+    completedLessons: number;
+    totalLessons: number;
+    progressPercent: number;
+  }>;
+  currentLesson: {
+    lessonId: string;
+    lessonSlug: string;
+    lessonTitle: string;
+    courseSlug: string;
+    courseTitle: string;
+    weekNumber: number;
+    keyConcept: string;
+    duration: string;
+    xpReward: number;
+  } | null;
+  stats: {
+    totalEnrolled: number;
+    totalCompleted: number;
+  };
+}
 
 export default function DashboardPage() {
-  const [user] = useState(mockUser);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Get enrolled courses with progress
-  const enrolledCourses = user.enrolledCourses.map(slug => {
-    const course = getCourseBySlug(slug);
-    const progress = user.courseProgress[slug];
-    return course ? { ...course, progress } : null;
-  }).filter(Boolean);
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login?callbackUrl=/dashboard');
+      return;
+    }
 
-  // Get current lesson
-  const currentLesson = user.currentLesson ? getLessonById(user.currentLesson) : null;
-  const currentCourse = currentLesson ? getCourseBySlug(currentLesson.courseSlug) : null;
+    if (status === 'authenticated') {
+      fetchDashboardData();
+    }
+  }, [status, router]);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/dashboard');
+      if (!response.ok) {
+        throw new Error('Failed to fetch dashboard data');
+      }
+      const data = await response.json();
+      setDashboardData(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Loading state
+  if (status === 'loading' || loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 text-gold-400 animate-spin mx-auto mb-4" />
+          <p className="text-white/50">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">{error}</p>
+          <button
+            onClick={fetchDashboardData}
+            className="px-4 py-2 bg-gold-500 text-black rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!dashboardData) {
+    return null;
+  }
+
+  const { user, xp, enrolledCourses, currentLesson, stats } = dashboardData;
 
   // XP calculations
-  const xpForNextLevel = (user.xp.level) * 1000;
-  const xpProgress = (user.xp.total % 1000) / 10; // Percentage toward next level
+  const xpForNextLevel = xp.level * 1000;
+  const xpProgress = (xp.total % 1000) / 10;
 
   // Animation variants
   const containerVariants = {
@@ -70,6 +144,16 @@ export default function DashboardPage() {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
+  };
+
+  // Block type colors
+  const getBlockColors = (bookSource: string) => {
+    const blockMap: Record<string, { primary: string; bg: string; border: string; label: string }> = {
+      'BLOCK_A': { primary: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30', label: 'Block A' },
+      'BLOCK_B': { primary: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30', label: 'Block B' },
+      'BLOCK_C': { primary: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30', label: 'Block C' },
+    };
+    return blockMap[bookSource] || blockMap['BLOCK_A'];
   };
 
   return (
@@ -90,15 +174,15 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gold-500/10 border border-gold-500/20">
                 <Trophy className="w-5 h-5 text-gold-400" />
                 <div>
-                  <p className="text-gold-400 font-medium">{user.xp.total} XP</p>
-                  <p className="text-xs text-white/40">Level {user.xp.level}</p>
+                  <p className="text-gold-400 font-medium">{xp.total} XP</p>
+                  <p className="text-xs text-white/40">Level {xp.level}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 border border-orange-500/20">
                 <Flame className="w-5 h-5 text-orange-400" />
                 <div>
-                  <p className="text-orange-400 font-medium">{user.xp.streakDays} day streak</p>
-                  <p className="text-xs text-white/40">Best: {user.xp.longestStreak}</p>
+                  <p className="text-orange-400 font-medium">{xp.streakDays} day streak</p>
+                  <p className="text-xs text-white/40">Best: {xp.longestStreak}</p>
                 </div>
               </div>
             </div>
@@ -114,32 +198,31 @@ export default function DashboardPage() {
           className="grid gap-8"
         >
           {/* Continue Learning Section */}
-          {currentLesson && currentCourse && (
+          {currentLesson && (
             <motion.section variants={itemVariants}>
               <h2 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
                 <Play className="w-5 h-5 text-gold-400" />
                 Continue Learning
               </h2>
               <Link
-                href={`/courses/${currentLesson.courseSlug}/lesson/${currentLesson.id}`}
+                href={`/courses/${currentLesson.courseSlug}/lesson/${currentLesson.lessonSlug}`}
                 className="block"
               >
                 <div className="relative p-6 rounded-2xl bg-gradient-to-br from-gold-500/10 to-transparent border border-gold-500/20 hover:border-gold-500/40 transition-all group overflow-hidden">
-                  {/* Background decoration */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-gold-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
                   <div className="relative flex flex-col md:flex-row md:items-center gap-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-white/10 text-white/70">
-                          {currentCourse.title}
+                          {currentLesson.courseTitle}
                         </span>
                         <span className="text-white/40 text-sm">
                           Week {currentLesson.weekNumber}
                         </span>
                       </div>
                       <h3 className="text-xl md:text-2xl font-serif text-white group-hover:text-gold-400 transition-colors">
-                        {currentLesson.title}
+                        {currentLesson.lessonTitle}
                       </h3>
                       <p className="text-white/50 mt-2 line-clamp-2">{currentLesson.keyConcept}</p>
                       <div className="flex items-center gap-4 mt-4">
@@ -183,7 +266,7 @@ export default function DashboardPage() {
                   />
                 </div>
                 <p className="text-xs text-white/40">
-                  {user.xp.total % 1000} / {1000} XP to Level {user.xp.level + 1}
+                  {xp.total % 1000} / 1000 XP to Level {xp.level + 1}
                 </p>
               </div>
 
@@ -193,7 +276,7 @@ export default function DashboardPage() {
                   <Flame className="w-5 h-5 text-orange-400" />
                   <span className="text-white/50 text-sm">Current Streak</span>
                 </div>
-                <p className="text-2xl font-bold text-white">{user.xp.streakDays}</p>
+                <p className="text-2xl font-bold text-white">{xp.streakDays}</p>
                 <p className="text-xs text-white/40">days in a row</p>
               </div>
 
@@ -203,7 +286,7 @@ export default function DashboardPage() {
                   <BookOpen className="w-5 h-5 text-purple-400" />
                   <span className="text-white/50 text-sm">Enrolled Courses</span>
                 </div>
-                <p className="text-2xl font-bold text-white">{enrolledCourses.length}</p>
+                <p className="text-2xl font-bold text-white">{stats.totalEnrolled}</p>
                 <p className="text-xs text-white/40">of 6 courses</p>
               </div>
 
@@ -213,9 +296,7 @@ export default function DashboardPage() {
                   <Target className="w-5 h-5 text-green-400" />
                   <span className="text-white/50 text-sm">Lessons Complete</span>
                 </div>
-                <p className="text-2xl font-bold text-white">
-                  {Object.values(user.courseProgress).reduce((sum, p) => sum + p.completedLessons, 0)}
-                </p>
+                <p className="text-2xl font-bold text-white">{stats.totalCompleted}</p>
                 <p className="text-xs text-white/40">total lessons</p>
               </div>
             </div>
@@ -252,52 +333,42 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {enrolledCourses.map((course: any) => {
-                  const lessons = getLessonsByCourse(course.slug);
-                  const progressPercent = course.progress
-                    ? Math.round((course.progress.completedLessons / course.progress.totalLessons) * 100)
-                    : 0;
-
-                  const blockColors = {
-                    A: { primary: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30' },
-                    B: { primary: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
-                    C: { primary: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/30' },
-                  };
-                  const colors = blockColors[course.blockType as keyof typeof blockColors];
+                {enrolledCourses.map((course) => {
+                  const colors = getBlockColors(course.bookSource);
 
                   return (
                     <Link
-                      key={course.id}
-                      href={`/courses/${course.slug}`}
+                      key={course.courseId}
+                      href={`/courses/${course.courseSlug}`}
                       className="block p-5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${colors.bg} ${colors.primary}`}>
-                          Block {course.blockType}
+                          {colors.label}
                         </span>
                         <span className="text-white/40 text-sm">{course.weeks} weeks</span>
                       </div>
 
                       <h3 className="text-lg font-serif text-white group-hover:text-gold-400 transition-colors mb-2">
-                        {course.title}
+                        {course.courseTitle}
                       </h3>
 
                       <div className="mb-4">
                         <div className="flex items-center justify-between text-sm mb-1">
                           <span className="text-white/50">Progress</span>
-                          <span className="text-white/70">{progressPercent}%</span>
+                          <span className="text-white/70">{course.progressPercent}%</span>
                         </div>
                         <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                           <div
-                            className={`h-full bg-gradient-to-r from-gold-600 to-gold-400 transition-all`}
-                            style={{ width: `${progressPercent}%` }}
+                            className="h-full bg-gradient-to-r from-gold-600 to-gold-400 transition-all"
+                            style={{ width: `${course.progressPercent}%` }}
                           />
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-white/40">
-                          {course.progress?.completedLessons || 0} / {lessons.length} lessons
+                          {course.completedLessons} / {course.totalLessons} lessons
                         </span>
                         <ChevronRight className="w-4 h-4 text-white/40 group-hover:text-gold-400 group-hover:translate-x-1 transition-all" />
                       </div>
@@ -328,9 +399,8 @@ export default function DashboardPage() {
             <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
               <div className="grid grid-cols-7 gap-2">
                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => {
-                  // Simulate activity for past days
-                  const isActive = i < user.xp.streakDays;
-                  const isToday = i === 2; // Wednesday
+                  const isActive = i < xp.streakDays;
+                  const isToday = i === new Date().getDay() - 1; // Adjust for Monday start
 
                   return (
                     <div key={day} className="text-center">
