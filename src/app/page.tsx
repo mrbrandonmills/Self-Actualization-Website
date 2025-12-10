@@ -285,8 +285,28 @@ export default function HomePage() {
   // hasMounted ensures we only check mobile AFTER client hydration
   // This prevents SSR mismatch (server has no window, returns false)
   const [hasMounted, setHasMounted] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<string | null>(null);
 
   useEffect(() => {
+    // Collect debug info BEFORE setting hasMounted
+    const width = window.innerWidth;
+    const hasTouch = 'ontouchstart' in window;
+    const touchPoints = navigator.maxTouchPoints || 0;
+    const ua = navigator.userAgent;
+    const uaMatch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+
+    const info = `W:${width} T:${hasTouch} TP:${touchPoints} UA:${uaMatch ? 'Y' : 'N'}`;
+    setDebugInfo(info);
+
+    // Log to console for debugging
+    console.log('[MOBILE DEBUG]', {
+      width,
+      hasTouch,
+      touchPoints,
+      uaMatch,
+      userAgent: ua.substring(0, 100)
+    });
+
     setHasMounted(true);
   }, []);
 
@@ -297,16 +317,36 @@ export default function HomePage() {
 
   // Now safe to check - we're on the client
   // Improved detection: handles touch laptops, older browsers, user agent fallback
-  const isMobile = typeof window !== 'undefined' && (
-    // Check for small screen first (most reliable)
-    window.innerWidth < 768 ||
-    // Touch capability check (with safety)
-    'ontouchstart' in window ||
-    (typeof navigator !== 'undefined' && navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
-    // User agent fallback for edge cases
-    (typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+  const width = window.innerWidth;
+  const hasTouch = 'ontouchstart' in window;
+  const touchPoints = navigator.maxTouchPoints || 0;
+  const uaMatch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  const isMobile = width < 768 || hasTouch || touchPoints > 0 || uaMatch;
+
+  // DEBUG: Show detection info overlay (remove after debugging)
+  const debugOverlay = (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      background: isMobile ? 'green' : 'red',
+      color: 'white',
+      padding: '8px',
+      fontSize: '12px',
+      zIndex: 99999,
+      fontFamily: 'monospace'
+    }}>
+      {isMobile ? 'MOBILE' : 'DESKTOP'} | {debugInfo} | W:{width} T:{hasTouch?1:0} TP:{touchPoints}
+    </div>
   );
 
   // Render appropriate version
-  return isMobile ? <MobileHomePage /> : <DesktopHomePage />;
+  return (
+    <>
+      {debugOverlay}
+      {isMobile ? <MobileHomePage /> : <DesktopHomePage />}
+    </>
+  );
 }
