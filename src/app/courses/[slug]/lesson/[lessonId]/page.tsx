@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,7 +17,8 @@ import {
   BookOpen,
   ChevronDown,
   ChevronUp,
-  Award
+  Award,
+  Lock
 } from 'lucide-react';
 import { getCourseBySlug, getCoursesByBlock } from '@/data/courses';
 import { getLessonsByCourse, getLessonById, getNextLesson, getPreviousLesson } from '@/data/lessons';
@@ -24,6 +26,7 @@ import { getLessonsByCourse, getLessonById, getNextLesson, getPreviousLesson } f
 export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
+  const { data: session, status } = useSession();
   const courseSlug = params.slug as string;
   const lessonId = params.lessonId as string;
 
@@ -33,12 +36,47 @@ export default function LessonPage() {
   const [tutorMessages, setTutorMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
   const [tutorInput, setTutorInput] = useState('');
   const [isTutorLoading, setIsTutorLoading] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState<boolean | null>(null);
+  const [enrollmentLoading, setEnrollmentLoading] = useState(true);
 
   const course = getCourseBySlug(courseSlug);
   const allLessons = getLessonsByCourse(courseSlug);
   const lesson = getLessonById(lessonId);
   const nextLesson = lesson ? getNextLesson(lessonId, courseSlug) : null;
   const prevLesson = lesson ? getPreviousLesson(lessonId, courseSlug) : null;
+
+  // Check enrollment status
+  useEffect(() => {
+    async function checkEnrollment() {
+      if (status === 'loading') return;
+
+      // First lesson is always free preview
+      if (lesson?.isFreePreview) {
+        setIsEnrolled(true);
+        setEnrollmentLoading(false);
+        return;
+      }
+
+      if (!session?.user) {
+        setIsEnrolled(false);
+        setEnrollmentLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/enrollment/check?courseSlug=${courseSlug}`);
+        const data = await response.json();
+        setIsEnrolled(data.enrolled);
+      } catch (error) {
+        console.error('Enrollment check error:', error);
+        setIsEnrolled(false);
+      } finally {
+        setEnrollmentLoading(false);
+      }
+    }
+
+    checkEnrollment();
+  }, [session, status, courseSlug, lesson?.isFreePreview]);
 
   // Get lessons grouped by week
   const weekGroups = allLessons.reduce((acc, l) => {
@@ -63,6 +101,56 @@ export default function LessonPage() {
           <Link href="/courses" className="text-gold-400 hover:underline">
             Return to Courses
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while checking enrollment
+  if (enrollmentLoading || status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Show enrollment required message
+  if (!isEnrolled && !lesson.isFreePreview) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4">
+        <div className="max-w-md text-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gold-500/10 flex items-center justify-center">
+            <Lock className="w-8 h-8 text-gold-500" />
+          </div>
+          <h1 className="text-2xl font-serif text-white mb-3">Enrollment Required</h1>
+          <p className="text-white/60 mb-6">
+            This lesson is part of <strong className="text-white">{course.title}</strong>.
+            Enroll in the course to access all lessons and your personal AI tutor.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href={`/courses/${courseSlug}`}
+              className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-400 text-black font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              View Course - ${course.price}
+            </Link>
+            {!session?.user && (
+              <Link
+                href={`/login?callbackUrl=/courses/${courseSlug}/lesson/${lessonId}`}
+                className="px-6 py-3 border border-white/20 text-white rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
+          {lesson.weekNumber === 1 && (
+            <p className="mt-6 text-sm text-white/40">
+              <Link href={`/courses/${courseSlug}/lesson/week-1-lesson-1`} className="text-gold-500 hover:underline">
+                Preview the first lesson free
+              </Link>
+            </p>
+          )}
         </div>
       </div>
     );

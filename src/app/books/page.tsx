@@ -4,12 +4,24 @@ import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID } fro
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
 /**
  * Books Catalog Page - Clean & Simple
  * All books link directly to Amazon
+ * Mobile order: Trilogy, Block C, Block B, Block A
  */
 export default function BooksPage() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  // Mobile: Trilogy first, then C, B, A (reverse order)
+  // Desktop: Original order (A, B, C, Trilogy)
+  const orderedBooks = isMobile ? [...books].reverse() : books;
+
   return (
     <main className="min-h-screen bg-[var(--color-black-green)]">
       {/* Hero Section */}
@@ -51,7 +63,7 @@ export default function BooksPage() {
       <section className="section px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1600px] mx-auto">
           <div className="books-grid">
-            {books.map((book, index) => (
+            {orderedBooks.map((book, index) => (
               <motion.div
                 key={book.id}
                 initial={{ opacity: 0, y: 40 }}
