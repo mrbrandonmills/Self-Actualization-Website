@@ -17,7 +17,9 @@ import {
   BarChart3,
   Calendar,
   Play,
-  Loader2
+  Loader2,
+  ArrowLeft,
+  Home
 } from 'lucide-react';
 
 interface DashboardData {
@@ -166,8 +168,29 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      {/* Header */}
-      <header className="border-b border-white/5">
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">Back to Site</span>
+          </Link>
+          <span className="text-lg font-serif text-gold-400">Learning Portal</span>
+          <Link
+            href="/courses"
+            className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+          >
+            <span className="text-sm font-medium">Browse Courses</span>
+            <BookOpen className="w-4 h-4" />
+          </Link>
+        </div>
+      </nav>
+
+      {/* Header - with padding for fixed nav */}
+      <header className="border-b border-white/5 pt-14">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>

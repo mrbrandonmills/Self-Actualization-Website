@@ -372,13 +372,23 @@ export default function LessonPage() {
             </p>
           </div>
 
-          <button
-            onClick={() => setShowCurriculum(!showCurriculum)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white/60 hover:text-white"
-          >
-            <BookOpen className="w-4 h-4" />
-            <span className="hidden sm:inline">Curriculum</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+              title="My Dashboard"
+            >
+              <Award className="w-4 h-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </Link>
+            <button
+              onClick={() => setShowCurriculum(!showCurriculum)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span className="hidden sm:inline">Curriculum</span>
+            </button>
+          </div>
         </div>
       </div>
 
