@@ -52,6 +52,12 @@ model User {
   approvedContributions Contribution[] @relation("ApprovedBy")
   resolvedComments  Comment[] @relation("ResolvedBy")
 
+  // Course platform relations
+  enrollments       Enrollment[]
+  lessonProgress    LessonProgress[]
+  userXp            UserXP?
+  tutorConversations TutorConversation[]
+
   @@index([email], name: "idx_users_email")
   @@index([membershipTier], name: "idx_users_membership_tier")
   @@index([isActive, deletedAt], name: "idx_users_active")
@@ -480,4 +486,192 @@ enum PollStatus {
   DRAFT
   ACTIVE
   CLOSED
+}
+
+// ============================================================================
+// COURSE PLATFORM - AI-NATIVE LEARNING
+// ============================================================================
+
+/// Courses available on the platform
+model Course {
+  id              String    @id @default(uuid()) @db.Uuid
+  title           String    @db.VarChar(255)
+  slug            String    @unique @db.VarChar(100)
+  description     String?   @db.Text
+  priceCents      Int       @default(9700) @map("price_cents")
+  stripePriceId   String?   @map("stripe_price_id") @db.VarChar(255)
+  stripeProductId String?   @map("stripe_product_id") @db.VarChar(255)
+  durationWeeks   Int       @default(6) @map("duration_weeks")
+  isPublished     Boolean   @default(false) @map("is_published")
+  bookSource      BookSource? @map("book_source")
+  coverImageUrl   String?   @map("cover_image_url") @db.VarChar(500)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  lessons         Lesson[]
+  enrollments     Enrollment[]
+  progress        LessonProgress[]
+  tutorConversations TutorConversation[]
+  contentEmbeddings ContentEmbedding[]
+
+  @@index([slug], name: "idx_courses_slug")
+  @@index([isPublished], name: "idx_courses_published")
+  @@map("courses")
+}
+
+/// Lessons within courses
+model Lesson {
+  id              String    @id @default(uuid()) @db.Uuid
+  courseId        String    @map("course_id") @db.Uuid
+  title           String    @db.VarChar(255)
+  slug            String    @db.VarChar(100)
+  description     String?   @db.Text
+  content         String?   @db.Text
+  orderIndex      Int       @map("order_index")
+  durationMinutes Int       @default(15) @map("duration_minutes")
+  isFreePreview   Boolean   @default(false) @map("is_free_preview")
+  videoUrl        String?   @map("video_url") @db.VarChar(500)
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress        LessonProgress[]
+  tutorConversations TutorConversation[]
+  contentEmbeddings ContentEmbedding[]
+
+  @@unique([courseId, slug], name: "idx_lessons_course_slug")
+  @@index([courseId, orderIndex], name: "idx_lessons_order")
+  @@map("lessons")
+}
+
+/// User enrollments in courses
+model Enrollment {
+  id                  String           @id @default(uuid()) @db.Uuid
+  userId              String           @map("user_id") @db.Uuid
+  courseId            String           @map("course_id") @db.Uuid
+  stripeSessionId     String?          @map("stripe_session_id") @db.VarChar(255)
+  stripeSubscriptionId String?         @map("stripe_subscription_id") @db.VarChar(255)
+  status              EnrollmentStatus @default(ACTIVE)
+  enrolledAt          DateTime         @default(now()) @map("enrolled_at")
+  expiresAt           DateTime?        @map("expires_at")
+
+  // Relations
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course              Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId], name: "idx_enrollments_unique")
+  @@index([userId, status], name: "idx_enrollments_user")
+  @@index([courseId], name: "idx_enrollments_course")
+  @@map("enrollments")
+}
+
+/// Progress tracking for lessons
+model LessonProgress {
+  id                String         @id @default(uuid()) @db.Uuid
+  userId            String         @map("user_id") @db.Uuid
+  lessonId          String         @map("lesson_id") @db.Uuid
+  courseId          String         @map("course_id") @db.Uuid
+  status            ProgressStatus @default(NOT_STARTED)
+  timeSpentSeconds  Int            @default(0) @map("time_spent_seconds")
+  completedAt       DateTime?      @map("completed_at")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson            Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  course            Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId], name: "idx_progress_unique")
+  @@index([userId, courseId], name: "idx_progress_user_course")
+  @@map("lesson_progress")
+}
+
+/// User XP and gamification
+model UserXP {
+  userId            String    @id @map("user_id") @db.Uuid
+  totalXp           Int       @default(0) @map("total_xp")
+  currentLevel      Int       @default(1) @map("current_level")
+  streakDays        Int       @default(0) @map("streak_days")
+  longestStreak     Int       @default(0) @map("longest_streak")
+  lastActivityDate  DateTime? @map("last_activity_date") @db.Date
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_xp")
+}
+
+/// AI Tutor conversation history
+model TutorConversation {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  lessonId        String    @map("lesson_id") @db.Uuid
+  courseId        String    @map("course_id") @db.Uuid
+  messages        Json      @default("[]") @db.JsonB
+  hintsGiven      Int       @default(0) @map("hints_given")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson          Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId], name: "idx_tutor_conv_unique")
+  @@index([userId], name: "idx_tutor_conv_user")
+  @@map("tutor_conversations")
+}
+
+/// RAG content embeddings for AI search
+model ContentEmbedding {
+  id                String    @id @default(uuid()) @db.Uuid
+  courseId          String    @map("course_id") @db.Uuid
+  lessonId          String?   @map("lesson_id") @db.Uuid
+  content           String    @db.Text
+  context           String?   @db.Text
+  chapterReference  String?   @map("chapter_reference") @db.VarChar(255)
+  // Note: For vector embeddings, use pgvector extension
+  // embedding      vector(1536)  -- Add via raw SQL after enabling pgvector
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  course            Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lesson            Lesson?   @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+
+  @@index([courseId], name: "idx_embeddings_course")
+  @@map("content_embeddings")
+}
+
+/// Voice options for AI tutor
+model VoiceOption {
+  id                String    @id @db.VarChar(50)
+  name              String    @db.VarChar(100)
+  description       String?   @db.Text
+  previewUrl        String?   @map("preview_url") @db.VarChar(500)
+  elevenlabsVoiceId String    @map("elevenlabs_voice_id") @db.VarChar(100)
+
+  @@map("voice_options")
+}
+
+// Course platform enums
+enum BookSource {
+  BLOCK_A
+  BLOCK_B
+  BLOCK_C
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
 }

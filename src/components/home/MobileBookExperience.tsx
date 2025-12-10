@@ -127,7 +127,10 @@ export function MobileBookExperience() {
 
           .book-glow {
             position: absolute;
-            inset: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            top: 0;
             background: radial-gradient(circle, rgba(196, 163, 90, 0.2) 0%, transparent 70%);
             z-index: -1;
             animation: glow 3s ease-in-out infinite;
