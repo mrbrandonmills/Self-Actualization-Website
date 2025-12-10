@@ -38,6 +38,9 @@ export default function LessonPage() {
   const [isTutorLoading, setIsTutorLoading] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState<boolean | null>(null);
   const [enrollmentLoading, setEnrollmentLoading] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
 
   const course = getCourseBySlug(courseSlug);
   const allLessons = getLessonsByCourse(courseSlug);
@@ -166,6 +169,57 @@ export default function LessonPage() {
     // await completeLesson(userId, lessonId, course.id);
   };
 
+  const playVoice = async (text: string) => {
+    if (!voiceEnabled || !text) return;
+
+    try {
+      setIsPlayingAudio(true);
+
+      // Stop any currently playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.src = '';
+      }
+
+      const response = await fetch('/api/voice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voiceId: 'sage' }),
+      });
+
+      if (!response.ok) throw new Error('Voice generation failed');
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+
+      audio.onended = () => {
+        setIsPlayingAudio(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      audio.onerror = () => {
+        setIsPlayingAudio(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      setCurrentAudio(audio);
+      await audio.play();
+    } catch (error) {
+      console.error('Voice playback error:', error);
+      setIsPlayingAudio(false);
+    }
+  };
+
+  const stopAudio = () => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.src = '';
+      setCurrentAudio(null);
+      setIsPlayingAudio(false);
+    }
+  };
+
   const sendTutorMessage = async () => {
     if (!tutorInput.trim() || isTutorLoading) return;
 
@@ -174,15 +228,77 @@ export default function LessonPage() {
     setTutorMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsTutorLoading(true);
 
-    // TODO: Call AI Tutor API with streaming
-    // For now, simulate a response
-    setTimeout(() => {
+    // Build messages array for API
+    const apiMessages = [
+      ...tutorMessages.map(m => ({ role: m.role, content: m.content })),
+      { role: 'user' as const, content: userMessage }
+    ];
+
+    try {
+      const response = await fetch('/api/tutor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: apiMessages,
+          lessonId,
+          courseSlug,
+          userId: session?.user?.id,
+          userName: session?.user?.name,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Tutor API error');
+      }
+
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let assistantContent = '';
+
+      // Add empty assistant message that we'll update
+      setTutorMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.type === 'text') {
+                assistantContent += data.content;
+                // Update the last message with accumulated content
+                setTutorMessages(prev => {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = { role: 'assistant', content: assistantContent };
+                  return updated;
+                });
+              } else if (data.type === 'done') {
+                // Play voice when complete
+                if (voiceEnabled && assistantContent) {
+                  playVoice(assistantContent);
+                }
+              }
+            } catch {
+              // Skip malformed JSON
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Tutor message error:', error);
       setTutorMessages(prev => [...prev, {
         role: 'assistant',
-        content: `That's a great question about "${lesson.title}". ${lesson.keyConcept}\n\nWould you like me to explore any aspect of this deeper?`
+        content: 'I apologize, but I encountered an error. Please try again.',
       }]);
+    } finally {
       setIsTutorLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -476,7 +592,23 @@ export default function LessonPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-lg hover:bg-white/5 transition-colors text-white/60">
+                  <button
+                    onClick={() => {
+                      if (isPlayingAudio) {
+                        stopAudio();
+                      } else {
+                        setVoiceEnabled(!voiceEnabled);
+                      }
+                    }}
+                    className={`p-2 rounded-lg transition-colors ${
+                      isPlayingAudio
+                        ? 'bg-purple-500/20 text-purple-400 animate-pulse'
+                        : voiceEnabled
+                          ? 'bg-purple-500/20 text-purple-400'
+                          : 'hover:bg-white/5 text-white/60'
+                    }`}
+                    title={isPlayingAudio ? 'Stop audio' : voiceEnabled ? 'Voice enabled' : 'Enable voice'}
+                  >
                     <Volume2 className="w-5 h-5" />
                   </button>
                   <button
