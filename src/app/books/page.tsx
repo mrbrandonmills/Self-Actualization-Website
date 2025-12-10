@@ -183,17 +183,51 @@ export default function BooksPage() {
         }
 
         .book-card {
-          background: rgba(212, 175, 55, 0.05);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          border-radius: 16px;
+          background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.08) 0%,
+            rgba(212, 175, 55, 0.03) 50%,
+            rgba(212, 175, 55, 0.08) 100%
+          );
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          border-radius: 24px;
           overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(212, 175, 55, 0.1) inset,
+            0 20px 60px rgba(212, 175, 55, 0.08);
+          position: relative;
+        }
+
+        .book-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            circle at 50% 0%,
+            rgba(212, 175, 55, 0.2) 0%,
+            transparent 50%
+          );
+          opacity: 0;
+          transition: opacity 0.6s ease;
+          pointer-events: none;
+          z-index: 1;
         }
 
         .book-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(212, 175, 55, 0.4);
-          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
+          transform: translateY(-12px) scale(1.02);
+          border-color: rgba(212, 175, 55, 0.5);
+          box-shadow:
+            0 24px 80px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(212, 175, 55, 0.2) inset,
+            0 40px 100px rgba(212, 175, 55, 0.2);
+        }
+
+        .book-card:hover::before {
+          opacity: 1;
         }
 
         .book-cover {

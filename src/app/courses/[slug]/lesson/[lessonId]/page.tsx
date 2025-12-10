@@ -41,6 +41,8 @@ export default function LessonPage() {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [xpAwarded, setXpAwarded] = useState<number | null>(null);
+  const [isCompletingLesson, setIsCompletingLesson] = useState(false);
 
   const course = getCourseBySlug(courseSlug);
   const allLessons = getLessonsByCourse(courseSlug);
@@ -164,9 +166,41 @@ export default function LessonPage() {
   const progress = ((currentIndex + 1) / allLessons.length) * 100;
 
   const handleComplete = async () => {
-    setIsCompleted(true);
-    // TODO: Call API to save progress and award XP
-    // await completeLesson(userId, lessonId, course.id);
+    if (isCompletingLesson || isCompleted) return;
+
+    setIsCompletingLesson(true);
+
+    try {
+      const response = await fetch('/api/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lessonId: lesson?.id,
+          courseId: course?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save progress');
+      }
+
+      const data = await response.json();
+
+      setIsCompleted(true);
+
+      // Show XP awarded if any
+      if (data.xpAwarded > 0) {
+        setXpAwarded(data.xpAwarded);
+        // Clear XP notification after 3 seconds
+        setTimeout(() => setXpAwarded(null), 3000);
+      }
+    } catch (error) {
+      console.error('Error completing lesson:', error);
+      // Still mark as completed locally even if API fails
+      setIsCompleted(true);
+    } finally {
+      setIsCompletingLesson(false);
+    }
   };
 
   const playVoice = async (text: string) => {

@@ -73,18 +73,56 @@ export default function WritingLabPage() {
 
       <style jsx>{`
         .lab-card {
-          background: rgba(212, 175, 55, 0.05);
-          border: 2px solid rgba(212, 175, 55, 0.3);
-          border-radius: 24px;
+          background: linear-gradient(
+            135deg,
+            rgba(212, 175, 55, 0.1) 0%,
+            rgba(212, 175, 55, 0.03) 50%,
+            rgba(212, 175, 55, 0.1) 100%
+          );
+          backdrop-filter: blur(24px) saturate(180%);
+          -webkit-backdrop-filter: blur(24px) saturate(180%);
+          border: 1.5px solid rgba(212, 175, 55, 0.3);
+          border-radius: 32px;
           padding: 80px 48px;
-          box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5),
-                      0 0 40px rgba(212, 175, 55, 0.1);
+          box-shadow:
+            0 20px 80px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(212, 175, 55, 0.15) inset,
+            0 40px 100px rgba(212, 175, 55, 0.15);
           max-width: 900px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
           align-items: center;
           text-align: center;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .lab-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            circle at 50% 0%,
+            rgba(212, 175, 55, 0.2) 0%,
+            transparent 50%
+          );
+          opacity: 0.5;
+          pointer-events: none;
+        }
+
+        .lab-card:hover {
+          transform: translateY(-8px) scale(1.01);
+          border-color: rgba(212, 175, 55, 0.5);
+          box-shadow:
+            0 30px 100px rgba(0, 0, 0, 0.6),
+            0 0 0 1px rgba(212, 175, 55, 0.25) inset,
+            0 60px 120px rgba(212, 175, 55, 0.25);
+        }
+
+        .lab-card:hover::before {
+          opacity: 1;
         }
 
         .lab-card h2 {
