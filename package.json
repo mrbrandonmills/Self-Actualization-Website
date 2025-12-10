@@ -12,6 +12,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:admins": "tsx prisma/seed-admins.ts",
     "db:seed:admin-enrollments": "tsx prisma/seed-admin-enrollments.ts",
+    "db:reset:admin-progress": "tsx prisma/reset-admin-progress.ts",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed"
