@@ -63,7 +63,7 @@ async function seedAdminEnrollments() {
       // Create enrollment
       await prisma.enrollment.upsert({
         where: {
-          userId_courseId: {
+          idx_enrollments_unique: {
             userId: user.id,
             courseId: course.id,
           },
@@ -90,7 +90,7 @@ async function seedAdminEnrollments() {
 
         await prisma.lessonProgress.upsert({
           where: {
-            userId_lessonId: {
+            idx_progress_unique: {
               userId: user.id,
               lessonId: lesson.id,
             },
