@@ -126,16 +126,33 @@ export function CourseCard({ course, index }: CourseCardProps) {
             transformStyle: 'preserve-3d',
           }}
         >
-          {/* Main card with 3D tilt */}
+          {/* Main card with 3D tilt - Floating Glass Effect */}
           <motion.div
             className="relative h-full min-h-[550px] rounded-2xl overflow-hidden"
             style={{
               rotateX,
               rotateY,
               transformStyle: 'preserve-3d',
-              background: '#F5EFE6',
+              background: 'rgba(245, 239, 230, 0.05)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: `
+                0 8px 32px 0 rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.18),
+                0 20px 60px -10px ${courseColor.glow}40,
+                0 40px 120px -20px ${courseColor.glow}20
+              `,
+              border: '1px solid rgba(255, 255, 255, 0.18)',
             }}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{
+              scale: 1.02,
+              boxShadow: `
+                0 8px 32px 0 rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.25),
+                0 25px 80px -10px ${courseColor.glow}60,
+                0 50px 150px -20px ${courseColor.glow}40
+              `,
+            }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Course thumbnail with unique rainbow gradient - HYPER-SATURATED */}
