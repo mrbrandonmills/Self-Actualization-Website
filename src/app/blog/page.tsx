@@ -17,6 +17,7 @@ export default function BlogPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="label text-accent mb-md text-center mx-auto"
+            style={{ color: '#d4af37' }}
           >
             The Laboratory Blog
           </motion.p>
@@ -26,10 +27,11 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="h1 mb-lg text-center mx-auto"
+            style={{ color: '#e8e4dc' }}
           >
             Updates from
             <br />
-            <span className="text-gold">The Laboratory</span>
+            <span style={{ color: '#d4af37', fontWeight: 700 }}>The Laboratory</span>
           </motion.h1>
 
           <motion.p
@@ -37,6 +39,7 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="lead max-w-2xl mx-auto mb-xl text-center"
+            style={{ color: '#c5d2b7' }}
           >
             Insights, experiments, and discoveries from our journey of self-actualization.
           </motion.p>
@@ -50,10 +53,10 @@ export default function BlogPage() {
         <div className="container-lg text-center mx-auto">
           <div className="coming-soon-card mx-auto">
             <div className="text-8xl mb-6 text-center">⚗️</div>
-            <h2 className="h2 mb-lg text-center mx-auto">
-              New Content <span className="text-gold">Brewing</span>
+            <h2 className="h2 mb-lg text-center mx-auto" style={{ color: '#e8e4dc' }}>
+              New Content <span style={{ color: '#d4af37', fontWeight: 700 }}>Brewing</span>
             </h2>
-            <p className="lead mb-xl max-w-2xl mx-auto text-center">
+            <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
               We're crafting thoughtful content about self-actualization, personal growth, and the science of transformation. Check back soon!
             </p>
             <div className="flex gap-md justify-center flex-wrap mx-auto">

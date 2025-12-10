@@ -19,6 +19,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="label text-accent mb-md mx-auto text-center"
+            style={{ color: '#d4af37' }}
           >
             The Alchemists
           </motion.p>
@@ -28,10 +29,11 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="h1 mb-lg text-center mx-auto"
+            style={{ color: '#e8e4dc' }}
           >
             About
             <br />
-            <span className="text-gold">The Laboratory of Life</span>
+            <span style={{ color: '#d4af37', fontWeight: 700 }}>The Laboratory of Life</span>
           </motion.h1>
 
           <motion.p
@@ -39,6 +41,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="lead max-w-2xl mx-auto mb-xl text-center"
+            style={{ color: '#c5d2b7' }}
           >
             Where science meets soul. Where research becomes reality. Where transformation is not just studied—it's lived.
           </motion.p>
@@ -57,13 +60,13 @@ export default function AboutPage() {
             className="liquid-glass-card mx-auto"
           >
             <div className="text-8xl mb-6 text-center">⚗️</div>
-            <h2 className="h2 mb-lg text-center mx-auto">
-              The <span className="text-gold">Laboratory</span> Philosophy
+            <h2 className="h2 mb-lg text-center mx-auto" style={{ color: '#e8e4dc' }}>
+              The <span style={{ color: '#d4af37', fontWeight: 700 }}>Laboratory</span> Philosophy
             </h2>
-            <p className="text-lg leading-relaxed mb-6 text-center">
+            <p className="text-lg leading-relaxed mb-6 text-center" style={{ color: '#c5d2b7' }}>
               Self-actualization isn't a destination—it's an ongoing experiment in conscious living. The Laboratory of Life was born from a simple conviction: that the most profound transformation happens when we treat our lives as living laboratories, where every experience becomes data, every challenge becomes research, and every insight becomes actionable wisdom.
             </p>
-            <p className="text-lg leading-relaxed text-center">
+            <p className="text-lg leading-relaxed text-center" style={{ color: '#c5d2b7' }}>
               We bridge the gap between academic rigor and practical application, between cutting-edge neuroscience and ancient wisdom, between theory and lived experience. This is where psychology meets philosophy, where quantum mechanics meets consciousness, where research papers transform into real-world results.
             </p>
           </motion.div>
@@ -73,8 +76,8 @@ export default function AboutPage() {
       {/* Team Section - Floating Liquid Glass Cards */}
       <section className="section px-4 sm:px-6 lg:px-8">
         <div className="container-lg mx-auto">
-          <h2 className="h2 mb-xl text-center mx-auto">
-            Meet the <span className="text-gold">Alchemists</span>
+          <h2 className="h2 mb-xl text-center mx-auto" style={{ color: '#e8e4dc' }}>
+            Meet the <span style={{ color: '#d4af37', fontWeight: 700 }}>Alchemists</span>
           </h2>
 
           <div className="team-grid">

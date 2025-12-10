@@ -19,6 +19,7 @@ export default function EssaysPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="label text-accent mb-md text-center mx-auto"
+            style={{ color: '#d4af37' }}
           >
             The Laboratory of Life
           </motion.p>
@@ -28,10 +29,11 @@ export default function EssaysPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="h1 mb-lg text-center mx-auto"
+            style={{ color: '#e8e4dc' }}
           >
             Essays on
             <br />
-            <span className="text-gold">Self-Actualization</span>
+            <span style={{ color: '#d4af37', fontWeight: 700 }}>Self-Actualization</span>
           </motion.h1>
 
           <motion.p
@@ -39,6 +41,7 @@ export default function EssaysPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="lead max-w-2xl mx-auto mb-xl text-center"
+            style={{ color: '#c5d2b7' }}
           >
             Academic research and thought leadership exploring consciousness, identity, relationships, and the science of transformation.
           </motion.p>

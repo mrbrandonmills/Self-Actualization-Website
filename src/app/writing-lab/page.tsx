@@ -17,6 +17,7 @@ export default function WritingLabPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="label text-accent mb-md text-center mx-auto"
+            style={{ color: '#d4af37' }}
           >
             The Writing Lab
           </motion.p>
@@ -26,10 +27,11 @@ export default function WritingLabPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="h1 mb-lg text-center mx-auto"
+            style={{ color: '#e8e4dc' }}
           >
             Your Life is the
             <br />
-            <span className="text-gold">Laboratory</span>
+            <span style={{ color: '#d4af37', fontWeight: 700 }}>Laboratory</span>
           </motion.h1>
 
           <motion.p
@@ -37,6 +39,7 @@ export default function WritingLabPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="lead max-w-2xl mx-auto mb-xl text-center"
+            style={{ color: '#c5d2b7' }}
           >
             Where the science of self-actualization meets the art of transformation.
           </motion.p>
@@ -50,10 +53,10 @@ export default function WritingLabPage() {
         <div className="container-lg mx-auto text-center">
           <div className="lab-card mx-auto">
             <div className="text-8xl mb-6 text-center">🔬</div>
-            <h2 className="h2 mb-lg text-center mx-auto">
-              Experiments in <span className="text-gold">Progress</span>
+            <h2 className="h2 mb-lg text-center mx-auto" style={{ color: '#e8e4dc' }}>
+              Experiments in <span style={{ color: '#d4af37', fontWeight: 700 }}>Progress</span>
             </h2>
-            <p className="lead mb-xl max-w-2xl mx-auto text-center">
+            <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
               The Writing Lab is where theory meets practice. We're preparing interactive experiences, writing exercises, and transformation tools. Coming soon!
             </p>
             <div className="flex gap-md justify-center flex-wrap mx-auto">
