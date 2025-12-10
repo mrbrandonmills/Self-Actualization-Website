@@ -67,20 +67,48 @@ const narrativeOverlays = [
   },
 ];
 
+// Detect mobile synchronously (runs once on module load, before any component renders)
+const getIsMobile = () => {
+  if (typeof window === 'undefined') return false;
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const isSmall = window.innerWidth < 768;
+  return hasTouch || isSmall;
+};
+
 export default function HomePage() {
+  // Initialize mobile state synchronously to prevent flash
+  const [isMobile] = useState(() => getIsMobile());
+
+  // MOBILE: Return early - skip ALL desktop code (no preloader, no Canvas, no loading screen)
+  if (isMobile) {
+    return (
+      <main className="min-h-screen">
+        <MobileBookExperience />
+
+        {/* Regular sections below */}
+        <div id="process" className="bg-[var(--bg-primary)]">
+          <ProcessFlowSection />
+        </div>
+        <FeaturedBooksSection />
+        <LatestEssaysSection />
+
+        {/* Footer */}
+        <footer className="bg-[var(--olive-dark)] text-[var(--bg-primary)] py-[var(--space-xl)] sm:py-[var(--space-2xl)]">
+          <div className="max-w-[var(--content-width-wide)] mx-auto px-4 sm:px-[var(--space-md)] text-center">
+            <p className="text-base sm:text-lg mb-[var(--space-sm)]">We Are All Made of Stardust</p>
+            <p className="text-sm sm:small opacity-70">© 2026 The Self Actualized Life. All rights reserved.</p>
+          </div>
+        </footer>
+      </main>
+    );
+  }
+
+  // DESKTOP ONLY: All code below only runs on desktop
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showContent, setShowContent] = useState(false);
   const [isCanvasReady, setIsCanvasReady] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile/touch devices - skip heavy 3D on mobile
-  useEffect(() => {
-    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isSmall = window.innerWidth < 768;
-    setIsMobile(hasTouch || isSmall);
-  }, []);
-
-  // Preload all book assets
+  // Preload all book assets - DESKTOP ONLY
   const { progress, isLoaded } = useBookPreloader();
 
   // Calculate combined progress: assets (0-85%) + Canvas init (85-100%)
@@ -145,27 +173,25 @@ export default function HomePage() {
   }, [isLoaded, isCanvasReady]); // Run when both assets and Canvas are ready
 
   // Hide loading screen when BOTH assets are loaded AND Canvas is ready
-  // Mobile: Show content immediately (no Canvas to wait for)
   useEffect(() => {
-    if (isMobile) {
-      setShowContent(true);
-    } else if (isLoaded && isCanvasReady) {
+    if (isLoaded && isCanvasReady) {
       setShowContent(true);
     }
-  }, [isLoaded, isCanvasReady, isMobile]);
+  }, [isLoaded, isCanvasReady]);
 
+  // DESKTOP RENDER (mobile already returned above)
   return (
     <main className="min-h-screen">
-      {/* Loading Screen - DESKTOP ONLY */}
-      {!isMobile && !showContent && (
+      {/* Loading Screen */}
+      {!showContent && (
         <LoadingScreen
           progress={Math.round(combinedProgress)}
           onComplete={() => {}}
         />
       )}
 
-      {/* Fixed 3D Canvas - DESKTOP ONLY (mobile skips to prevent crash) */}
-      {!isMobile && isLoaded && (
+      {/* Fixed 3D Canvas */}
+      {isLoaded && (
         <div className="fixed top-0 left-0 w-screen h-screen z-0">
           <Canvas
             camera={{ position: [0, 0, 50], fov: 75 }}
@@ -184,11 +210,8 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Mobile Book Experience - Swipeable page-flip book */}
-      {isMobile && <MobileBookExperience />}
-
-      {/* Scrollable narrative overlays - DESKTOP ONLY */}
-      {!isMobile && <div className="relative z-10">
+      {/* Scrollable narrative overlays */}
+      <div className="relative z-10">
         {/* Spacer sections for scroll journey */}
         {narrativeOverlays.map((overlay, index) => (
           <section
@@ -244,7 +267,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-      </div>}
+      </div>
 
       {/* Regular sections below journey */}
       <div id="process" className="bg-[var(--bg-primary)]">
