@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MobilePageFlipBook } from './MobilePageFlipBook';
 import Image from 'next/image';
 
@@ -26,16 +26,27 @@ export function MobileBookExperience() {
   const [narrativeOverlay, setNarrativeOverlay] = useState<{ title: string; text: string } | null>(null);
   const [showOverlay, setShowOverlay] = useState(false);
 
-  // Handle page flip narratives
-  const handlePageFlip = (page: number) => {
+  // Auto-hide overlay with proper cleanup (fixes memory leak)
+  useEffect(() => {
+    if (showOverlay) {
+      const timer = setTimeout(() => setShowOverlay(false), 2000);
+      return () => clearTimeout(timer); // Cleanup on unmount
+    }
+  }, [showOverlay]);
+
+  // Handle page flip narratives - memoized to prevent re-renders
+  const handlePageFlip = useCallback((page: number) => {
     const narrative = narrativePages[page];
-    if (narrative && !showOverlay) {
+    if (narrative) {
       setNarrativeOverlay(narrative);
       setShowOverlay(true);
-      // Auto-hide after 2 seconds
-      setTimeout(() => setShowOverlay(false), 2000);
     }
-  };
+  }, []);
+
+  // Memoized complete handler
+  const handleComplete = useCallback(() => {
+    setPhase('outro');
+  }, []);
 
   // Intro Screen
   if (phase === 'intro') {
@@ -200,7 +211,7 @@ export function MobileBookExperience() {
       <div className="mobile-book-phase">
         <MobilePageFlipBook
           onPageFlip={handlePageFlip}
-          onComplete={() => setPhase('outro')}
+          onComplete={handleComplete}
         />
 
         {/* Skip Button */}

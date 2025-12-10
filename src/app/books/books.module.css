@@ -1,0 +1,315 @@
+/* Hero Section */
+.heroSection {
+  padding-top: 128px;
+  padding-bottom: 64px;
+}
+
+.heroLabel,
+.heroTitle,
+.heroDescription {
+  text-align: center;
+}
+
+/* Books Grid */
+.booksGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  margin-bottom: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* FLOATING LIQUID GLASS EFFECT - Same as Courses */
+.bookCard {
+  background: rgba(245, 239, 230, 0.12);
+  backdrop-filter: blur(60px) saturate(200%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%);
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow:
+    0 30px 80px -15px rgba(0, 0, 0, 0.7),
+    0 0 0 3px rgba(212, 175, 55, 0.25),
+    inset 0 2px 0 0 rgba(255, 255, 255, 0.2),
+    0 60px 140px -25px rgba(212, 175, 55, 0.5),
+    0 0 200px rgba(212, 175, 55, 0.25);
+}
+
+.bookCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bookCard:hover {
+  transform: translateY(-16px) scale(1.02);
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(245, 239, 230, 0.18);
+  box-shadow:
+    0 40px 100px -15px rgba(0, 0, 0, 0.8),
+    0 0 0 4px rgba(212, 175, 55, 0.4),
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.3),
+    0 80px 180px -25px rgba(212, 175, 55, 0.7),
+    0 0 250px rgba(212, 175, 55, 0.4);
+}
+
+.bookCard:hover::before {
+  opacity: 1;
+}
+
+.bookCover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(212,175,55,0.1) 100%);
+  z-index: 1;
+}
+
+.bookCover :global(img) {
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bookCard:hover .bookCover :global(img) {
+  transform: scale(1.05);
+}
+
+.bookInfo {
+  padding: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.formatButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formatBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  color: var(--color-gold);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.formatBtn:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--color-gold);
+  transform: translateX(4px);
+}
+
+.formatType {
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.formatPrice {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
+.lineClamp3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tablet Breakpoint */
+@media (max-width: 1024px) {
+  .booksGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 768px) {
+  /* Hero Section Mobile */
+  .heroSection {
+    padding-top: 120px;
+    padding-bottom: 48px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .heroLabel {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .heroTitle {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .heroDescription {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 100%;
+  }
+
+  /* Books Grid Mobile */
+  .booksGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0 auto;
+  }
+
+  /* Book Card - Center Everything + Mobile Performance */
+  .bookCard {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 100%;
+    /* Reduce intensive effects on mobile */
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    background: rgba(245, 239, 230, 0.15);
+    /* Simplified shadows for mobile performance */
+    box-shadow:
+      0 20px 40px -10px rgba(0, 0, 0, 0.5),
+      0 0 0 2px rgba(212, 175, 55, 0.3),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .bookCard:hover {
+    transform: translateY(-4px);
+    /* Lighter hover effect on mobile */
+    box-shadow:
+      0 25px 50px -10px rgba(0, 0, 0, 0.6),
+      0 0 0 2px rgba(212, 175, 55, 0.4),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* Disable ::before overlay on mobile for performance */
+  .bookCard::before {
+    display: none;
+  }
+
+  /* Book Info - Better Mobile Padding */
+  .bookInfo {
+    padding: 24px 20px;
+  }
+
+  /* Center All Text Content */
+  .bookInfo h2 {
+    text-align: center;
+  }
+
+  .bookInfo p {
+    text-align: center;
+  }
+
+  /* Format Buttons - Center Alignment */
+  .formatButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .formatBtn {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* Disable transform on format buttons for mobile */
+  .formatBtn:hover {
+    transform: none;
+  }
+
+  /* Disable book cover zoom on mobile */
+  .bookCard:hover .bookCover :global(img) {
+    transform: none;
+  }
+
+  /* CTA Section Mobile */
+  .gradientDark :global(.container-lg) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .gradientDark h2 {
+    text-align: center;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .gradientDark p {
+    text-align: center;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Extra Small Mobile Breakpoint */
+@media (max-width: 480px) {
+  /* Hero Section Extra Small */
+  .heroSection {
+    padding-top: 100px;
+    padding-bottom: 32px;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  /* Books Grid Extra Small */
+  .booksGrid {
+    gap: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .bookCard {
+    border-radius: 12px;
+  }
+
+  .bookInfo {
+    padding: 20px 16px;
+  }
+
+  .formatBtn {
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+
+  .formatType {
+    font-size: 14px;
+  }
+
+  .formatPrice {
+    font-size: 16px;
+  }
+}

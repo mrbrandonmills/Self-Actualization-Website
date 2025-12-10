@@ -1,0 +1,31 @@
+const { chromium } = require('playwright');
+
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({
+    viewport: { width: 390, height: 844 } // iPhone size
+  });
+
+  console.log('📱 Taking mobile screenshot of home page...\n');
+
+  try {
+    await page.goto('https://selfactualize.life', {
+      waitUntil: 'networkidle',
+      timeout: 60000
+    });
+
+    // Wait for rendering
+    await page.waitForTimeout(3000);
+
+    // Take full page screenshot
+    await page.screenshot({ path: '/tmp/screenshot-home-mobile.png', fullPage: true });
+    console.log('✓ Mobile screenshot saved to /tmp/screenshot-home-mobile.png\n');
+
+    console.log('✅ Done!');
+
+  } catch (error) {
+    console.error('❌ ERROR:', error.message);
+  } finally {
+    await browser.close();
+  }
+})();

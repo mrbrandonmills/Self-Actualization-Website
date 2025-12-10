@@ -6,7 +6,6 @@
 
 'use client';
 
-import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { KasaneBookJourney } from '@/components/3d/KasaneBookJourney';
 import {
@@ -297,10 +296,15 @@ export default function HomePage() {
   }
 
   // Now safe to check - we're on the client
+  // Improved detection: handles touch laptops, older browsers, user agent fallback
   const isMobile = typeof window !== 'undefined' && (
+    // Check for small screen first (most reliable)
+    window.innerWidth < 768 ||
+    // Touch capability check (with safety)
     'ontouchstart' in window ||
-    navigator.maxTouchPoints > 0 ||
-    window.innerWidth < 768
+    (typeof navigator !== 'undefined' && navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
+    // User agent fallback for edge cases
+    (typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
   );
 
   // Render appropriate version
