@@ -11,6 +11,24 @@ import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { getFeaturedBooks, createAffiliateLink } from '@/data/books';
 import Image from 'next/image';
 
+// Analytics tracking helper
+const trackCardClick = (cardType: string, cardData: any) => {
+  // Log to console for now - can be upgraded to Google Analytics
+  console.log('📊 Card Click:', {
+    type: cardType,
+    data: cardData,
+    timestamp: new Date().toISOString()
+  });
+
+  // Future: Add Google Analytics event
+  // if (typeof window !== 'undefined' && (window as any).gtag) {
+  //   (window as any).gtag('event', 'card_click', {
+  //     card_type: cardType,
+  //     card_label: cardData.handle || cardData.name || cardData.title
+  //   });
+  // }
+};
+
 interface ContentCard {
   type: 'book' | 'quote' | 'stat' | 'social' | 'testimonial' | 'author'
   data: any
@@ -153,6 +171,59 @@ export function FeaturedBooksSection() {
   const triggerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const animationsRef = useRef<any>(null); // Separate ref for animations
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+
+  // Add click-and-drag functionality
+  useLayoutEffect(() => {
+    if (!sliderRef.current) return;
+
+    const slider = sliderRef.current;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      isDraggingRef.current = true;
+      startXRef.current = e.pageX - slider.offsetLeft;
+      scrollLeftRef.current = slider.scrollLeft;
+      slider.style.cursor = 'grabbing';
+      slider.style.userSelect = 'none';
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startXRef.current) * 2;
+      slider.scrollLeft = scrollLeftRef.current - walk;
+    };
+
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+      slider.style.cursor = 'grab';
+      slider.style.userSelect = '';
+    };
+
+    const handleMouseLeave = () => {
+      isDraggingRef.current = false;
+      slider.style.cursor = 'grab';
+      slider.style.userSelect = '';
+    };
+
+    slider.addEventListener('mousedown', handleMouseDown);
+    slider.addEventListener('mousemove', handleMouseMove);
+    slider.addEventListener('mouseup', handleMouseUp);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+
+    // Set initial cursor
+    slider.style.cursor = 'grab';
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown);
+      slider.removeEventListener('mousemove', handleMouseMove);
+      slider.removeEventListener('mouseup', handleMouseUp);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (!triggerRef.current || !sliderRef.current) return;
@@ -236,6 +307,7 @@ export function FeaturedBooksSection() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="quick-buy-btn"
+                onClick={() => trackCardClick('book', { title: item.data.subtitle, author: item.data.author })}
               >
                 View on Amazon →
               </a>
@@ -281,6 +353,7 @@ export function FeaturedBooksSection() {
             target="_blank"
             rel="noopener noreferrer"
             className={`content-card social-card clickable-card ${isMedium ? 'medium-card' : ''} ${isPinterest ? 'pinterest-card' : ''} ${isTwitter ? 'twitter-card' : ''}`}
+            onClick={() => trackCardClick('social', { platform: item.data.platform, handle: item.data.handle })}
           >
             {/* Platform-specific background */}
             {isMedium ? (
@@ -361,6 +434,7 @@ export function FeaturedBooksSection() {
                 ? `url(${item.data.profilePhoto})`
                 : 'none'
             }}
+            onClick={() => trackCardClick('author', { name: item.data.name, role: item.data.role })}
           >
             {/* Dark overlay for text readability */}
             <div className="author-photo-overlay" />
