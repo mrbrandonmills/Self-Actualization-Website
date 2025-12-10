@@ -1,11 +1,11 @@
 /**
  * Stripe Webhook Handler
- * Handles payment events from Stripe and creates enrollments in Supabase
+ * Handles payment events from Stripe and creates enrollments in the database
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe-server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
 
 // All course slugs for bundle enrollment
@@ -84,70 +84,60 @@ export async function POST(request: NextRequest) {
 
       if (userId) {
         try {
-          const supabaseAdmin = getSupabaseAdmin();
-
           if (isBundle) {
             // Enroll in all courses
-            const { data: courses, error: coursesError } = await supabaseAdmin
-              .from('courses')
-              .select('id, slug')
-              .in('slug', ALL_COURSE_SLUGS);
+            const courses = await prisma.course.findMany({
+              where: { slug: { in: ALL_COURSE_SLUGS } },
+              select: { id: true, slug: true },
+            });
 
-            if (coursesError) {
-              console.error('Error fetching courses for bundle:', coursesError);
-            } else if (courses) {
-              for (const course of courses) {
-                const { error: enrollError } = await supabaseAdmin
-                  .from('enrollments')
-                  .upsert({
-                    user_id: userId,
-                    course_id: course.id,
-                    stripe_session_id: session.id,
-                    status: 'active',
-                  }, {
-                    onConflict: 'user_id,course_id',
-                  });
-
-                if (enrollError) {
-                  console.error(`Error enrolling in course ${course.slug}:`, enrollError);
-                } else {
-                  console.log(`Enrolled user ${userId} in course: ${course.slug}`);
-                }
-              }
+            for (const course of courses) {
+              await prisma.enrollment.upsert({
+                where: {
+                  userId_courseId: { userId, courseId: course.id },
+                },
+                create: {
+                  userId,
+                  courseId: course.id,
+                  stripeSessionId: session.id,
+                  status: 'ACTIVE',
+                },
+                update: {
+                  stripeSessionId: session.id,
+                  status: 'ACTIVE',
+                },
+              });
+              console.log(`Enrolled user ${userId} in course: ${course.slug}`);
             }
           } else if (courseSlug) {
             // Enroll in single course
-            const { data: course, error: courseError } = await supabaseAdmin
-              .from('courses')
-              .select('id')
-              .eq('slug', courseSlug)
-              .single();
+            const course = await prisma.course.findUnique({
+              where: { slug: courseSlug },
+              select: { id: true },
+            });
 
-            if (courseError) {
-              console.error('Error fetching course:', courseError);
-            } else if (course) {
-              const { error: enrollError } = await supabaseAdmin
-                .from('enrollments')
-                .upsert({
-                  user_id: userId,
-                  course_id: course.id,
-                  stripe_session_id: session.id,
-                  status: 'active',
-                }, {
-                  onConflict: 'user_id,course_id',
-                });
-
-              if (enrollError) {
-                console.error('Error creating enrollment:', enrollError);
-              } else {
-                console.log(`Enrolled user ${userId} in course: ${courseSlug}`);
-              }
+            if (course) {
+              await prisma.enrollment.upsert({
+                where: {
+                  userId_courseId: { userId, courseId: course.id },
+                },
+                create: {
+                  userId,
+                  courseId: course.id,
+                  stripeSessionId: session.id,
+                  status: 'ACTIVE',
+                },
+                update: {
+                  stripeSessionId: session.id,
+                  status: 'ACTIVE',
+                },
+              });
+              console.log(`Enrolled user ${userId} in course: ${courseSlug}`);
             }
           }
         } catch (error) {
-          console.error('Supabase enrollment error:', error);
+          console.error('Enrollment error:', error);
           // Don't fail the webhook - Stripe payment already succeeded
-          // Log for manual resolution if needed
         }
       } else {
         console.warn('No userId in checkout session metadata - enrollment not created');

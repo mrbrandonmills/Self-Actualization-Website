@@ -33,6 +33,18 @@
   --ui-hover: rgba(196, 163, 90, 0.1);         /* Gold hover states */
   --ui-glass: rgba(242, 237, 230, 0.9);        /* Frosted glass panels */
 
+  /* Bartosz Color System - Aliases for BartoszNavigation compatibility */
+  --color-black-green: #05201f;
+  --color-dark-green: #0a2f2e;
+  --color-deep-forest: #041e1d;
+  --color-text-primary: #c5d2b7;
+  --color-text-secondary: #a3b18a;
+  --color-accent-gold: #c9a050;
+  --color-accent-sage: #6b8e4e;
+  --color-ui-border: rgba(197, 210, 183, 0.1);
+  --color-ui-hover: rgba(197, 210, 183, 0.05);
+  --color-ui-glass: rgba(10, 47, 46, 0.8);
+
 
   /* ========================================
      TYPOGRAPHY - Award-Winning Fluid System

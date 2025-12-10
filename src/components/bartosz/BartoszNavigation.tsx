@@ -351,6 +351,41 @@ export function BartoszNavigation() {
         body.menu-open {
           overflow: hidden;
         }
+
+        /* Mobile Navigation - Liquid Glass Effect */
+        @media (max-width: 767px) {
+          .bartosz-nav {
+            /* Liquid Glass / Frosted Glass Effect */
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow:
+              0 4px 30px rgba(0, 0, 0, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4);
+          }
+
+          .nav-logo {
+            color: #3d4a3a !important; /* Olive dark - visible on light backgrounds */
+          }
+
+          .logo-text {
+            color: #3d4a3a !important;
+          }
+
+          .logo-accent {
+            color: #c4a35a !important; /* Gold accent */
+          }
+
+          .hamburger span {
+            background: #3d4a3a !important; /* Visible hamburger lines */
+          }
+
+          /* Active/open state - darker glass */
+          .bartosz-nav.menu-open {
+            background: rgba(255, 255, 255, 0.95) !important;
+          }
+        }
       `}</style>
     </>
   )

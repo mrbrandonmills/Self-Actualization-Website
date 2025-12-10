@@ -93,13 +93,17 @@ interface FlipBookApi {
   };
 }
 
+// Preview mode: Show only first 12 pages (cover, copyright, prefaces, TOC, authors, intro start)
+const PREVIEW_PAGES = 12;
+
 export function MobilePageFlipBook({ onPageFlip, onComplete }: MobilePageFlipBookProps) {
   const bookRef = useRef<FlipBookApi | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages] = useState(87);
+  const [totalPages] = useState(PREVIEW_PAGES); // Only show preview pages
   const [dimensions, setDimensions] = useState({ width: 320, height: 450 });
   const [isReady, setIsReady] = useState(false);
   const [loadedCount, setLoadedCount] = useState(0);
+  const [showCTA, setShowCTA] = useState(false); // Show "Get Full Book" CTA
 
   // Pages to load: current page ± buffer for smooth flipping
   const pagesToLoad = useMemo(() => {
@@ -169,12 +173,12 @@ export function MobilePageFlipBook({ onPageFlip, onComplete }: MobilePageFlipBoo
       setCurrentPage(newPage);
       onPageFlip?.(newPage);
 
-      // Call onComplete when reaching last page
+      // Show CTA when reaching end of preview
       if (newPage >= totalPages - 2) {
-        onComplete?.();
+        setShowCTA(true);
       }
     },
-    [onPageFlip, onComplete, totalPages]
+    [onPageFlip, totalPages]
   );
 
   const nextPage = useCallback(() => {
@@ -318,6 +322,41 @@ export function MobilePageFlipBook({ onPageFlip, onComplete }: MobilePageFlipBoo
           style={{ width: `${((currentPage + 1) / totalPages) * 100}%` }}
         />
       </div>
+
+      {/* Preview Label */}
+      <div className="preview-badge">
+        FREE PREVIEW • {totalPages} of 87 pages
+      </div>
+
+      {/* CTA Overlay - appears at end of preview */}
+      {showCTA && (
+        <div className="cta-overlay">
+          <div className="cta-content">
+            <div className="cta-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                <path d="M12 6v8" />
+                <path d="M8 10l4 4 4-4" />
+              </svg>
+            </div>
+            <h3 className="cta-title">Enjoying the preview?</h3>
+            <p className="cta-subtitle">Get all 87 pages of transformation wisdom</p>
+            <a href="/books" className="cta-button">
+              Get the Full Book
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </a>
+            <button
+              className="cta-dismiss"
+              onClick={() => setShowCTA(false)}
+            >
+              Continue browsing preview
+            </button>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         .mobile-book-container {
@@ -510,6 +549,105 @@ export function MobilePageFlipBook({ onPageFlip, onComplete }: MobilePageFlipBoo
           height: 100%;
           background: linear-gradient(90deg, var(--accent-warm, #c4a35a) 0%, #d4a574 100%);
           transition: width 0.4s ease;
+        }
+
+        .preview-badge {
+          margin-top: 1rem;
+          padding: 0.4rem 1rem;
+          background: rgba(196, 163, 90, 0.15);
+          border: 1px solid rgba(196, 163, 90, 0.3);
+          border-radius: 20px;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.05em;
+          color: var(--accent-warm, #c4a35a);
+          text-transform: uppercase;
+        }
+
+        .cta-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.85);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 100;
+          padding: 2rem;
+          animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .cta-content {
+          background: linear-gradient(180deg, #f5f3ef 0%, #e8e6e1 100%);
+          border-radius: 16px;
+          padding: 2.5rem 2rem;
+          text-align: center;
+          max-width: 340px;
+          width: 100%;
+          animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cta-icon {
+          color: var(--accent-warm, #c4a35a);
+          margin-bottom: 1rem;
+        }
+
+        .cta-title {
+          font-family: 'Georgia', serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--olive-dark, #3d4a3a);
+          margin-bottom: 0.5rem;
+        }
+
+        .cta-subtitle {
+          color: #666;
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: linear-gradient(135deg, #c4a35a 0%, #d4a574 100%);
+          color: white;
+          padding: 0.9rem 1.8rem;
+          border-radius: 30px;
+          font-weight: 600;
+          font-size: 1rem;
+          text-decoration: none;
+          box-shadow: 0 4px 15px rgba(196, 163, 90, 0.4);
+          transition: all 0.2s ease;
+        }
+
+        .cta-button:active {
+          transform: scale(0.98);
+        }
+
+        .cta-dismiss {
+          display: block;
+          width: 100%;
+          margin-top: 1rem;
+          padding: 0.75rem;
+          background: transparent;
+          border: none;
+          color: #888;
+          font-size: 0.85rem;
+          cursor: pointer;
+        }
+
+        .cta-dismiss:active {
+          color: #666;
         }
       `}</style>
     </div>

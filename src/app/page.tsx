@@ -285,24 +285,31 @@ export default function HomePage() {
   // hasMounted ensures we only check mobile AFTER client hydration
   // This prevents SSR mismatch (server has no window, returns false)
   const [hasMounted, setHasMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
+    // Detect mobile on client
+    const width = window.innerWidth;
+    const hasTouch = 'ontouchstart' in window;
+    const touchPoints = navigator.maxTouchPoints || 0;
+    const uaMatch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    setIsMobile(width < 768 || hasTouch || touchPoints > 0 || uaMatch);
     setHasMounted(true);
   }, []);
 
-  // Show nothing during SSR and initial hydration - prevents mismatch
-  if (!hasMounted) {
-    return null;
+  // During SSR and initial hydration, show a loading state
+  // This prevents blank page if JS is slow to load
+  if (!hasMounted || isMobile === null) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-[#f5f3ef]">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 border-4 border-[#c4a35a] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[#3d4a3a] font-serif text-lg">Loading experience...</p>
+        </div>
+      </main>
+    );
   }
-
-  // Now safe to check - we're on the client
-  // Detection: small screen OR touch device OR mobile user agent
-  const width = window.innerWidth;
-  const hasTouch = 'ontouchstart' in window;
-  const touchPoints = navigator.maxTouchPoints || 0;
-  const uaMatch = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-  const isMobile = width < 768 || hasTouch || touchPoints > 0 || uaMatch;
 
   // Render appropriate version
   return isMobile ? <MobileHomePage /> : <DesktopHomePage />;

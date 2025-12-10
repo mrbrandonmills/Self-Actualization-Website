@@ -74,7 +74,7 @@ export function MobileBookExperience() {
 
           {/* Subtitle */}
           <p className="intro-subtitle">
-            87 pages of self-actualization wisdom. Swipe through your transformation.
+            Preview the first 12 pages free. Swipe through your transformation.
           </p>
 
           {/* CTA Buttons */}
@@ -102,7 +102,7 @@ export function MobileBookExperience() {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 2rem 1.5rem;
+            padding: 5rem 1.5rem 2rem; /* 5rem top for fixed nav bar */
             background: linear-gradient(180deg, #f5f3ef 0%, #e8e6e1 50%, #f0eee9 100%);
           }
 

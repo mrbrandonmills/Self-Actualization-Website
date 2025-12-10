@@ -1,72 +1,61 @@
 /**
  * Progress API
- * Handles lesson completion and progress tracking
+ * Handles lesson completion and progress tracking using Prisma
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
 
-// GET /api/progress?userId=xxx&courseId=xxx
+// GET /api/progress?courseId=xxx
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const userId = searchParams.get('userId');
-  const courseId = searchParams.get('courseId');
+  const session = await auth();
 
-  if (!userId) {
-    return NextResponse.json({ error: 'userId is required' }, { status: 400 });
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const userId = session.user.id;
+  const searchParams = request.nextUrl.searchParams;
+  const courseId = searchParams.get('courseId');
+
   try {
-    const supabase = getSupabaseAdmin();
-
-    // Base query for progress
-    let query = supabase
-      .from('progress')
-      .select(`
-        *,
-        lessons (
-          id,
-          title,
-          slug,
-          order_index
-        )
-      `)
-      .eq('user_id', userId);
-
-    // Filter by course if specified
+    // Get progress records
+    const whereClause: { userId: string; courseId?: string } = { userId };
     if (courseId) {
-      query = query.eq('course_id', courseId);
+      whereClause.courseId = courseId;
     }
 
-    const { data: progress, error } = await query;
-
-    if (error) {
-      console.error('Error fetching progress:', error);
-      return NextResponse.json({ error: 'Failed to fetch progress' }, { status: 500 });
-    }
+    const progress = await prisma.lessonProgress.findMany({
+      where: whereClause,
+      include: {
+        lesson: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            orderIndex: true,
+          },
+        },
+      },
+    });
 
     // Get user XP
-    const { data: xpData, error: xpError } = await supabase
-      .from('user_xp')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
-
-    if (xpError && xpError.code !== 'PGRST116') {
-      console.error('Error fetching XP:', xpError);
-    }
+    const xpData = await prisma.userXP.findUnique({
+      where: { userId },
+    });
 
     // Calculate summary
-    const completedLessons = progress?.filter(p => p.status === 'completed').length ?? 0;
-    const totalTimeSpent = progress?.reduce((acc, p) => acc + (p.time_spent_seconds ?? 0), 0) ?? 0;
+    const completedLessons = progress.filter(p => p.status === 'COMPLETED').length;
+    const totalTimeSpent = progress.reduce((acc, p) => acc + p.timeSpentSeconds, 0);
 
     return NextResponse.json({
-      progress: progress ?? [],
-      xp: xpData ?? { total_xp: 0, current_level: 1, streak_days: 0 },
+      progress,
+      xp: xpData ?? { totalXp: 0, currentLevel: 1, streakDays: 0 },
       summary: {
         completedLessons,
         totalTimeSpentMinutes: Math.round(totalTimeSpent / 60),
-      }
+      },
     });
   } catch (error) {
     console.error('Progress API error:', error);
@@ -76,82 +65,128 @@ export async function GET(request: NextRequest) {
 
 // POST /api/progress - Mark lesson as completed
 export async function POST(request: NextRequest) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const body = await request.json();
-    const { userId, lessonId, courseId, timeSpentSeconds = 0 } = body;
+    const { lessonId, courseId, timeSpentSeconds = 0 } = body;
 
-    if (!userId || !lessonId || !courseId) {
+    if (!lessonId || !courseId) {
       return NextResponse.json(
-        { error: 'userId, lessonId, and courseId are required' },
+        { error: 'lessonId and courseId are required' },
         { status: 400 }
       );
     }
 
-    const supabase = getSupabaseAdmin();
-
     // Check if already completed
-    const { data: existing } = await supabase
-      .from('progress')
-      .select('status')
-      .eq('user_id', userId)
-      .eq('lesson_id', lessonId)
-      .single();
+    const existing = await prisma.lessonProgress.findUnique({
+      where: {
+        userId_lessonId: { userId, lessonId },
+      },
+    });
 
-    const wasAlreadyCompleted = existing?.status === 'completed';
+    const wasAlreadyCompleted = existing?.status === 'COMPLETED';
 
     // Upsert progress
-    const { data: progressData, error: progressError } = await supabase
-      .from('progress')
-      .upsert({
-        user_id: userId,
-        lesson_id: lessonId,
-        course_id: courseId,
-        status: 'completed',
-        time_spent_seconds: timeSpentSeconds,
-        completed_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }, {
-        onConflict: 'user_id,lesson_id',
-      })
-      .select()
-      .single();
-
-    if (progressError) {
-      console.error('Error updating progress:', progressError);
-      return NextResponse.json({ error: 'Failed to update progress' }, { status: 500 });
-    }
+    const progressData = await prisma.lessonProgress.upsert({
+      where: {
+        userId_lessonId: { userId, lessonId },
+      },
+      create: {
+        userId,
+        lessonId,
+        courseId,
+        status: 'COMPLETED',
+        timeSpentSeconds,
+        completedAt: new Date(),
+      },
+      update: {
+        status: 'COMPLETED',
+        timeSpentSeconds,
+        completedAt: new Date(),
+      },
+    });
 
     // Award XP only if not already completed
     let xpAwarded = 0;
     if (!wasAlreadyCompleted) {
-      // Default XP for lesson completion
       xpAwarded = 50;
 
-      // Award XP using the database function
-      const { error: xpError } = await supabase
-        .rpc('add_xp', {
-          p_user_id: userId,
-          p_xp_amount: xpAwarded,
-        });
+      // Update user XP
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      if (xpError) {
-        console.error('Error awarding XP:', xpError);
-        // Don't fail the request, just log the error
+      const userXp = await prisma.userXP.findUnique({
+        where: { userId },
+      });
+
+      if (userXp) {
+        const lastActivity = userXp.lastActivityDate
+          ? new Date(userXp.lastActivityDate)
+          : null;
+
+        let newStreakDays = userXp.streakDays;
+
+        if (lastActivity) {
+          const yesterday = new Date(today);
+          yesterday.setDate(yesterday.getDate() - 1);
+
+          if (lastActivity.getTime() === yesterday.getTime()) {
+            // Consecutive day
+            newStreakDays = userXp.streakDays + 1;
+          } else if (lastActivity.getTime() < yesterday.getTime()) {
+            // Streak broken
+            newStreakDays = 1;
+          }
+          // Same day = keep streak
+        } else {
+          newStreakDays = 1;
+        }
+
+        const newTotalXp = userXp.totalXp + xpAwarded;
+        const newLevel = Math.floor(newTotalXp / 1000) + 1;
+
+        await prisma.userXP.update({
+          where: { userId },
+          data: {
+            totalXp: newTotalXp,
+            currentLevel: newLevel,
+            streakDays: newStreakDays,
+            longestStreak: Math.max(userXp.longestStreak, newStreakDays),
+            lastActivityDate: today,
+          },
+        });
+      } else {
+        // Create XP record if it doesn't exist
+        await prisma.userXP.create({
+          data: {
+            userId,
+            totalXp: xpAwarded,
+            currentLevel: 1,
+            streakDays: 1,
+            longestStreak: 1,
+            lastActivityDate: today,
+          },
+        });
       }
     }
 
     // Get updated XP
-    const { data: xpData } = await supabase
-      .from('user_xp')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+    const xpData = await prisma.userXP.findUnique({
+      where: { userId },
+    });
 
     return NextResponse.json({
       success: true,
       progress: progressData,
       xpAwarded,
-      xp: xpData ?? { total_xp: 0, current_level: 1, streak_days: 0 },
+      xp: xpData ?? { totalXp: 0, currentLevel: 1, streakDays: 0 },
     });
   } catch (error) {
     console.error('Progress API error:', error);
@@ -161,38 +196,32 @@ export async function POST(request: NextRequest) {
 
 // PATCH /api/progress - Update progress (e.g., time spent)
 export async function PATCH(request: NextRequest) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const userId = session.user.id;
+
   try {
     const body = await request.json();
-    const { userId, lessonId, status, timeSpentSeconds } = body;
+    const { lessonId, status, timeSpentSeconds } = body;
 
-    if (!userId || !lessonId) {
-      return NextResponse.json(
-        { error: 'userId and lessonId are required' },
-        { status: 400 }
-      );
+    if (!lessonId) {
+      return NextResponse.json({ error: 'lessonId is required' }, { status: 400 });
     }
 
-    const supabase = getSupabaseAdmin();
-
-    const updateData: Record<string, unknown> = {
-      updated_at: new Date().toISOString(),
-    };
-
+    const updateData: Record<string, unknown> = {};
     if (status) updateData.status = status;
-    if (timeSpentSeconds !== undefined) updateData.time_spent_seconds = timeSpentSeconds;
+    if (timeSpentSeconds !== undefined) updateData.timeSpentSeconds = timeSpentSeconds;
 
-    const { data, error } = await supabase
-      .from('progress')
-      .update(updateData)
-      .eq('user_id', userId)
-      .eq('lesson_id', lessonId)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating progress:', error);
-      return NextResponse.json({ error: 'Failed to update progress' }, { status: 500 });
-    }
+    const data = await prisma.lessonProgress.update({
+      where: {
+        userId_lessonId: { userId, lessonId },
+      },
+      data: updateData,
+    });
 
     return NextResponse.json({ success: true, progress: data });
   } catch (error) {
