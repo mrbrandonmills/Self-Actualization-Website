@@ -66,6 +66,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Hide main site nav/footer in learning environment
+  useEffect(() => {
+    document.body.classList.add('learning-mode');
+    return () => {
+      document.body.classList.remove('learning-mode');
+    };
+  }, []);
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login?callbackUrl=/dashboard');

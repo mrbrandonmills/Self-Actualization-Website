@@ -70,6 +70,15 @@
 }
 
 @layer utilities {
+  /* Learning Mode - Hide main site nav/footer for courses/dashboard */
+  body.learning-mode .bartosz-nav,
+  body.learning-mode nav.bartosz-nav,
+  body.learning-mode footer,
+  body.learning-mode [class*="BartoszFooter"],
+  body.learning-mode [class*="bartosz-footer"] {
+    display: none !important;
+  }
+
   /* Backdrop blur utilities matching design system */
   .blur-bartosz {
     backdrop-filter: blur(20px);

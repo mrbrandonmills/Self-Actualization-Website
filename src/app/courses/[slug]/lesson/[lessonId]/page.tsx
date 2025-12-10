@@ -50,6 +50,14 @@ export default function LessonPage() {
   const nextLesson = lesson ? getNextLesson(lessonId, courseSlug) : null;
   const prevLesson = lesson ? getPreviousLesson(lessonId, courseSlug) : null;
 
+  // Hide main site nav/footer in learning environment
+  useEffect(() => {
+    document.body.classList.add('learning-mode');
+    return () => {
+      document.body.classList.remove('learning-mode');
+    };
+  }, []);
+
   // Check enrollment status
   useEffect(() => {
     async function checkEnrollment() {
