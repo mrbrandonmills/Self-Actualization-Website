@@ -126,34 +126,40 @@ export function CourseCard({ course, index }: CourseCardProps) {
             transformStyle: 'preserve-3d',
           }}
         >
-          {/* Main card with 3D tilt - Floating Glass Effect */}
+          {/* Main card with 3D tilt - EXAGGERATED Floating Glass Effect */}
           <motion.div
-            className="relative h-full min-h-[550px] rounded-2xl overflow-hidden"
+            className="relative h-full min-h-[550px] rounded-3xl overflow-hidden"
             style={{
               rotateX,
               rotateY,
               transformStyle: 'preserve-3d',
-              background: 'rgba(245, 239, 230, 0.05)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: 'rgba(10, 47, 46, 0.6)',
+              backdropFilter: 'blur(40px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
               boxShadow: `
-                0 8px 32px 0 rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(255, 255, 255, 0.18),
-                0 20px 60px -10px ${courseColor.glow}40,
-                0 40px 120px -20px ${courseColor.glow}20
+                0 20px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1.5px rgba(197, 210, 183, 0.18),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+                0 50px 100px -20px ${courseColor.glow}80,
+                0 80px 160px -30px ${courseColor.glow}50,
+                0 0 100px ${courseColor.glow}30
               `,
-              border: '1px solid rgba(255, 255, 255, 0.18)',
+              border: '1.5px solid rgba(197, 210, 183, 0.2)',
+              transform: 'translateY(0)',
             }}
             whileHover={{
-              scale: 1.02,
+              scale: 1.03,
+              y: -12,
               boxShadow: `
-                0 8px 32px 0 rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.25),
-                0 25px 80px -10px ${courseColor.glow}60,
-                0 50px 150px -20px ${courseColor.glow}40
+                0 30px 70px -12px rgba(0, 0, 0, 0.6),
+                0 0 0 2px rgba(197, 210, 183, 0.3),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+                0 60px 120px -20px ${courseColor.glow}90,
+                0 100px 200px -30px ${courseColor.glow}70,
+                0 0 150px ${courseColor.glow}50
               `,
             }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Course thumbnail with unique rainbow gradient - HYPER-SATURATED */}
             <motion.div
