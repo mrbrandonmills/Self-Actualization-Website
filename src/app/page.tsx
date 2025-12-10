@@ -19,6 +19,7 @@ import Lenis from 'lenis';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { useBookPreloader } from '@/hooks/useBookPreloader';
+import { MobileBookExperience } from '@/components/home/MobileBookExperience';
 
 // Narrative overlays that appear as you scroll through the 3D journey
 const narrativeOverlays = [
@@ -183,21 +184,8 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Mobile Hero - Simple static content */}
-      {isMobile && (
-        <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#f5f3ef] via-[#e8e6e1] to-[#f0eee9] px-6 py-16">
-          <h1 className="text-4xl font-bold text-[var(--olive-dark)] text-center mb-4">
-            The Laboratory<span className="block text-[var(--accent-warm)]">of Life</span>
-          </h1>
-          <p className="text-lg text-[var(--olive-dark)]/70 text-center max-w-md mb-8">
-            Where self-actualization meets scientific experimentation.
-          </p>
-          <div className="flex flex-col gap-4 w-full max-w-xs">
-            <a href="#process" className="px-6 py-4 bg-[var(--accent-warm)] rounded-lg text-white font-semibold text-center">Enter The Laboratory</a>
-            <a href="/books" className="px-6 py-4 bg-white border-2 border-[var(--accent-warm)] rounded-lg text-[var(--accent-warm)] font-semibold text-center">Shop Books</a>
-          </div>
-        </section>
-      )}
+      {/* Mobile Book Experience - Swipeable page-flip book */}
+      {isMobile && <MobileBookExperience />}
 
       {/* Scrollable narrative overlays - DESKTOP ONLY */}
       {!isMobile && <div className="relative z-10">
