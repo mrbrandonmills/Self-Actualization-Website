@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useScrollDirection } from '@/hooks/useScrollDirection'
+import { UserMenu } from '@/components/auth/UserMenu'
 
 /**
  * BartoszNavigation - Sticky nav with backdrop blur
@@ -88,6 +89,11 @@ export function BartoszNavigation() {
             })}
           </div>
 
+          {/* User Menu (Desktop) */}
+          <div className="hidden md:block">
+            <UserMenu />
+          </div>
+
           {/* Mobile Menu Button */}
           <button
             className="mobile-menu-button"
@@ -151,6 +157,16 @@ export function BartoszNavigation() {
                     </motion.div>
                   )
                 })}
+
+                {/* Mobile Auth Section */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: navLinks.length * 0.1 }}
+                  className="pt-4 mt-4 border-t border-white/10"
+                >
+                  <UserMenu />
+                </motion.div>
               </div>
             </motion.div>
           </>
