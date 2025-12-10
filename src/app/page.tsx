@@ -67,48 +67,37 @@ const narrativeOverlays = [
   },
 ];
 
-// Detect mobile synchronously (runs once on module load, before any component renders)
-const getIsMobile = () => {
-  if (typeof window === 'undefined') return false;
-  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isSmall = window.innerWidth < 768;
-  return hasTouch || isSmall;
-};
+// Mobile Homepage - completely separate component to avoid hook issues
+function MobileHomePage() {
+  return (
+    <main className="min-h-screen">
+      <MobileBookExperience />
 
-export default function HomePage() {
-  // Initialize mobile state synchronously to prevent flash
-  const [isMobile] = useState(() => getIsMobile());
+      {/* Regular sections below */}
+      <div id="process" className="bg-[var(--bg-primary)]">
+        <ProcessFlowSection />
+      </div>
+      <FeaturedBooksSection />
+      <LatestEssaysSection />
 
-  // MOBILE: Return early - skip ALL desktop code (no preloader, no Canvas, no loading screen)
-  if (isMobile) {
-    return (
-      <main className="min-h-screen">
-        <MobileBookExperience />
-
-        {/* Regular sections below */}
-        <div id="process" className="bg-[var(--bg-primary)]">
-          <ProcessFlowSection />
+      {/* Footer */}
+      <footer className="bg-[var(--olive-dark)] text-[var(--bg-primary)] py-[var(--space-xl)] sm:py-[var(--space-2xl)]">
+        <div className="max-w-[var(--content-width-wide)] mx-auto px-4 sm:px-[var(--space-md)] text-center">
+          <p className="text-base sm:text-lg mb-[var(--space-sm)]">We Are All Made of Stardust</p>
+          <p className="text-sm sm:small opacity-70">© 2026 The Self Actualized Life. All rights reserved.</p>
         </div>
-        <FeaturedBooksSection />
-        <LatestEssaysSection />
+      </footer>
+    </main>
+  );
+}
 
-        {/* Footer */}
-        <footer className="bg-[var(--olive-dark)] text-[var(--bg-primary)] py-[var(--space-xl)] sm:py-[var(--space-2xl)]">
-          <div className="max-w-[var(--content-width-wide)] mx-auto px-4 sm:px-[var(--space-md)] text-center">
-            <p className="text-base sm:text-lg mb-[var(--space-sm)]">We Are All Made of Stardust</p>
-            <p className="text-sm sm:small opacity-70">© 2026 The Self Actualized Life. All rights reserved.</p>
-          </div>
-        </footer>
-      </main>
-    );
-  }
-
-  // DESKTOP ONLY: All code below only runs on desktop
+// Desktop Homepage - full 3D experience
+function DesktopHomePage() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showContent, setShowContent] = useState(false);
   const [isCanvasReady, setIsCanvasReady] = useState(false);
 
-  // Preload all book assets - DESKTOP ONLY
+  // Preload all book assets
   const { progress, isLoaded } = useBookPreloader();
 
   // Calculate combined progress: assets (0-85%) + Canvas init (85-100%)
@@ -179,7 +168,6 @@ export default function HomePage() {
     }
   }, [isLoaded, isCanvasReady]);
 
-  // DESKTOP RENDER (mobile already returned above)
   return (
     <main className="min-h-screen">
       {/* Loading Screen */}
@@ -291,4 +279,30 @@ export default function HomePage() {
       </footer>
     </main>
   );
+}
+
+// Main export - handles SSR hydration properly
+export default function HomePage() {
+  // hasMounted ensures we only check mobile AFTER client hydration
+  // This prevents SSR mismatch (server has no window, returns false)
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Show nothing during SSR and initial hydration - prevents mismatch
+  if (!hasMounted) {
+    return null;
+  }
+
+  // Now safe to check - we're on the client
+  const isMobile = typeof window !== 'undefined' && (
+    'ontouchstart' in window ||
+    navigator.maxTouchPoints > 0 ||
+    window.innerWidth < 768
+  );
+
+  // Render appropriate version
+  return isMobile ? <MobileHomePage /> : <DesktopHomePage />;
 }
