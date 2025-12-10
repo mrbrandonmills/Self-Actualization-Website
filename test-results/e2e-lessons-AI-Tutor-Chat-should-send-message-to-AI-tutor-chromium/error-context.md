@@ -1,0 +1,99 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "The Self Actualized Life" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: The Self
+        - generic [ref=e6]: Actualized
+        - generic [ref=e7]: Life
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Books" [ref=e10] [cursor=pointer]:
+          - /url: /books
+        - link "Courses" [ref=e11] [cursor=pointer]:
+          - /url: /courses
+        - link "Writing Lab" [ref=e12] [cursor=pointer]:
+          - /url: /writing-lab
+        - link "Blog" [ref=e13] [cursor=pointer]:
+          - /url: /blog
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - button "BM" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: BM
+        - img [ref=e19]
+  - generic [ref=e22]:
+    - heading "Lesson Not Found" [level=1] [ref=e23]
+    - link "Return to Courses" [ref=e24] [cursor=pointer]:
+      - /url: /courses
+  - contentinfo [ref=e25]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - link "The Self Actualized Life" [ref=e30] [cursor=pointer]:
+            - /url: /
+            - heading "The Self Actualized Life" [level=3] [ref=e31]
+          - paragraph [ref=e32]: Transform your reality through self-actualization. Unlock your full potential with luxury guidance and premium resources.
+          - generic [ref=e33]:
+            - link "Instagram" [ref=e34] [cursor=pointer]:
+              - /url: https://instagram.com
+              - img [ref=e35]
+            - link "Twitter" [ref=e38] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img [ref=e39]
+            - link "LinkedIn" [ref=e41] [cursor=pointer]:
+              - /url: https://linkedin.com
+              - img [ref=e42]
+        - generic [ref=e46]:
+          - heading "Products" [level=4] [ref=e47]
+          - list [ref=e48]:
+            - listitem [ref=e49]:
+              - link "Books" [ref=e50] [cursor=pointer]:
+                - /url: /books
+            - listitem [ref=e51]:
+              - link "Courses" [ref=e52] [cursor=pointer]:
+                - /url: /courses
+            - listitem [ref=e53]:
+              - link "Writing Lab" [ref=e54] [cursor=pointer]:
+                - /url: /writing-lab
+            - listitem [ref=e55]:
+              - link "Blog" [ref=e56] [cursor=pointer]:
+                - /url: /blog
+        - generic [ref=e57]:
+          - heading "Company" [level=4] [ref=e58]
+          - list [ref=e59]:
+            - listitem [ref=e60]:
+              - link "About" [ref=e61] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e62]:
+              - link "Contact" [ref=e63] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e64]:
+              - link "Coaching" [ref=e65] [cursor=pointer]:
+                - /url: /coaching
+        - generic [ref=e66]:
+          - heading "Join the Journey" [level=4] [ref=e67]
+          - paragraph [ref=e68]: Get weekly insights on self-actualization, mindset mastery, and transformational growth.
+          - generic [ref=e69]:
+            - textbox "Email address" [ref=e71]:
+              - /placeholder: Enter your email
+            - button "Subscribe" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]: Subscribe
+      - generic [ref=e77]:
+        - paragraph [ref=e78]: © 2025 The Self Actualized Life. All rights reserved.
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - link "Privacy Policy" [ref=e81] [cursor=pointer]:
+              - /url: /privacy
+            - generic [ref=e82]: •
+          - link "Terms of Service" [ref=e84] [cursor=pointer]:
+            - /url: /terms
+        - paragraph [ref=e85]:
+          - text: Built with
+          - generic [ref=e86]: ♥
+          - text: for transformation
+  - alert [ref=e87]
+```

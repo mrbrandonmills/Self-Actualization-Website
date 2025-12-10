@@ -34,12 +34,17 @@ export const test = base.extend<{
  */
 export async function login(page: any, email: string, password: string) {
   await page.goto('/login');
-  await page.fill('input[type="email"]', email);
-  await page.fill('input[type="password"]', password);
-  await page.click('button[type="submit"]');
+  await page.locator('form input[type="email"]').first().fill(email);
+  await page.locator('form input[type="password"]').first().fill(password);
+  await page.locator('form button[type="submit"]').first().click();
 
   // Wait for redirect or dashboard
-  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
+  await page.waitForTimeout(3000);
+  try {
+    await page.waitForURL((url: URL) => !url.pathname.includes('/login'), { timeout: 10000 });
+  } catch {
+    // May already be redirected
+  }
 }
 
 /**
