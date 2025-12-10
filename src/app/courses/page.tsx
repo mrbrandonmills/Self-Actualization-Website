@@ -190,83 +190,131 @@ export default function CoursesPage() {
           margin-right: auto;
         }
 
-        /* Liquid Glass Cards */
+        /* EXAGGERATED Liquid Glass Cards - Floating Effect */
         .course-card {
-          background: rgba(212, 175, 55, 0.05);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          border-radius: 16px;
+          background: rgba(10, 47, 46, 0.6);
+          backdrop-filter: blur(40px) saturate(180%);
+          -webkit-backdrop-filter: blur(40px) saturate(180%);
+          border: 1.5px solid rgba(197, 210, 183, 0.2);
+          border-radius: 24px;
           padding: 40px;
-          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
           position: relative;
           overflow: hidden;
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(212, 175, 55, 0.3);
         }
 
         .course-card::before {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, transparent 50%);
+          background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, transparent 50%);
           opacity: 0;
           transition: opacity 0.4s ease;
         }
 
         .course-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(212, 175, 55, 0.5);
-          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
+          transform: translateY(-12px);
+          border-color: rgba(197, 210, 183, 0.3);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(212, 175, 55, 0.5),
+            0 0 150px rgba(212, 175, 55, 0.3);
         }
 
         .course-card:hover::before {
           opacity: 1;
         }
 
-        /* Theme Color Variants - Subtle enhancements */
+        /* Theme Color Variants - EXAGGERATED Glows */
         .theme-green {
-          border-color: rgba(34, 197, 94, 0.25);
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(34, 197, 94, 0.3);
         }
         .theme-green:hover {
-          border-color: rgba(34, 197, 94, 0.5);
-          box-shadow: 0 20px 60px rgba(34, 197, 94, 0.15);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(34, 197, 94, 0.5),
+            0 0 150px rgba(34, 197, 94, 0.3);
         }
 
         .theme-blue {
-          border-color: rgba(59, 130, 246, 0.25);
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(59, 130, 246, 0.3);
         }
         .theme-blue:hover {
-          border-color: rgba(59, 130, 246, 0.5);
-          box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(59, 130, 246, 0.5),
+            0 0 150px rgba(59, 130, 246, 0.3);
         }
 
         .theme-purple {
-          border-color: rgba(168, 85, 247, 0.25);
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(168, 85, 247, 0.3);
         }
         .theme-purple:hover {
-          border-color: rgba(168, 85, 247, 0.5);
-          box-shadow: 0 20px 60px rgba(168, 85, 247, 0.15);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(168, 85, 247, 0.5),
+            0 0 150px rgba(168, 85, 247, 0.3);
         }
 
         .theme-cyan {
-          border-color: rgba(6, 182, 212, 0.25);
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(6, 182, 212, 0.3);
         }
         .theme-cyan:hover {
-          border-color: rgba(6, 182, 212, 0.5);
-          box-shadow: 0 20px 60px rgba(6, 182, 212, 0.15);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(6, 182, 212, 0.5),
+            0 0 150px rgba(6, 182, 212, 0.3);
         }
 
         .theme-rose {
-          border-color: rgba(244, 63, 94, 0.25);
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(244, 63, 94, 0.3);
         }
         .theme-rose:hover {
-          border-color: rgba(244, 63, 94, 0.5);
-          box-shadow: 0 20px 60px rgba(244, 63, 94, 0.15);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(244, 63, 94, 0.5),
+            0 0 150px rgba(244, 63, 94, 0.3);
         }
 
         .theme-gold {
-          border-color: rgba(212, 175, 55, 0.25);
-        }
-        .theme-gold:hover {
-          border-color: rgba(212, 175, 55, 0.5);
-          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
+          /* Default already has gold glow */
         }
 
         .level-badge {
