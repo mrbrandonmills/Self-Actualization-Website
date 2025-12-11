@@ -734,6 +734,111 @@ const nextConfig: NextConfig = {
 
 ---
 
-Last Updated: 2025-11-22
+Last Updated: 2025-12-10
 
 **This is not just a website. This is a luxury self-actualization experience.**
+
+---
+
+## 🎓 AI-Native Course Platform (LIVE)
+
+### Status: PRODUCTION READY ✅
+
+**URL:** https://selfactualize.life
+
+### Tech Stack
+- **Database:** Railway PostgreSQL (Prisma ORM)
+- **Auth:** NextAuth.js v5 with credentials + Google OAuth
+- **Payments:** Stripe Checkout with webhooks
+- **AI Tutor:** Claude Sonnet 4 with streaming SSE
+- **Voice:** ElevenLabs TTS (4 voice options)
+- **Email:** Resend (domain verified: selfactualize.life)
+
+### Features Implemented
+
+#### 6 Courses with 200 Lessons
+| Course | Weeks | Lessons | Block |
+|--------|-------|---------|-------|
+| Engineering Your Patterns | 6 | 30 | A |
+| Self-Actualization Process | 6 | 30 | A |
+| Art of Right Judgment | 6 | 30 | B |
+| Structuring Decisions in Chaos | 6 | 30 | B |
+| Laboratory of Living | 8 | 40 | C |
+| Conscious Integration | 8 | 40 | C |
+
+#### XP & Gamification System
+- 50 XP per lesson completion
+- Level = XP / 1000 + 1
+- Streak tracking (consecutive days)
+- Longest streak record
+- Real-time dashboard updates
+
+#### Guest Checkout → Auto Account Creation
+1. Guest pays via Stripe (no login required)
+2. Webhook creates account with temp password
+3. Welcome email sent via Resend
+4. User enrolled in purchased course(s)
+5. Login with email + temp password
+
+#### Learning Environment
+- `body.learning-mode` hides main nav/footer
+- Dashboard and lesson pages are isolated
+- Clean top bar: "Back to Site" | "Learning Portal" | "Browse Courses"
+- AI Tutor sidebar with streaming responses
+- Voice toggle with ElevenLabs TTS
+
+### Admin Test Accounts
+| Email | Password | Role |
+|-------|----------|------|
+| brandonflexy@gmail.com | SelfActualize2025! | ADMIN |
+| jesseadoherty@gmail.com | SelfActualize2025! | ADMIN |
+
+### API Routes
+
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/api/auth/[...nextauth]` | * | NextAuth.js handler |
+| `/api/auth/signup` | POST | User registration |
+| `/api/checkout` | POST | Stripe checkout session |
+| `/api/dashboard` | GET | User dashboard data |
+| `/api/enrollment/check` | GET | Check course access |
+| `/api/progress` | GET/POST/PATCH | Lesson progress + XP |
+| `/api/tutor` | POST | AI Tutor streaming |
+| `/api/voice` | GET/POST | ElevenLabs TTS |
+| `/api/webhooks/stripe` | POST | Payment webhooks |
+
+### Environment Variables (Vercel Production)
+```
+DATABASE_URL          # Railway PostgreSQL
+DIRECT_URL            # Railway PostgreSQL (direct)
+NEXTAUTH_SECRET       # Auth encryption
+NEXTAUTH_URL          # https://selfactualize.life
+ANTHROPIC_API_KEY     # Claude AI
+ELEVENLABS_API_KEY    # Voice TTS
+RESEND_API_KEY        # Transactional emails
+STRIPE_SECRET_KEY     # Payments
+STRIPE_WEBHOOK_SECRET # Webhook verification
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `/src/lib/auth.ts` | NextAuth.js config |
+| `/src/lib/prisma.ts` | Prisma client singleton |
+| `/src/lib/claude.ts` | AI Tutor client |
+| `/src/lib/elevenlabs.ts` | Voice synthesis |
+| `/src/lib/resend.ts` | Email client |
+| `/src/data/courses.ts` | Course definitions |
+| `/src/data/lessons.ts` | Lesson content |
+| `/prisma/schema.prisma` | Database schema |
+| `/prisma/seed.ts` | Database seeding |
+
+### Database Commands
+```bash
+npm run db:seed              # Seed courses + lessons
+npm run db:seed:admins       # Create admin accounts
+npm run db:reset:admin-progress  # Reset test data
+npx prisma db push           # Push schema changes
+npx prisma studio            # Visual database editor
+```
