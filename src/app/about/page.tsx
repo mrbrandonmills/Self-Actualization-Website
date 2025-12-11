@@ -57,16 +57,17 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="liquid-glass-card mx-auto"
+            className="liquid-glass-card"
+            style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}
           >
             <div className="text-8xl mb-6 text-center">⚗️</div>
             <h2 className="h2 mb-lg text-center mx-auto" style={{ color: '#e8e4dc' }}>
               The <span style={{ color: '#d4af37', fontWeight: 700 }}>Laboratory</span> Philosophy
             </h2>
-            <p className="text-lg leading-relaxed mb-6" style={{ color: '#c5d2b7', textAlign: 'center' }}>
+            <p className="text-lg leading-relaxed mb-6" style={{ color: '#c5d2b7', textAlign: 'center', maxWidth: '800px', margin: '0 auto 1.5rem auto' }}>
               Self-actualization isn't a destination—it's an ongoing experiment in conscious living. The Laboratory of Life was born from a simple conviction: that the most profound transformation happens when we treat our lives as living laboratories, where every experience becomes data, every challenge becomes research, and every insight becomes actionable wisdom.
             </p>
-            <p className="text-lg leading-relaxed" style={{ color: '#c5d2b7', textAlign: 'center' }}>
+            <p className="text-lg leading-relaxed" style={{ color: '#c5d2b7', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
               We bridge the gap between academic rigor and practical application, between cutting-edge neuroscience and ancient wisdom, between theory and lived experience. This is where psychology meets philosophy, where quantum mechanics meets consciousness, where research papers transform into real-world results.
             </p>
           </motion.div>
