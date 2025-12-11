@@ -1,132 +1,15 @@
 'use client'
 
-import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID, Book } from '@/data/books'
+import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID } from '@/data/books'
 import Image from 'next/image'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
-
-// 3D Book Card with tilt effect - keeps existing covers untouched
-function Book3DCard({ book, index }: { book: Book; index: number }) {
-  const [isHovered, setIsHovered] = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
-
-  // Motion values for 3D tilt effect
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  // Spring physics for smooth, luxury movement
-  const mouseX = useSpring(x, { stiffness: 300, damping: 30 })
-  const mouseY = useSpring(y, { stiffness: 300, damping: 30 })
-
-  // Transform mouse position to rotation (subtle 3D tilt)
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5])
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5])
-
-  // Handle mouse move for 3D tilt effect
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5
-    x.set(xPct)
-    y.set(yPct)
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-    x.set(0)
-    y.set(0)
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="h-full"
-    >
-      <motion.div
-        ref={cardRef}
-        className="book-card"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          perspective: 1000,
-          transformStyle: 'preserve-3d',
-          rotateX,
-          rotateY,
-        }}
-        whileHover={{
-          scale: 1.02,
-          y: -8,
-        }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {/* Book Cover - UNTOUCHED */}
-        <div className="book-cover">
-          <Image
-            src={book.coverImage}
-            alt={`${book.title} - ${book.subtitle}`}
-            width={400}
-            height={600}
-            className="w-full h-auto"
-          />
-        </div>
-
-        {/* Book Info */}
-        <div className="book-info">
-          <h2 className="h3 mb-sm" style={{ color: '#e8e4dc' }}>{book.title}</h2>
-          <p className="text-accent mb-md">{book.subtitle}</p>
-          <p className="text-sm mb-lg line-clamp-3" style={{ color: '#c5d2b7' }}>{book.description.split('\n\n')[0]}</p>
-
-          {/* Format Options */}
-          <div className="format-buttons">
-            {book.formats.map((format) => {
-              const amazonLink = createAffiliateLink(format.amazonUrl)
-              return (
-                <motion.a
-                  key={format.type}
-                  href={amazonLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="format-btn"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="format-type">{format.type}</span>
-                  <span className="format-price">{formatBookPrice(format.price)}</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M7 17L17 7M17 7H7M17 7V17" />
-                  </svg>
-                </motion.a>
-              )
-            })}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
 
 /**
- * Books Catalog Page - Clean & Simple with 3D Floating Cards
+ * Books Catalog Page - Clean & Simple
  * All books link directly to Amazon
- * Mobile order: Trilogy, Block C, Block B, Block A
  */
 export default function BooksPage() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
-
-  // Mobile: Trilogy first, then C, B, A (reverse order)
-  // Desktop: Original order (A, B, C, Trilogy)
-  const orderedBooks = isMobile ? [...books].reverse() : books;
-
   return (
     <main className="min-h-screen bg-[var(--color-black-green)]">
       {/* Hero Section */}
@@ -136,7 +19,6 @@ export default function BooksPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="label text-accent mb-md hero-label mx-auto text-center"
-            style={{ color: '#d4af37' }}
           >
             Premium Collection
           </motion.p>
@@ -146,11 +28,10 @@ export default function BooksPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="h1 mb-lg text-center hero-title mx-auto"
-            style={{ color: '#e8e4dc' }}
           >
             Random Acts of
             <br />
-            <span style={{ color: '#d4af37', fontWeight: 700 }}>Self-Actualization</span>
+            <span className="text-gold">Self-Actualization</span>
           </motion.h1>
 
           <motion.p
@@ -158,7 +39,6 @@ export default function BooksPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="lead max-w-2xl mx-auto mb-xl text-center hero-description"
-            style={{ color: '#c5d2b7' }}
           >
             Transform your reality with the complete Laboratory of Life series by Jesse Doherty & Brandon Mills.
           </motion.p>
@@ -171,8 +51,56 @@ export default function BooksPage() {
       <section className="section px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1600px] mx-auto">
           <div className="books-grid">
-            {orderedBooks.map((book, index) => (
-              <Book3DCard key={book.id} book={book} index={index} />
+            {books.map((book, index) => (
+              <motion.div
+                key={book.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="book-card"
+              >
+                {/* Book Cover */}
+                <div className="book-cover">
+                  <Image
+                    src={book.coverImage}
+                    alt={`${book.title} - ${book.subtitle}`}
+                    width={400}
+                    height={600}
+                    className="w-full h-auto"
+                  />
+                </div>
+
+                {/* Book Info */}
+                <div className="book-info">
+                  <h2 className="h3 mb-sm">{book.title}</h2>
+                  <p className="text-accent mb-md">{book.subtitle}</p>
+                  <p className="text-sm mb-lg line-clamp-3">{book.description.split('\n\n')[0]}</p>
+
+                  {/* Format Options */}
+                  <div className="format-buttons">
+                    {book.formats.map((format) => {
+                      const amazonLink = createAffiliateLink(format.amazonUrl)
+                      return (
+                        <motion.a
+                          key={format.type}
+                          href={amazonLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="format-btn"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span className="format-type">{format.type}</span>
+                          <span className="format-price">{formatBookPrice(format.price)}</span>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17" />
+                          </svg>
+                        </motion.a>
+                      )
+                    })}
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -181,10 +109,10 @@ export default function BooksPage() {
       {/* CTA Section */}
       <section className="section gradient-dark text-center px-4 sm:px-6 lg:px-8">
         <div className="container-lg mx-auto">
-          <h2 className="h2 mb-lg mx-auto text-center" style={{ color: '#e8e4dc' }}>
+          <h2 className="h2 mb-lg mx-auto text-center">
             Ready to Begin Your Journey?
           </h2>
-          <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
+          <p className="lead mb-xl max-w-2xl mx-auto text-center">
             Each book is a carefully curated pathway to transformation and self-discovery.
           </p>
           <Link href="/" className="btn btn-primary mx-auto">
@@ -206,27 +134,6 @@ export default function BooksPage() {
           text-align: center;
         }
 
-        .hero-label {
-          color: #d4af37 !important;
-        }
-
-        .hero-title,
-        .hero-title.h1,
-        h1.hero-title {
-          color: #e8e4dc !important;
-        }
-
-        .hero-title :global(.text-gold),
-        .hero-title :global(span.text-gold) {
-          color: #d4af37 !important;
-        }
-
-        .hero-description,
-        .hero-description.lead,
-        p.hero-description {
-          color: #c5d2b7 !important;
-        }
-
         /* Books Grid */
         .books-grid {
           display: grid;
@@ -240,50 +147,17 @@ export default function BooksPage() {
         }
 
         .book-card {
-          background: rgba(10, 47, 46, 0.6);
-          backdrop-filter: blur(40px) saturate(180%);
-          -webkit-backdrop-filter: blur(40px) saturate(180%);
-          border: 2px solid rgba(212, 175, 55, 0.5);
-          border-radius: 24px;
+          background: rgba(212, 175, 55, 0.05);
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          border-radius: 16px;
           overflow: hidden;
-          transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-          box-shadow:
-            0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(212, 175, 55, 0.4),
-            inset 0 1px 0 0 rgba(212, 175, 55, 0.2),
-            0 0 80px rgba(212, 175, 55, 0.4),
-            0 0 120px rgba(212, 175, 55, 0.25);
-          position: relative;
-        }
-
-        .book-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(
-            circle at 50% 0%,
-            rgba(212, 175, 55, 0.2) 0%,
-            transparent 50%
-          );
-          opacity: 0;
-          transition: opacity 0.6s ease;
-          pointer-events: none;
-          z-index: 1;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .book-card:hover {
-          transform: translateY(-12px);
-          border-color: rgba(212, 175, 55, 0.7);
-          box-shadow:
-            0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(212, 175, 55, 0.6),
-            inset 0 1px 0 0 rgba(212, 175, 55, 0.3),
-            0 0 120px rgba(212, 175, 55, 0.5),
-            0 0 200px rgba(212, 175, 55, 0.35);
-        }
-
-        .book-card:hover::before {
-          opacity: 1;
+          transform: translateY(-8px);
+          border-color: rgba(212, 175, 55, 0.4);
+          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
         }
 
         .book-cover {
@@ -291,7 +165,7 @@ export default function BooksPage() {
           width: 100%;
           aspect-ratio: 2/3;
           overflow: hidden;
-          background: #ffffff;
+          background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(212,175,55,0.1) 100%);
         }
 
         .book-cover :global(img) {
@@ -305,18 +179,6 @@ export default function BooksPage() {
 
         .book-info {
           padding: 32px;
-        }
-
-        .book-info h2 {
-          color: #c5d2b7;
-        }
-
-        .book-info .text-accent {
-          color: #d4af37;
-        }
-
-        .book-info .text-sm {
-          color: #a3b18a;
         }
 
         .format-buttons {
@@ -333,7 +195,7 @@ export default function BooksPage() {
           background: rgba(212, 175, 55, 0.1);
           border: 1px solid rgba(212, 175, 55, 0.3);
           border-radius: 12px;
-          color: #d4af37;
+          color: var(--color-gold);
           text-decoration: none;
           transition: all 0.3s ease;
           font-weight: 500;
@@ -341,19 +203,19 @@ export default function BooksPage() {
 
         .format-btn:hover {
           background: rgba(212, 175, 55, 0.2);
-          border-color: #d4af37;
+          border-color: var(--color-gold);
           transform: translateX(4px);
         }
 
         .format-type {
           font-size: 16px;
-          color: #c5d2b7;
+          color: var(--color-text);
         }
 
         .format-price {
           font-size: 18px;
           font-weight: 600;
-          color: #d4af37;
+          color: var(--color-gold);
         }
 
         .line-clamp-3 {

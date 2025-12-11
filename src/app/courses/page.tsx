@@ -1,86 +1,64 @@
 'use client'
 
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { courses, Course } from '@/data/courses'
-import { useState, useRef } from 'react'
+import { courses } from '@/data/courses'
 
 /**
- * Courses Page - Liquid Glass Theme with 3D Floating Cards
- * Beautiful, clean design with 3D tilt effect on hover
+ * Courses Page - Liquid Glass Theme
+ * Beautiful, clean design with icons and color variety
  */
 
-// Theme color map for dynamic glows
-const themeColors: Record<string, string> = {
-  green: 'rgba(34, 197, 94, 1)',
-  blue: 'rgba(59, 130, 246, 1)',
-  purple: 'rgba(168, 85, 247, 1)',
-  cyan: 'rgba(6, 182, 212, 1)',
-  rose: 'rgba(244, 63, 94, 1)',
-  gold: 'rgba(212, 175, 55, 1)',
-}
-
-// 3D Course Card Component with tilt effect
-function Course3DCard({ course, index }: { course: Course; index: number }) {
-  const [isHovered, setIsHovered] = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
-
-  // Motion values for 3D tilt effect
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-
-  // Spring physics for smooth, luxury movement
-  const mouseX = useSpring(x, { stiffness: 300, damping: 30 })
-  const mouseY = useSpring(y, { stiffness: 300, damping: 30 })
-
-  // Transform mouse position to rotation (subtle 3D tilt)
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5])
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5])
-
-  // Handle mouse move for 3D tilt effect
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5
-    x.set(xPct)
-    y.set(yPct)
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-    x.set(0)
-    y.set(0)
-  }
-
-  const themeColor = themeColors[course.themeColor || 'gold']
-
+export default function CoursesPage() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="h-full"
-    >
-      <motion.div
-        ref={cardRef}
-        className={`course-card theme-${course.themeColor || 'gold'}`}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          perspective: 1000,
-          transformStyle: 'preserve-3d',
-          rotateX,
-          rotateY,
-        }}
-        whileHover={{
-          scale: 1.02,
-          y: -8,
-        }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
+    <main className="min-h-screen bg-[var(--color-black-green)]">
+      {/* Hero Section */}
+      <section className="hero-section px-4 sm:px-6 lg:px-8">
+        <div className="container-xl mx-auto text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="label text-accent mb-md hero-label mx-auto text-center"
+          >
+            The Laboratory of Life
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="h1 mb-lg text-center hero-title mx-auto"
+          >
+            Transform Through
+            <br />
+            <span className="text-gold">Structured Learning</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lead max-w-2xl mx-auto mb-xl text-center hero-description"
+          >
+            Discover transformational courses that bridge the gap between theory and practice in self-actualization.
+          </motion.p>
+
+          <div className="divider mx-auto" />
+        </div>
+      </section>
+
+      {/* Courses Grid */}
+      <section className="section px-4 sm:px-6 lg:px-8">
+        <div className="container-xl mx-auto">
+          <div className="courses-grid">
+            {courses.map((course, index) => (
+              <motion.div
+                key={course.id}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`course-card theme-${course.themeColor || 'gold'}`}
+              >
                 {/* Level Badge */}
                 <div className={`level-badge level-${course.level.toLowerCase()}`}>
                   {course.level}
@@ -116,74 +94,23 @@ function Course3DCard({ course, index }: { course: Course; index: number }) {
                   </div>
                 </div>
 
-        {/* Price & CTA */}
-        <div className="card-footer">
-          <div className="price-section">
-            <span className="price-label">From</span>
-            <span className="price-value">${course.price}</span>
-          </div>
-          <Link
-            href={`/courses/${course.slug}`}
-            className="course-btn"
-          >
-            <span>Explore Course</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M7 17L17 7M17 7H7M17 7V17" />
-            </svg>
-          </Link>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
-export default function CoursesPage() {
-  return (
-    <main className="min-h-screen bg-[var(--color-black-green)]">
-      {/* Hero Section */}
-      <section className="hero-section px-4 sm:px-6 lg:px-8">
-        <div className="container-xl mx-auto text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="label text-accent mb-md hero-label mx-auto text-center"
-            style={{ color: '#d4af37' }}
-          >
-            The Laboratory of Life
-          </motion.p>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="h1 mb-lg text-center hero-title mx-auto"
-            style={{ color: '#e8e4dc' }}
-          >
-            Transform Through
-            <br />
-            <span style={{ color: '#d4af37', fontWeight: 700 }}>Structured Learning</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="lead max-w-2xl mx-auto mb-xl text-center hero-description"
-            style={{ color: '#c5d2b7' }}
-          >
-            Discover transformational courses that bridge the gap between theory and practice in self-actualization.
-          </motion.p>
-
-          <div className="divider mx-auto" />
-        </div>
-      </section>
-
-      {/* Courses Grid */}
-      <section className="section px-4 sm:px-6 lg:px-8">
-        <div className="container-xl mx-auto">
-          <div className="courses-grid">
-            {courses.map((course, index) => (
-              <Course3DCard key={course.id} course={course} index={index} />
+                {/* Price & CTA */}
+                <div className="card-footer">
+                  <div className="price-section">
+                    <span className="price-label">From</span>
+                    <span className="price-value">${course.price}</span>
+                  </div>
+                  <Link
+                    href={`/courses/${course.slug}`}
+                    className="course-btn"
+                  >
+                    <span>Explore Course</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" />
+                    </svg>
+                  </Link>
+                </div>
+              </motion.div>
             ))}
           </div>
 
@@ -221,10 +148,10 @@ export default function CoursesPage() {
         <div className="container-lg mx-auto">
           <div className="coming-soon-box mx-auto">
             <div className="text-8xl mb-6 text-center">🔬</div>
-            <h2 className="h2 mb-lg mx-auto text-center" style={{ color: '#e8e4dc' }}>
+            <h2 className="h2 mb-lg mx-auto text-center">
               New Courses <span className="text-gold">In Development</span>
             </h2>
-            <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
+            <p className="lead mb-xl max-w-2xl mx-auto text-center">
               We're crafting immersive learning experiences that combine the science of self-actualization with practical transformation tools. Stay tuned!
             </p>
             <div className="flex gap-md justify-center flex-wrap mx-auto">
@@ -305,119 +232,89 @@ export default function CoursesPage() {
           opacity: 1;
         }
 
-        /* Theme Color Variants - SUPER VISIBLE Colored Glows */
+        /* Theme Color Variants - EXAGGERATED Glows */
         .theme-green {
-          border-color: rgba(34, 197, 94, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(34, 197, 94, 0.4),
-            inset 0 1px 0 0 rgba(34, 197, 94, 0.2),
-            0 0 80px rgba(34, 197, 94, 0.4),
-            0 0 120px rgba(34, 197, 94, 0.25);
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(34, 197, 94, 0.3);
         }
         .theme-green:hover {
-          border-color: rgba(34, 197, 94, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(34, 197, 94, 0.6),
-            inset 0 1px 0 0 rgba(34, 197, 94, 0.3),
-            0 0 120px rgba(34, 197, 94, 0.5),
-            0 0 200px rgba(34, 197, 94, 0.35);
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(34, 197, 94, 0.5),
+            0 0 150px rgba(34, 197, 94, 0.3);
         }
 
         .theme-blue {
-          border-color: rgba(59, 130, 246, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(59, 130, 246, 0.4),
-            inset 0 1px 0 0 rgba(59, 130, 246, 0.2),
-            0 0 80px rgba(59, 130, 246, 0.4),
-            0 0 120px rgba(59, 130, 246, 0.25);
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(59, 130, 246, 0.3);
         }
         .theme-blue:hover {
-          border-color: rgba(59, 130, 246, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(59, 130, 246, 0.6),
-            inset 0 1px 0 0 rgba(59, 130, 246, 0.3),
-            0 0 120px rgba(59, 130, 246, 0.5),
-            0 0 200px rgba(59, 130, 246, 0.35);
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(59, 130, 246, 0.5),
+            0 0 150px rgba(59, 130, 246, 0.3);
         }
 
         .theme-purple {
-          border-color: rgba(168, 85, 247, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(168, 85, 247, 0.4),
-            inset 0 1px 0 0 rgba(168, 85, 247, 0.2),
-            0 0 80px rgba(168, 85, 247, 0.4),
-            0 0 120px rgba(168, 85, 247, 0.25);
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(168, 85, 247, 0.3);
         }
         .theme-purple:hover {
-          border-color: rgba(168, 85, 247, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(168, 85, 247, 0.6),
-            inset 0 1px 0 0 rgba(168, 85, 247, 0.3),
-            0 0 120px rgba(168, 85, 247, 0.5),
-            0 0 200px rgba(168, 85, 247, 0.35);
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(168, 85, 247, 0.5),
+            0 0 150px rgba(168, 85, 247, 0.3);
         }
 
         .theme-cyan {
-          border-color: rgba(6, 182, 212, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(6, 182, 212, 0.4),
-            inset 0 1px 0 0 rgba(6, 182, 212, 0.2),
-            0 0 80px rgba(6, 182, 212, 0.4),
-            0 0 120px rgba(6, 182, 212, 0.25);
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(6, 182, 212, 0.3);
         }
         .theme-cyan:hover {
-          border-color: rgba(6, 182, 212, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(6, 182, 212, 0.6),
-            inset 0 1px 0 0 rgba(6, 182, 212, 0.3),
-            0 0 120px rgba(6, 182, 212, 0.5),
-            0 0 200px rgba(6, 182, 212, 0.35);
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(6, 182, 212, 0.5),
+            0 0 150px rgba(6, 182, 212, 0.3);
         }
 
         .theme-rose {
-          border-color: rgba(244, 63, 94, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(244, 63, 94, 0.4),
-            inset 0 1px 0 0 rgba(244, 63, 94, 0.2),
-            0 0 80px rgba(244, 63, 94, 0.4),
-            0 0 120px rgba(244, 63, 94, 0.25);
+            0 0 0 1.5px rgba(197, 210, 183, 0.18),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+            0 50px 100px -20px rgba(244, 63, 94, 0.3);
         }
         .theme-rose:hover {
-          border-color: rgba(244, 63, 94, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(244, 63, 94, 0.6),
-            inset 0 1px 0 0 rgba(244, 63, 94, 0.3),
-            0 0 120px rgba(244, 63, 94, 0.5),
-            0 0 200px rgba(244, 63, 94, 0.35);
+            0 0 0 2px rgba(197, 210, 183, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+            0 60px 120px -20px rgba(244, 63, 94, 0.5),
+            0 0 150px rgba(244, 63, 94, 0.3);
         }
 
         .theme-gold {
-          border-color: rgba(212, 175, 55, 0.5);
-          box-shadow:
-            0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 2px rgba(212, 175, 55, 0.4),
-            inset 0 1px 0 0 rgba(212, 175, 55, 0.2),
-            0 0 80px rgba(212, 175, 55, 0.4),
-            0 0 120px rgba(212, 175, 55, 0.25);
-        }
-        .theme-gold:hover {
-          border-color: rgba(212, 175, 55, 0.7);
-          box-shadow:
-            0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 3px rgba(212, 175, 55, 0.6),
-            inset 0 1px 0 0 rgba(212, 175, 55, 0.3),
-            0 0 120px rgba(212, 175, 55, 0.5),
-            0 0 200px rgba(212, 175, 55, 0.35);
+          /* Default already has gold glow */
         }
 
         .level-badge {
@@ -470,8 +367,7 @@ export default function CoursesPage() {
         }
 
         .course-title {
-          text-align: center;
-          color: #e8e4dc;
+          text-align: left;
         }
 
         .course-description {
@@ -479,7 +375,6 @@ export default function CoursesPage() {
           line-height: 1.7;
           color: rgba(255, 255, 255, 0.85);
           margin-bottom: 24px;
-          text-align: center;
         }
 
         .course-meta {
