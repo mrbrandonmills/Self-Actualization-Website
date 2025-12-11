@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe-server';
 import { prisma } from '@/lib/prisma';
+import { sendWelcomeEmail } from '@/lib/resend';
 import Stripe from 'stripe';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -134,9 +135,15 @@ export async function POST(request: NextRequest) {
             finalUserId = newUser.id;
             console.log(`Created new account for paying customer: ${customerEmail} (${finalUserId})`);
 
-            // TODO: Send welcome email with temp password
-            // For now, log it (in production, integrate with email service)
-            console.log(`WELCOME EMAIL NEEDED: ${customerEmail} - Temp password: ${tempPassword}`);
+            // Send welcome email with temp password
+            const courseName = session.metadata?.courseTitle || 'Your Course';
+            await sendWelcomeEmail({
+              to: customerEmail,
+              name: customerName,
+              tempPassword,
+              courseName,
+              isBundle,
+            });
           }
         } catch (error) {
           console.error('Error creating user account:', error);
