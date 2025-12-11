@@ -1,24 +1,26 @@
 'use client'
 
-import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID } from '@/data/books'
+import { books, createAffiliateLink, formatBookPrice } from '@/data/books'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import styles from './books.module.css'
 
 /**
- * Books Catalog Page - Clean & Simple
- * All books link directly to Amazon
+ * Books Catalog Page - Floating Liquid Glass Design
+ * Uses CSS Modules for the beautiful glass effect
  */
 export default function BooksPage() {
   return (
     <main className="min-h-screen bg-[var(--color-black-green)]">
       {/* Hero Section */}
-      <section className="hero-section pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className={`${styles.heroSection} pt-32 pb-16 px-4 sm:px-6 lg:px-8`}>
         <div className="container-xl mx-auto text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="label text-accent mb-md hero-label mx-auto text-center"
+            className={`label text-accent mb-md ${styles.heroLabel} mx-auto text-center`}
+            style={{ color: '#d4af37' }}
           >
             Premium Collection
           </motion.p>
@@ -27,18 +29,20 @@ export default function BooksPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="h1 mb-lg text-center hero-title mx-auto"
+            className={`h1 mb-lg text-center ${styles.heroTitle} mx-auto`}
+            style={{ color: '#e8e4dc' }}
           >
             Random Acts of
             <br />
-            <span className="text-gold">Self-Actualization</span>
+            <span className="text-gold" style={{ color: '#d4af37' }}>Self-Actualization</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="lead max-w-2xl mx-auto mb-xl text-center hero-description"
+            className={`lead max-w-2xl mx-auto mb-xl text-center ${styles.heroDescription}`}
+            style={{ color: '#c5d2b7' }}
           >
             Transform your reality with the complete Laboratory of Life series by Jesse Doherty & Brandon Mills.
           </motion.p>
@@ -50,17 +54,17 @@ export default function BooksPage() {
       {/* Books Grid */}
       <section className="section px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1600px] mx-auto">
-          <div className="books-grid">
+          <div className={styles.booksGrid}>
             {books.map((book, index) => (
               <motion.div
                 key={book.id}
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="book-card"
+                className={styles.bookCard}
               >
                 {/* Book Cover */}
-                <div className="book-cover">
+                <div className={styles.bookCover}>
                   <Image
                     src={book.coverImage}
                     alt={`${book.title} - ${book.subtitle}`}
@@ -71,13 +75,13 @@ export default function BooksPage() {
                 </div>
 
                 {/* Book Info */}
-                <div className="book-info">
-                  <h2 className="h3 mb-sm">{book.title}</h2>
-                  <p className="text-accent mb-md">{book.subtitle}</p>
-                  <p className="text-sm mb-lg line-clamp-3">{book.description.split('\n\n')[0]}</p>
+                <div className={styles.bookInfo}>
+                  <h2 className="h3 mb-sm" style={{ color: '#e8e4dc' }}>{book.title}</h2>
+                  <p className="text-accent mb-md" style={{ color: '#d4af37' }}>{book.subtitle}</p>
+                  <p className={`text-sm mb-lg ${styles.lineClamp3}`} style={{ color: '#c5d2b7' }}>{book.description.split('\n\n')[0]}</p>
 
                   {/* Format Options */}
-                  <div className="format-buttons">
+                  <div className={styles.formatButtons}>
                     {book.formats.map((format) => {
                       const amazonLink = createAffiliateLink(format.amazonUrl)
                       return (
@@ -86,13 +90,13 @@ export default function BooksPage() {
                           href={amazonLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="format-btn"
+                          className={styles.formatBtn}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <span className="format-type">{format.type}</span>
-                          <span className="format-price">{formatBookPrice(format.price)}</span>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <span className={styles.formatType} style={{ color: '#c5d2b7' }}>{format.type}</span>
+                          <span className={styles.formatPrice} style={{ color: '#d4af37' }}>{formatBookPrice(format.price)}</span>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2">
                             <path d="M7 17L17 7M17 7H7M17 7V17" />
                           </svg>
                         </motion.a>
@@ -107,12 +111,12 @@ export default function BooksPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="section gradient-dark text-center px-4 sm:px-6 lg:px-8">
+      <section className={`section gradient-dark text-center px-4 sm:px-6 lg:px-8 ${styles.gradientDark}`}>
         <div className="container-lg mx-auto">
-          <h2 className="h2 mb-lg mx-auto text-center">
+          <h2 className="h2 mb-lg mx-auto text-center" style={{ color: '#e8e4dc' }}>
             Ready to Begin Your Journey?
           </h2>
-          <p className="lead mb-xl max-w-2xl mx-auto text-center">
+          <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
             Each book is a carefully curated pathway to transformation and self-discovery.
           </p>
           <Link href="/" className="btn btn-primary mx-auto">
@@ -120,261 +124,6 @@ export default function BooksPage() {
           </Link>
         </div>
       </section>
-
-      <style jsx>{`
-        /* Hero Section */
-        .hero-section {
-          padding-top: 128px;
-          padding-bottom: 64px;
-        }
-
-        .hero-label,
-        .hero-title,
-        .hero-description {
-          text-align: center;
-        }
-
-        /* Books Grid */
-        .books-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 32px;
-          margin-bottom: 64px;
-          margin-left: auto;
-          margin-right: auto;
-          width: 100%;
-          padding: 0 20px;
-        }
-
-        .book-card {
-          background: rgba(212, 175, 55, 0.05);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          border-radius: 16px;
-          overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .book-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(212, 175, 55, 0.4);
-          box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
-        }
-
-        .book-cover {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 2/3;
-          overflow: hidden;
-          background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(212,175,55,0.1) 100%);
-        }
-
-        .book-cover :global(img) {
-          object-fit: cover;
-          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .book-card:hover .book-cover :global(img) {
-          transform: scale(1.05);
-        }
-
-        .book-info {
-          padding: 32px;
-        }
-
-        .format-buttons {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .format-btn {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 16px 24px;
-          background: rgba(212, 175, 55, 0.1);
-          border: 1px solid rgba(212, 175, 55, 0.3);
-          border-radius: 12px;
-          color: var(--color-gold);
-          text-decoration: none;
-          transition: all 0.3s ease;
-          font-weight: 500;
-        }
-
-        .format-btn:hover {
-          background: rgba(212, 175, 55, 0.2);
-          border-color: var(--color-gold);
-          transform: translateX(4px);
-        }
-
-        .format-type {
-          font-size: 16px;
-          color: var(--color-text);
-        }
-
-        .format-price {
-          font-size: 18px;
-          font-weight: 600;
-          color: var(--color-gold);
-        }
-
-        .line-clamp-3 {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        /* Tablet Breakpoint */
-        @media (max-width: 1024px) {
-          .books-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 32px;
-          }
-        }
-
-        /* Mobile Breakpoint */
-        @media (max-width: 768px) {
-          /* Hero Section Mobile */
-          .hero-section {
-            padding-top: 96px;
-            padding-bottom: 48px;
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
-          .hero-label {
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-          }
-
-          .hero-title {
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 16px;
-            padding-right: 16px;
-          }
-
-          .hero-description {
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 16px;
-            padding-right: 16px;
-            max-width: 100%;
-          }
-
-          /* Books Grid Mobile */
-          .books-grid {
-            grid-template-columns: 1fr;
-            gap: 24px;
-            padding-left: 16px;
-            padding-right: 16px;
-            margin: 0 auto;
-          }
-
-          /* Book Card - Center Everything */
-          .book-card {
-            text-align: center;
-            margin: 0 auto;
-            max-width: 100%;
-          }
-
-          .book-card:hover {
-            transform: translateY(-4px);
-          }
-
-          /* Book Info - Better Mobile Padding */
-          .book-info {
-            padding: 24px 20px;
-          }
-
-          /* Center All Text Content */
-          .book-info h2 {
-            text-align: center;
-          }
-
-          .book-info p {
-            text-align: center;
-          }
-
-          /* Format Buttons - Center Alignment */
-          .format-buttons {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-          }
-
-          .format-btn {
-            width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
-          }
-
-          /* CTA Section Mobile */
-          .gradient-dark .container-lg {
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
-          .gradient-dark h2 {
-            text-align: center;
-            padding-left: 16px;
-            padding-right: 16px;
-          }
-
-          .gradient-dark p {
-            text-align: center;
-            padding-left: 16px;
-            padding-right: 16px;
-          }
-        }
-
-        /* Extra Small Mobile Breakpoint */
-        @media (max-width: 480px) {
-          /* Hero Section Extra Small */
-          .hero-section {
-            padding-top: 80px;
-            padding-bottom: 32px;
-          }
-
-          .hero-title {
-            font-size: 2rem;
-            line-height: 1.2;
-          }
-
-          /* Books Grid Extra Small */
-          .books-grid {
-            gap: 20px;
-            padding-left: 12px;
-            padding-right: 12px;
-          }
-
-          .book-card {
-            border-radius: 12px;
-          }
-
-          .book-info {
-            padding: 20px 16px;
-          }
-
-          .format-btn {
-            padding: 14px 20px;
-            font-size: 14px;
-          }
-
-          .format-type {
-            font-size: 14px;
-          }
-
-          .format-price {
-            font-size: 16px;
-          }
-        }
-      `}</style>
     </main>
   )
 }
