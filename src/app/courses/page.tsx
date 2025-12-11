@@ -1,13 +1,141 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
-import { courses } from '@/data/courses'
+import { courses, Course } from '@/data/courses'
+import { useState, useRef } from 'react'
 
 /**
- * Courses Page - Liquid Glass Theme
- * Beautiful, clean design with icons and color variety
+ * Courses Page - Liquid Glass Theme with 3D Floating Cards
+ * Beautiful, clean design with 3D tilt effect on hover
  */
+
+// Theme color map for dynamic glows
+const themeColors: Record<string, string> = {
+  green: 'rgba(34, 197, 94, 1)',
+  blue: 'rgba(59, 130, 246, 1)',
+  purple: 'rgba(168, 85, 247, 1)',
+  cyan: 'rgba(6, 182, 212, 1)',
+  rose: 'rgba(244, 63, 94, 1)',
+  gold: 'rgba(212, 175, 55, 1)',
+}
+
+// 3D Course Card Component with tilt effect
+function Course3DCard({ course, index }: { course: Course; index: number }) {
+  const [isHovered, setIsHovered] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  // Motion values for 3D tilt effect
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  // Spring physics for smooth, luxury movement
+  const mouseX = useSpring(x, { stiffness: 300, damping: 30 })
+  const mouseY = useSpring(y, { stiffness: 300, damping: 30 })
+
+  // Transform mouse position to rotation (subtle 3D tilt)
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5])
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5])
+
+  // Handle mouse move for 3D tilt effect
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovered(false)
+    x.set(0)
+    y.set(0)
+  }
+
+  const themeColor = themeColors[course.themeColor || 'gold']
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="h-full"
+    >
+      <motion.div
+        ref={cardRef}
+        className={`course-card theme-${course.themeColor || 'gold'}`}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          perspective: 1000,
+          transformStyle: 'preserve-3d',
+          rotateX,
+          rotateY,
+        }}
+        whileHover={{
+          scale: 1.02,
+          y: -8,
+        }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+                {/* Level Badge */}
+                <div className={`level-badge level-${course.level.toLowerCase()}`}>
+                  {course.level}
+                </div>
+
+                {/* Course Icon with Category */}
+                <div className="icon-category-group">
+                  <div className="course-icon">{course.icon || '⚗️'}</div>
+                  {course.category && (
+                    <p className="category-label">{course.category}</p>
+                  )}
+                </div>
+
+                {/* Course Info */}
+                <h2 className="h3 mb-md course-title">{course.title}</h2>
+                <p className="course-description">{course.description}</p>
+
+                {/* Course Meta */}
+                <div className="course-meta">
+                  <div className="meta-item">
+                    <span className="meta-icon">📅</span>
+                    <div>
+                      <span className="meta-label">Duration</span>
+                      <span className="meta-value">{course.duration}</span>
+                    </div>
+                  </div>
+                  <div className="meta-item">
+                    <span className="meta-icon">📚</span>
+                    <div>
+                      <span className="meta-label">Modules</span>
+                      <span className="meta-value">{course.modules}</span>
+                    </div>
+                  </div>
+                </div>
+
+        {/* Price & CTA */}
+        <div className="card-footer">
+          <div className="price-section">
+            <span className="price-label">From</span>
+            <span className="price-value">${course.price}</span>
+          </div>
+          <Link
+            href={`/courses/${course.slug}`}
+            className="course-btn"
+          >
+            <span>Explore Course</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </Link>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
 
 export default function CoursesPage() {
   return (
@@ -55,65 +183,7 @@ export default function CoursesPage() {
         <div className="container-xl mx-auto">
           <div className="courses-grid">
             {courses.map((course, index) => (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`course-card theme-${course.themeColor || 'gold'}`}
-              >
-                {/* Level Badge */}
-                <div className={`level-badge level-${course.level.toLowerCase()}`}>
-                  {course.level}
-                </div>
-
-                {/* Course Icon with Category */}
-                <div className="icon-category-group">
-                  <div className="course-icon">{course.icon || '⚗️'}</div>
-                  {course.category && (
-                    <p className="category-label">{course.category}</p>
-                  )}
-                </div>
-
-                {/* Course Info */}
-                <h2 className="h3 mb-md course-title">{course.title}</h2>
-                <p className="course-description">{course.description}</p>
-
-                {/* Course Meta */}
-                <div className="course-meta">
-                  <div className="meta-item">
-                    <span className="meta-icon">📅</span>
-                    <div>
-                      <span className="meta-label">Duration</span>
-                      <span className="meta-value">{course.duration}</span>
-                    </div>
-                  </div>
-                  <div className="meta-item">
-                    <span className="meta-icon">📚</span>
-                    <div>
-                      <span className="meta-label">Modules</span>
-                      <span className="meta-value">{course.modules}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Price & CTA */}
-                <div className="card-footer">
-                  <div className="price-section">
-                    <span className="price-label">From</span>
-                    <span className="price-value">${course.price}</span>
-                  </div>
-                  <Link
-                    href={`/courses/${course.slug}`}
-                    className="course-btn"
-                  >
-                    <span>Explore Course</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M7 17L17 7M17 7H7M17 7V17" />
-                    </svg>
-                  </Link>
-                </div>
-              </motion.div>
+              <Course3DCard key={course.id} course={course} index={index} />
             ))}
           </div>
 

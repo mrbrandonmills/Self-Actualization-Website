@@ -1,13 +1,118 @@
 'use client'
 
-import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID } from '@/data/books'
+import { books, createAffiliateLink, formatBookPrice, AMAZON_ASSOCIATES_ID, Book } from '@/data/books'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+// 3D Book Card with tilt effect - keeps existing covers untouched
+function Book3DCard({ book, index }: { book: Book; index: number }) {
+  const [isHovered, setIsHovered] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  // Motion values for 3D tilt effect
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  // Spring physics for smooth, luxury movement
+  const mouseX = useSpring(x, { stiffness: 300, damping: 30 })
+  const mouseY = useSpring(y, { stiffness: 300, damping: 30 })
+
+  // Transform mouse position to rotation (subtle 3D tilt)
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5])
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5])
+
+  // Handle mouse move for 3D tilt effect
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovered(false)
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="h-full"
+    >
+      <motion.div
+        ref={cardRef}
+        className="book-card"
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          perspective: 1000,
+          transformStyle: 'preserve-3d',
+          rotateX,
+          rotateY,
+        }}
+        whileHover={{
+          scale: 1.02,
+          y: -8,
+        }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Book Cover - UNTOUCHED */}
+        <div className="book-cover">
+          <Image
+            src={book.coverImage}
+            alt={`${book.title} - ${book.subtitle}`}
+            width={400}
+            height={600}
+            className="w-full h-auto"
+          />
+        </div>
+
+        {/* Book Info */}
+        <div className="book-info">
+          <h2 className="h3 mb-sm" style={{ color: '#e8e4dc' }}>{book.title}</h2>
+          <p className="text-accent mb-md">{book.subtitle}</p>
+          <p className="text-sm mb-lg line-clamp-3" style={{ color: '#c5d2b7' }}>{book.description.split('\n\n')[0]}</p>
+
+          {/* Format Options */}
+          <div className="format-buttons">
+            {book.formats.map((format) => {
+              const amazonLink = createAffiliateLink(format.amazonUrl)
+              return (
+                <motion.a
+                  key={format.type}
+                  href={amazonLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="format-btn"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="format-type">{format.type}</span>
+                  <span className="format-price">{formatBookPrice(format.price)}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" />
+                  </svg>
+                </motion.a>
+              )
+            })}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
 
 /**
- * Books Catalog Page - Clean & Simple
+ * Books Catalog Page - Clean & Simple with 3D Floating Cards
  * All books link directly to Amazon
  * Mobile order: Trilogy, Block C, Block B, Block A
  */
@@ -67,55 +172,7 @@ export default function BooksPage() {
         <div className="max-w-[1600px] mx-auto">
           <div className="books-grid">
             {orderedBooks.map((book, index) => (
-              <motion.div
-                key={book.id}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="book-card"
-              >
-                {/* Book Cover */}
-                <div className="book-cover">
-                  <Image
-                    src={book.coverImage}
-                    alt={`${book.title} - ${book.subtitle}`}
-                    width={400}
-                    height={600}
-                    className="w-full h-auto"
-                  />
-                </div>
-
-                {/* Book Info */}
-                <div className="book-info">
-                  <h2 className="h3 mb-sm" style={{ color: '#e8e4dc' }}>{book.title}</h2>
-                  <p className="text-accent mb-md">{book.subtitle}</p>
-                  <p className="text-sm mb-lg line-clamp-3" style={{ color: '#c5d2b7' }}>{book.description.split('\n\n')[0]}</p>
-
-                  {/* Format Options */}
-                  <div className="format-buttons">
-                    {book.formats.map((format) => {
-                      const amazonLink = createAffiliateLink(format.amazonUrl)
-                      return (
-                        <motion.a
-                          key={format.type}
-                          href={amazonLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="format-btn"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <span className="format-type">{format.type}</span>
-                          <span className="format-price">{formatBookPrice(format.price)}</span>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17" />
-                          </svg>
-                        </motion.a>
-                      )
-                    })}
-                  </div>
-                </div>
-              </motion.div>
+              <Book3DCard key={book.id} book={book} index={index} />
             ))}
           </div>
         </div>
