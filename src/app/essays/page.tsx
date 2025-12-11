@@ -117,6 +117,19 @@ export default function EssaysPage() {
                       <span key={tag} className={styles.tag}>{tag}</span>
                     ))}
                   </div>
+
+                  {/* Read Essay Button */}
+                  {essay.pdfPath && (
+                    <a
+                      href={essay.pdfPath}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.readButton}
+                    >
+                      <span>Read Full Essay</span>
+                      <span className={styles.readButtonArrow}>→</span>
+                    </a>
+                  )}
                 </motion.article>
               )
             })}

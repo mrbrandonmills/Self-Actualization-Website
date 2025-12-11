@@ -295,6 +295,40 @@
   border-color: rgba(212, 175, 55, 0.4);
 }
 
+/* Read Essay Button */
+.readButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 14px 28px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  border-radius: 12px;
+  color: #d4af37;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.readButton:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: #d4af37;
+  transform: translateX(4px);
+}
+
+.readButtonArrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.readButton:hover .readButtonArrow {
+  transform: translateX(6px);
+}
+
 /* Tablet Breakpoint */
 @media (max-width: 1024px) {
   .essaysGrid {

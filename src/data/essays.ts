@@ -36,6 +36,7 @@ export const essays: Essay[] = [
     featured: true,
     institution: 'San Diego City College',
     tags: ['Neuroscience', 'Quantum Mechanics', 'Self-Actualization', 'EEG', 'Gamma Oscillations', 'Consciousness'],
+    pdfPath: '/docs/essays/Self-Actualization as a Quantum-Coherent State_ Bridging Neuroscience and Quantum Mechanics - Brandon Mills.pdf',
     pageCount: 47
   },
   {
@@ -52,6 +53,7 @@ export const essays: Essay[] = [
     institution: 'San Diego City College',
     course: 'COMS 135: Interpersonal Communications',
     tags: ['Codependency', 'Relationships', 'Attachment Theory', 'Recovery', 'Communication', 'Boundaries'],
+    pdfPath: '/docs/essays/Codependency Essay.pdf',
     pageCount: 12
   },
   {
@@ -68,6 +70,7 @@ export const essays: Essay[] = [
     institution: 'San Diego City College',
     course: 'PSYC 255',
     tags: ['Machine Learning', 'Identity', 'Archetypes', 'Psychology', 'Computational Models', 'Jung'],
+    pdfPath: '/docs/essays/The Archetype of Fluidity A Machine Learning Framework for Modeling Identity as Dynamic Archetypal States.pdf',
     pageCount: 10
   },
   {
@@ -82,6 +85,7 @@ export const essays: Essay[] = [
     slug: 'psychological-pathways-fundamentalism',
     featured: false,
     tags: ['Psychology', 'Religion', 'Cognitive Science', 'Mixed Methods', 'Fundamentalism', 'Research Design'],
+    pdfPath: '/docs/essays/Psychological Pathways of Christian Fundamentalism A Mixed-Methods Study of Cognition, Upbringing, and Sociopolitical Behavior (1).pdf',
     pageCount: 5
   },
   {
@@ -98,6 +102,7 @@ export const essays: Essay[] = [
     institution: 'San Diego City College',
     course: 'English 101',
     tags: ['Environmental Racism', 'Rhetorical Analysis', 'Political Satire', 'Social Justice', 'Systemic Racism', 'Media Studies'],
+    pdfPath: '/docs/essays/Enviromental Racism -Rhetorical Analysis Essay.pdf',
     pageCount: 8
   }
 ]
