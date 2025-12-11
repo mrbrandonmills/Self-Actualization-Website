@@ -303,6 +303,9 @@ export default function AboutPage() {
           position: relative;
           overflow: hidden;
           text-align: center;
+          max-width: 900px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .liquid-glass-card::before {
