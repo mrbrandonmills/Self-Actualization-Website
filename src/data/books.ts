@@ -122,7 +122,7 @@ export const books: Book[] = [
       {
         type: 'Paperback',
         price: 2299,
-        amazonUrl: 'https://a.co/d/6qmgE0d'
+        amazonUrl: 'https://a.co/d/dmDroo2'
       },
       {
         type: 'Hardcover',
