@@ -57,7 +57,7 @@ export default function WritingLabPage() {
               Experiments in <span style={{ color: '#d4af37', fontWeight: 700 }}>Progress</span>
             </h2>
             <p className="lead mb-xl max-w-2xl mx-auto text-center" style={{ color: '#c5d2b7' }}>
-              The Writing Lab is where theory meets practice. We're preparing interactive experiences, writing exercises, and transformation tools. Coming soon!
+              The Writing Lab is where theory meets practice. We're preparing interactive experiences, writing exercises, and transformation tools that combine the science of self-actualization with practical transformation tools. Stay tuned!
             </p>
             <div className="flex gap-md justify-center flex-wrap mx-auto">
               <Link href="/books" className="btn btn-primary">
@@ -68,6 +68,52 @@ export default function WritingLabPage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Floating Essays Box - Pathway to Explore */}
+      <section className="section px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="container-lg mx-auto">
+          <motion.h3
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="h3 text-center mb-12"
+            style={{ color: '#e8e4dc' }}
+          >
+            Explore the <span style={{ color: '#d4af37' }}>Research</span>
+          </motion.h3>
+
+          <Link href="/essays" className="essays-box-link">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="essays-box mx-auto"
+            >
+              <div className="essays-box-icon">📝</div>
+              <div className="essays-box-content">
+                <h3 className="essays-box-title">Academic Essays</h3>
+                <p className="essays-box-subtitle">Deep dives into neuroscience, psychology, and the science of human transformation</p>
+                <div className="essays-box-meta">
+                  <span>5 Research Papers</span>
+                  <span className="meta-separator">•</span>
+                  <span>Brandon Mills</span>
+                  <span className="meta-separator">•</span>
+                  <span>San Diego City College</span>
+                </div>
+                <div className="essays-box-tags">
+                  <span className="essay-tag">Neuroscience</span>
+                  <span className="essay-tag">Psychology</span>
+                  <span className="essay-tag">Quantum Mechanics</span>
+                  <span className="essay-tag">Identity</span>
+                </div>
+                <div className="essays-box-cta">
+                  <span>Explore Essays</span>
+                  <span className="cta-arrow">→</span>
+                </div>
+              </div>
+            </motion.div>
+          </Link>
         </div>
       </section>
 
@@ -140,10 +186,172 @@ export default function WritingLabPage() {
           justify-content: center;
         }
 
+        /* FLOATING 3D ESSAYS BOX */
+        .essays-box-link {
+          display: block;
+          text-decoration: none;
+        }
+
+        .essays-box {
+          background: rgba(245, 239, 230, 0.12);
+          backdrop-filter: blur(60px) saturate(200%);
+          -webkit-backdrop-filter: blur(60px) saturate(200%);
+          border: 2px solid rgba(168, 85, 247, 0.5);
+          border-radius: 24px;
+          padding: 48px;
+          max-width: 700px;
+          position: relative;
+          transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+          box-shadow:
+            0 30px 80px -15px rgba(0, 0, 0, 0.7),
+            0 0 0 3px rgba(168, 85, 247, 0.3),
+            inset 0 2px 0 0 rgba(255, 255, 255, 0.2),
+            0 60px 140px -25px rgba(168, 85, 247, 0.6),
+            0 0 200px rgba(168, 85, 247, 0.3);
+          display: flex;
+          align-items: flex-start;
+          gap: 24px;
+          cursor: pointer;
+        }
+
+        .essays-box::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, transparent 50%);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          z-index: 0;
+          pointer-events: none;
+          border-radius: 24px;
+        }
+
+        .essays-box:hover {
+          transform: translateY(-16px) scale(1.02);
+          border-color: rgba(168, 85, 247, 0.7);
+          background: rgba(245, 239, 230, 0.18);
+          box-shadow:
+            0 40px 100px -15px rgba(0, 0, 0, 0.8),
+            0 0 0 4px rgba(168, 85, 247, 0.5),
+            inset 0 3px 0 0 rgba(255, 255, 255, 0.3),
+            0 80px 180px -25px rgba(168, 85, 247, 0.8),
+            0 0 250px rgba(168, 85, 247, 0.5);
+        }
+
+        .essays-box:hover::before {
+          opacity: 1;
+        }
+
+        .essays-box-icon {
+          font-size: 64px;
+          flex-shrink: 0;
+          position: relative;
+          z-index: 1;
+        }
+
+        .essays-box-content {
+          flex: 1;
+          position: relative;
+          z-index: 1;
+        }
+
+        .essays-box-title {
+          font-size: 28px;
+          font-weight: 700;
+          color: #e8e4dc;
+          margin-bottom: 8px;
+        }
+
+        .essays-box-subtitle {
+          font-size: 16px;
+          color: #c5d2b7;
+          line-height: 1.6;
+          margin-bottom: 16px;
+        }
+
+        .essays-box-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          font-size: 14px;
+          color: rgba(197, 210, 183, 0.8);
+          margin-bottom: 20px;
+        }
+
+        .meta-separator {
+          color: rgba(168, 85, 247, 0.5);
+        }
+
+        .essays-box-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 24px;
+        }
+
+        .essay-tag {
+          padding: 6px 14px;
+          background: rgba(168, 85, 247, 0.15);
+          border: 1px solid rgba(168, 85, 247, 0.3);
+          border-radius: 16px;
+          font-size: 12px;
+          font-weight: 500;
+          color: #c4b5fd;
+        }
+
+        .essays-box-cta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #d4af37;
+          transition: all 0.3s ease;
+        }
+
+        .cta-arrow {
+          font-size: 20px;
+          transition: transform 0.3s ease;
+        }
+
+        .essays-box:hover .cta-arrow {
+          transform: translateX(8px);
+        }
+
         @media (max-width: 768px) {
           .lab-card {
             padding: 48px 24px;
             border-radius: 16px;
+          }
+
+          .essays-box {
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            padding: 32px 24px;
+            /* Mobile performance optimizations */
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+          }
+
+          .essays-box-icon {
+            font-size: 48px;
+          }
+
+          .essays-box-title {
+            font-size: 22px;
+          }
+
+          .essays-box-meta {
+            justify-content: center;
+          }
+
+          .essays-box-tags {
+            justify-content: center;
+          }
+
+          .essays-box-cta {
+            justify-content: center;
           }
         }
 
@@ -154,6 +362,23 @@ export default function WritingLabPage() {
 
           .lab-card .text-8xl {
             font-size: 4rem;
+          }
+
+          .essays-box {
+            padding: 24px 20px;
+          }
+
+          .essays-box-title {
+            font-size: 20px;
+          }
+
+          .essays-box-subtitle {
+            font-size: 14px;
+          }
+
+          .essay-tag {
+            font-size: 11px;
+            padding: 4px 10px;
           }
         }
       `}</style>
