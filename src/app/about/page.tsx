@@ -302,6 +302,7 @@ export default function AboutPage() {
           transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
           position: relative;
           overflow: hidden;
+          text-align: center;
         }
 
         .liquid-glass-card::before {
