@@ -186,15 +186,16 @@ export default function BooksPage() {
           background: rgba(10, 47, 46, 0.6);
           backdrop-filter: blur(40px) saturate(180%);
           -webkit-backdrop-filter: blur(40px) saturate(180%);
-          border: 1.5px solid rgba(212, 175, 55, 0.3);
+          border: 2px solid rgba(212, 175, 55, 0.5);
           border-radius: 24px;
           overflow: hidden;
           transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1.5px rgba(212, 175, 55, 0.18),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-            0 50px 100px -20px rgba(212, 175, 55, 0.3);
+            0 0 0 2px rgba(212, 175, 55, 0.4),
+            inset 0 1px 0 0 rgba(212, 175, 55, 0.2),
+            0 0 80px rgba(212, 175, 55, 0.4),
+            0 0 120px rgba(212, 175, 55, 0.25);
           position: relative;
         }
 
@@ -215,13 +216,13 @@ export default function BooksPage() {
 
         .book-card:hover {
           transform: translateY(-12px);
-          border-color: rgba(212, 175, 55, 0.5);
+          border-color: rgba(212, 175, 55, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 2px rgba(212, 175, 55, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-            0 60px 120px -20px rgba(212, 175, 55, 0.5),
-            0 0 150px rgba(212, 175, 55, 0.3);
+            0 0 0 3px rgba(212, 175, 55, 0.6),
+            inset 0 1px 0 0 rgba(212, 175, 55, 0.3),
+            0 0 120px rgba(212, 175, 55, 0.5),
+            0 0 200px rgba(212, 175, 55, 0.35);
         }
 
         .book-card:hover::before {

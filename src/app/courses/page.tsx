@@ -235,89 +235,119 @@ export default function CoursesPage() {
           opacity: 1;
         }
 
-        /* Theme Color Variants - EXAGGERATED Glows */
+        /* Theme Color Variants - SUPER VISIBLE Colored Glows */
         .theme-green {
+          border-color: rgba(34, 197, 94, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1.5px rgba(197, 210, 183, 0.18),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-            0 50px 100px -20px rgba(34, 197, 94, 0.3);
+            0 0 0 2px rgba(34, 197, 94, 0.4),
+            inset 0 1px 0 0 rgba(34, 197, 94, 0.2),
+            0 0 80px rgba(34, 197, 94, 0.4),
+            0 0 120px rgba(34, 197, 94, 0.25);
         }
         .theme-green:hover {
+          border-color: rgba(34, 197, 94, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 2px rgba(197, 210, 183, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-            0 60px 120px -20px rgba(34, 197, 94, 0.5),
-            0 0 150px rgba(34, 197, 94, 0.3);
+            0 0 0 3px rgba(34, 197, 94, 0.6),
+            inset 0 1px 0 0 rgba(34, 197, 94, 0.3),
+            0 0 120px rgba(34, 197, 94, 0.5),
+            0 0 200px rgba(34, 197, 94, 0.35);
         }
 
         .theme-blue {
+          border-color: rgba(59, 130, 246, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1.5px rgba(197, 210, 183, 0.18),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-            0 50px 100px -20px rgba(59, 130, 246, 0.3);
+            0 0 0 2px rgba(59, 130, 246, 0.4),
+            inset 0 1px 0 0 rgba(59, 130, 246, 0.2),
+            0 0 80px rgba(59, 130, 246, 0.4),
+            0 0 120px rgba(59, 130, 246, 0.25);
         }
         .theme-blue:hover {
+          border-color: rgba(59, 130, 246, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 2px rgba(197, 210, 183, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-            0 60px 120px -20px rgba(59, 130, 246, 0.5),
-            0 0 150px rgba(59, 130, 246, 0.3);
+            0 0 0 3px rgba(59, 130, 246, 0.6),
+            inset 0 1px 0 0 rgba(59, 130, 246, 0.3),
+            0 0 120px rgba(59, 130, 246, 0.5),
+            0 0 200px rgba(59, 130, 246, 0.35);
         }
 
         .theme-purple {
+          border-color: rgba(168, 85, 247, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1.5px rgba(197, 210, 183, 0.18),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-            0 50px 100px -20px rgba(168, 85, 247, 0.3);
+            0 0 0 2px rgba(168, 85, 247, 0.4),
+            inset 0 1px 0 0 rgba(168, 85, 247, 0.2),
+            0 0 80px rgba(168, 85, 247, 0.4),
+            0 0 120px rgba(168, 85, 247, 0.25);
         }
         .theme-purple:hover {
+          border-color: rgba(168, 85, 247, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 2px rgba(197, 210, 183, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-            0 60px 120px -20px rgba(168, 85, 247, 0.5),
-            0 0 150px rgba(168, 85, 247, 0.3);
+            0 0 0 3px rgba(168, 85, 247, 0.6),
+            inset 0 1px 0 0 rgba(168, 85, 247, 0.3),
+            0 0 120px rgba(168, 85, 247, 0.5),
+            0 0 200px rgba(168, 85, 247, 0.35);
         }
 
         .theme-cyan {
+          border-color: rgba(6, 182, 212, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1.5px rgba(197, 210, 183, 0.18),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-            0 50px 100px -20px rgba(6, 182, 212, 0.3);
+            0 0 0 2px rgba(6, 182, 212, 0.4),
+            inset 0 1px 0 0 rgba(6, 182, 212, 0.2),
+            0 0 80px rgba(6, 182, 212, 0.4),
+            0 0 120px rgba(6, 182, 212, 0.25);
         }
         .theme-cyan:hover {
+          border-color: rgba(6, 182, 212, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 2px rgba(197, 210, 183, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-            0 60px 120px -20px rgba(6, 182, 212, 0.5),
-            0 0 150px rgba(6, 182, 212, 0.3);
+            0 0 0 3px rgba(6, 182, 212, 0.6),
+            inset 0 1px 0 0 rgba(6, 182, 212, 0.3),
+            0 0 120px rgba(6, 182, 212, 0.5),
+            0 0 200px rgba(6, 182, 212, 0.35);
         }
 
         .theme-rose {
+          border-color: rgba(244, 63, 94, 0.5);
           box-shadow:
             0 20px 50px -12px rgba(0, 0, 0, 0.5),
-            0 0 0 1.5px rgba(197, 210, 183, 0.18),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-            0 50px 100px -20px rgba(244, 63, 94, 0.3);
+            0 0 0 2px rgba(244, 63, 94, 0.4),
+            inset 0 1px 0 0 rgba(244, 63, 94, 0.2),
+            0 0 80px rgba(244, 63, 94, 0.4),
+            0 0 120px rgba(244, 63, 94, 0.25);
         }
         .theme-rose:hover {
+          border-color: rgba(244, 63, 94, 0.7);
           box-shadow:
             0 30px 70px -12px rgba(0, 0, 0, 0.6),
-            0 0 0 2px rgba(197, 210, 183, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-            0 60px 120px -20px rgba(244, 63, 94, 0.5),
-            0 0 150px rgba(244, 63, 94, 0.3);
+            0 0 0 3px rgba(244, 63, 94, 0.6),
+            inset 0 1px 0 0 rgba(244, 63, 94, 0.3),
+            0 0 120px rgba(244, 63, 94, 0.5),
+            0 0 200px rgba(244, 63, 94, 0.35);
         }
 
         .theme-gold {
-          /* Default already has gold glow */
+          border-color: rgba(212, 175, 55, 0.5);
+          box-shadow:
+            0 20px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 2px rgba(212, 175, 55, 0.4),
+            inset 0 1px 0 0 rgba(212, 175, 55, 0.2),
+            0 0 80px rgba(212, 175, 55, 0.4),
+            0 0 120px rgba(212, 175, 55, 0.25);
+        }
+        .theme-gold:hover {
+          border-color: rgba(212, 175, 55, 0.7);
+          box-shadow:
+            0 30px 70px -12px rgba(0, 0, 0, 0.6),
+            0 0 0 3px rgba(212, 175, 55, 0.6),
+            inset 0 1px 0 0 rgba(212, 175, 55, 0.3),
+            0 0 120px rgba(212, 175, 55, 0.5),
+            0 0 200px rgba(212, 175, 55, 0.35);
         }
 
         .level-badge {
