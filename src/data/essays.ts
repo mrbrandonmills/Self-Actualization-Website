@@ -75,18 +75,20 @@ export const essays: Essay[] = [
   },
   {
     id: 'psychological-pathways-fundamentalism',
-    title: 'Psychological Pathways of Christian Fundamentalism',
-    subtitle: 'A Mixed-Methods Study of Cognition, Upbringing, and Sociopolitical Behavior',
+    title: 'Psychological and Developmental Pathways to Christian Fundamentalism',
+    subtitle: 'A Mixed-Methods Investigation',
     author: 'Brandon Mills',
-    publishDate: '2024',
+    publishDate: 'December 11, 2025',
     category: 'Psychology',
-    abstract: 'A comprehensive mixed-methods investigation into the psychological mechanisms reinforcing fundamentalist belief systems. This research combines quantitative surveys (N≈400) with in-depth qualitative interviews (n≈30) across Evangelical, Orthodox, and Catholic fundamentalist communities. Employing regression analysis, structural equation modeling, machine learning classification, and NLP sentiment analysis, the study explores how cognitive patterns, childhood upbringing, and sociopolitical behaviors interweave to sustain fundamentalist worldviews—and what interventions might promote cognitive flexibility.',
-    readingTime: '8 min read',
+    abstract: 'Religious fundamentalism has been linked to authoritarianism, intolerance of ambiguity, and prejudice, yet few studies have systematically integrated psychological predictors, developmental experiences, and linguistic patterns within Christian fundamentalism. Using a mixed-methods design, 400 self-identified Christians completed surveys measuring religious fundamentalism, authoritarianism, need for closure, attachment security, and adverse childhood experiences (ACEs). Results indicated that religious fundamentalism was significantly positively correlated with authoritarianism (r = .58, p < .001) and need for closure (r = .52, p < .001). Structural equation modeling revealed excellent model fit for the hypothesized pathway linking ACEs to fundamentalism through need for closure and authoritarianism.',
+    readingTime: '13 min read',
     slug: 'psychological-pathways-fundamentalism',
     featured: false,
-    tags: ['Psychology', 'Religion', 'Cognitive Science', 'Mixed Methods', 'Fundamentalism', 'Research Design'],
+    institution: 'San Diego City College',
+    course: 'PSYC 255: Research Methods',
+    tags: ['Psychology', 'Religion', 'Authoritarianism', 'Mixed Methods', 'Fundamentalism', 'Attachment Theory', 'Trauma'],
     pdfPath: '/docs/essays/Psychological Pathways of Christian Fundamentalism A Mixed-Methods Study of Cognition, Upbringing, and Sociopolitical Behavior (1).pdf',
-    pageCount: 5
+    pageCount: 13
   },
   {
     id: 'environmental-racism-rhetorical-analysis',
